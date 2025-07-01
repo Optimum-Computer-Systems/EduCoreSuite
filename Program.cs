@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Optimum_University.Data;
+using EduCoreSuite;
 using System;
-namespace Optimum_University
+namespace EduCoreSuite
 {
     public class Program
     {
@@ -11,7 +11,7 @@ namespace Optimum_University
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<AppDBContext>(options =>
+            builder.Services.AddDbContext<ForgeDBContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
