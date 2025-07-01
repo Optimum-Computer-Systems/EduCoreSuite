@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
-using Optimum_University.Models;
+using EduCoreSuite.Models;
 
-namespace Optimum_University.Models.ViewModels
+namespace EduCoreSuite.Models.ViewModels
 {
     public class CourseFormViewModel
     {

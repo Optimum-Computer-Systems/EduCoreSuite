@@ -1,0 +1,119 @@
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 bg-light vh-100 p-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Students" asp-action="Index">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div class="col-md-10 p-4">
+            <h2 class="mb-4">Dashboard</h2>
+
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="bg-white border rounded p-3 text-center">
+                        <h6>Total Students</h6>
+                        <h3>1,250</h3>
+                        <span class="text-success">+10%</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="bg-white border rounded p-3 text-center">
+                        <h6>Total Courses</h6>
+                        <h3>150</h3>
+                        <span class="text-success">+5%</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="bg-white border rounded p-3 text-center">
+                        <h6>Total Enrollments</h6>
+                        <h3>800</h3>
+                        <span class="text-success">+8%</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="bg-white border rounded p-3 text-center">
+                        <h6>Total Sessions</h6>
+                        <h3>25</h3>
+                        <span class="text-success">+2%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Activity Feed -->
+                <div class="col-md-8">
+                    <h4>Recent Activity Feed</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>New Enrollment</strong><br />
+                            <small class="text-muted">2 hours ago</small><br />
+                            New Student, Ethan Carter, Enrolled in Introduction To Programming.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Course Completion Report</strong><br />
+                            <small class="text-muted">4 hours ago</small><br />
+                            Completion Rate For Advanced Mathematics Increased By 5%
+                        </li>
+                        <li class="list-group-item">
+                            <strong>New Course Added</strong><br />
+                            <small class="text-muted">6 hours ago</small><br />
+                            Digital Marketing Fundamentals Added To Catalog
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Exam Completion</strong><br />
+                            <small class="text-muted">8 hours ago</small><br />
+                            Noah Walker Completed Final Exam For Operating Systems
+                        </li>
+                        <li class="list-group-item">
+                            <strong>System Maintenance</strong><br />
+                            <small class="text-muted">10 hours ago</small><br />
+                            Maintenance Scheduled Tomorrow, 10pm to 12am
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Most Enrolled Courses -->
+                <div class="col-md-4">
+                    <h4>Most Enrolled Courses</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between">
+                            Introduction To Programming <span class="badge bg-secondary">120 Students</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Data Science Essentials <span class="badge bg-secondary">105 Students</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Advanced Mathematics <span class="badge bg-secondary">95 Students</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Digital Marketing Fundamentals <span class="badge bg-secondary">85 Students</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            Business Analytics <span class="badge bg-secondary">75 Students</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

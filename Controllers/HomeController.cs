@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EduCoreSuite;
+using EduCoreSuite.Data;
 using EduCoreSuite.Models;
 using EduCoreSuite.Models.ViewModels;
 

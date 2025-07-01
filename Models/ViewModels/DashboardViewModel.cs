@@ -1,4 +1,4 @@
-﻿namespace Optimum_University.Models.ViewModels
+﻿namespace EduCoreSuite.Models.ViewModels
 {
     public class DashboardViewModel
     {

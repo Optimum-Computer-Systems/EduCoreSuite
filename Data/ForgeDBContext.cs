@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EduCoreSuite.Models;
-using EduCoreSuite.EnrollmentModes;
-
+using EduCoreSuite.Models.EnrollmentModes;
 namespace EduCoreSuite.Data
 {
     public class ForgeDBContext : DbContext

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace Optimum_University.Models.ViewModels
+namespace EduCoreSuite.Models.ViewModels
 {
     public class CourseEnrollmentViewModel
     {
