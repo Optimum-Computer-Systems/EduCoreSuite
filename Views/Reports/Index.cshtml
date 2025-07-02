@@ -2,84 +2,104 @@
 @model ReportFilterViewModel
 
 <div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-2 bg-light vh-100 p-3">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Students" asp-action="Index">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Main Panel -->
-        <div class="col-md-10 p-4">
-            <h2 class="fw-bold">Reports</h2>
-
-            <!-- Filters -->
-            <h5 class="fw-semibold mb-3">Filters <i class="bi bi-sliders2-vertical"></i></h5>
-
-            <form id="filterForm" method="get" asp-action="Index" class="d-flex flex-column gap-3">
-                <div class="w-50">
-                    <label class="form-label">Department</label>
-                    <select class="form-select" name="department"
-                            asp-for="SelectedDepartment" asp-items="Model.Departments">
-                        <option value="">All Departments</option>
-                    </select>
-                </div>
-
-                <div class="w-50">
-                    <label class="form-label">Student</label>
-                    <select class="form-select" name="studentId"
-                            asp-for="SelectedStudentId" asp-items="Model.Students">
-                        <option value="">All Students</option>
-                    </select>
-                </div>
-
-                <div class="w-50">
-                    <label class="form-label">Course</label>
-                    <select class="form-select" name="courseId"
-                            asp-for="SelectedCourseId" asp-items="Model.Courses">
-                        <option value="">All Courses</option>
-                    </select>
-                </div>
-
-                <input type="hidden" name="page" value="1" />
-
-                <div class="mt-2">
-                    <button type="submit" class="btn btn-primary me-2">
-                        <i class="bi bi-filter"></i> Apply Filters
-                    </button>
-                    <a asp-action="Index" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset
-                    </a>
-                </div>
-            </form>
-
-
-            <!-- Report Header with Buttons -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-semibold mb-0">Report Display Panel</h5>
-                <div>
-                    <a asp-action="DownloadReport"
-                       asp-route-department="@Model.SelectedDepartment"
-                       asp-route-studentId="@Model.SelectedStudentId"
-                       asp-route-courseId="@Model.SelectedCourseId"
-                       target="_blank"
-                       class="btn btn-outline-primary rounded-pill">
-                        <i class="bi bi-download"></i> Download Report
-                    </a>
-                </div>
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-light vh-100 p-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Students" asp-action="Index">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
+                    </li>
+                </ul>
             </div>
+
+            <!-- Main Content Panel -->
+            <div class="col-md-10 p-4">
+                <h5 class="fw-semibold mb-3">
+                    <a class="text-decoration-none text-dark d-flex align-items-center gap-2"
+                       data-bs-toggle="collapse"
+                       href="#filterPanel" role="button" aria-expanded="true" aria-controls="filterPanel"
+                       onclick="toggleIcon(this)">
+
+                        <img src="~/Resources/Filter.svg"
+                             alt="Toggle Filters"
+                             id="filterIcon"
+                             width="18" height="18"
+                             class="transition-icon"
+                             style="transform: rotate(0deg); transition: transform 0.3s ease; margin-top: 1px;" />
+
+                        <span>Filters</span>
+                    </a>
+                </h5>
+
+
+
+                <!-- Filter Form  -->
+                <div class="collapse show" id="filterPanel">
+                    <form id="filterForm" method="get" asp-action="Index" class="d-flex flex-column gap-3">
+                        <div class="w-50">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" name="department"
+                                    asp-for="SelectedDepartment" asp-items="Model.Departments">
+                                <option value="">All Departments</option>
+                            </select>
+                        </div>
+
+                        <div class="w-50">
+                            <label class="form-label">Student</label>
+                            <select class="form-select" name="studentId"
+                                    asp-for="SelectedStudentId" asp-items="Model.Students">
+                                <option value="">All Students</option>
+                            </select>
+                        </div>
+
+                        <div class="w-50">
+                            <label class="form-label">Course</label>
+                            <select class="form-select" name="courseId"
+                                    asp-for="SelectedCourseId" asp-items="Model.Courses">
+                                <option value="">All Courses</option>
+                            </select>
+                        </div>
+
+                        <input type="hidden" name="page" value="1" />
+
+                        <!-- Reset button -->
+                        <div class="mt-2">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-counterclockwise"></i> Reset Filters
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Report Header with Buttons -->
+                <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+                    <h5 class="fw-semibold mb-0">Report Display Panel</h5>
+                    <div class="d-flex gap-2">
+                        <!-- Generate Report Button -->
+                        <button type="submit" form="filterForm" class="btn btn-primary rounded-pill">
+                            <i class="bi bi-filter"></i> Generate Report
+                        </button>
+
+                        <!-- Download Report Button -->
+                        <a asp-action="DownloadReport"
+                           asp-route-department="@Model.SelectedDepartment"
+                           asp-route-studentId="@Model.SelectedStudentId"
+                           asp-route-courseId="@Model.SelectedCourseId"
+                           target="_blank"
+                           class="btn btn-outline-primary rounded-pill">
+                            <i class="bi bi-download"></i> Download Report
+                        </a>
+                    </div>
+                </div>
             <!-- Report Table -->
             <div class="table-responsive">
                 <table class="table table-bordered table-sm table-hover">
@@ -128,6 +148,10 @@
                     </tbody>
                 </table>
             </div>
+            </div>
+
+
+            
 
             <!-- Pagination -->
             @if (Model.TotalPages > 1)
@@ -151,14 +175,36 @@
             }
         </div>
     </div>
-</div>
-
 @section Scripts {
     <script>
-        // Reset page to 1 when filters change
+        // Reset pagination to page 1 when any filter dropdown changes
         document.querySelectorAll('#filterForm select').forEach(select => {
-            select.addEventListener('change', function() {
+            select.addEventListener('change', function () {
                 document.querySelector('input[name="page"]').value = 1;
+            });
+        });
+
+        // Toggle rotation on collapse/expand
+        document.addEventListener('DOMContentLoaded', function () {
+            const panel = document.getElementById('filterPanel');
+            const icon = document.getElementById('filterIcon');
+
+            if (!panel || !icon) return;
+
+            // Set initial state
+            if (panel.classList.contains('show')) {
+                icon.style.transform = 'rotate(90deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+
+            // Listen for expand/collapse events from Bootstrap
+            panel.addEventListener('shown.bs.collapse', function () {
+                icon.style.transform = 'rotate(90deg)';
+            });
+
+            panel.addEventListener('hidden.bs.collapse', function () {
+                icon.style.transform = 'rotate(0deg)';
             });
         });
     </script>
