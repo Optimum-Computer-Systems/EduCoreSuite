@@ -1,0 +1,73 @@
+﻿@model IEnumerable<EduCoreSuite.Models.Course>
+
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<h1>Courses</h1>
+
+<p>
+    <a asp-controller="Courses" asp-action="Index" class="btn btn-secondary me-2">Course List</a>
+    <a asp-controller="Courses" asp-action="Create" class="btn btn-outline-secondary me-2">Create Course</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Programme)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudyLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExamBody)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudyStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Campus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Programme)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudyLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExamBody)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudyStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Campus)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CourseID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CourseID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CourseID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
