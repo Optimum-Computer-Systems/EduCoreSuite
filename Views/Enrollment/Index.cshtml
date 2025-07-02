@@ -1,0 +1,301 @@
+﻿@model EduCoreSuite.Models.ViewModels.CourseEnrollmentViewModel
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center">
+        @TempData["Error"]
+    </div>
+}
+
+@{
+    ViewData["Title"] = "Course Enrollment";
+}
+<style>
+    .dropdown-toggle::after {
+        display: none !important;
+    }
+</style>
+
+<h2>Enroll Students</h2>
+<p>
+    <a asp-controller="Enrollment" asp-action="Index" class="btn btn-secondary me-2">Enrollments</a>
+    <a asp-controller="Students" asp-action="Index" class="btn btn-outline-secondary me-2">Student List</a>
+    <a asp-controller="Students" asp-action="Create" class="btn btn-outline-secondary">Add Student</a>
+</p>
+
+<div class="container">
+    <div class="row g-4">
+        <!-- Enroll Single Student in Single Course -->
+        <div class="col-md-6">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-header fw-bold text-center">Enroll A Single Student In A Single Course</div>
+                <div class="card-body d-flex flex-column">
+                    <form asp-action="EnrollSingle" method="post" class="d-flex flex-column flex-grow-1">
+                        <div class="mb-3">
+                            <label asp-for="SelectedStudentId" class="form-label">Select Student</label>
+                            <select asp-for="SelectedStudentId" asp-items="Model.Students" class="form-select"></select>
+                        </div>
+                        <!-- Course Dropdown -->
+                        <div class="mb-3">
+                            <label asp-for="SelectedCourseId" class="form-label">Select Course</label>
+                            <select asp-for="SelectedCourseId" asp-items="Model.Courses" class="form-select" id="SelectedCourseId_Single"></select>
+                        </div>
+
+                        <!-- Auto-Filled Department -->
+                        <div class="mb-3">
+                            <label asp-for="SelectedDepartment" class="form-label">Department</label>
+                            <input asp-for="SelectedDepartment" class="form-control" id="SelectedDepartment_Single" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="SelectedCampus" class="form-label">Select Campus</label>
+                            <select asp-for="SelectedCampus" asp-items="Model.Campuses" class="form-select"></select>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="SelectedYear" class="form-label">Select Year</label>
+                            <select asp-for="SelectedYear" asp-items="Model.Years" class="form-select"></select>
+                        </div>
+                        <div class="mt-auto text-center">
+                            <button type="submit" class="btn btn-primary">Enroll</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Enroll Multiple Students in a Single Course -->
+        <div class="col-md-6">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-header fw-bold text-center">
+                    Enroll Multiple Students In A Single Course
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <form asp-action="EnrollMultipleStudentsSingleCourse" method="post" class="d-flex flex-column flex-grow-1">
+                        <div class="mb-3">
+                            <label class="form-label">Select Students</label>
+                            <div class="dropdown">
+                                <button id="studentsDropdownBtn"
+                                        class="form-select dropdown-toggle text-start"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    -- Select Students --
+                                </button>
+                                <ul class="dropdown-menu p-3" aria-labelledby="studentsDropdownBtn"
+                                    style="max-height:200px; overflow-y:auto;">
+                                    @foreach (var student in Model.Students.Skip(1))
+                                    {
+                                        <li class="form-check">
+                                            <input class="form-check-input student-checkbox"
+                                                   type="checkbox"
+                                                   name="SelectedStudentIds"
+                                                   value="@student.Value"
+                                                   id="chk_student_@student.Value" />
+                                            <label class="form-check-label"
+                                                   for="chk_student_@student.Value">
+                                                @student.Text
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Course Dropdown (unique ID) -->
+                        <div class="mb-3">
+                            <label asp-for="SelectedCourseId" class="form-label">Select Course</label>
+                            <select asp-for="SelectedCourseId" asp-items="Model.Courses" class="form-select" id="SelectedCourseId_MultipleStudentsSingleCourse"></select>
+                        </div>
+
+                        <!-- Auto-Filled Department (unique ID) -->
+                        <div class="mb-3">
+                            <label asp-for="SelectedDepartment" class="form-label">Department</label>
+                            <input asp-for="SelectedDepartment" class="form-control" id="SelectedDepartment_MultipleStudentsSingleCourse" readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SelectedCampus" class="form-label">Select Campus</label>
+                            <select asp-for="SelectedCampus" asp-items="Model.Campuses" class="form-select"></select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SelectedYear" class="form-label">Select Year</label>
+                            <select asp-for="SelectedYear" asp-items="Model.Years" class="form-select"></select>
+                        </div>
+
+                        <div class="mt-auto text-center">
+                            <button type="submit" class="btn btn-primary">Enroll</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Enroll A Single Student In Multiple Courses -->
+        <div class="col-md-6">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-header fw-bold text-center">
+                    Enroll A Single Student In Multiple Courses
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <form asp-action="EnrollSingleStudentMultipleCourses" method="post" class="d-flex flex-column flex-grow-1">
+
+                        <!-- Student Dropdown -->
+                        <div class="mb-3">
+                            <label asp-for="SelectedStudentId" class="form-label">Select Student</label>
+                            <select asp-for="SelectedStudentId" asp-items="Model.Students" class="form-select"></select>
+                        </div>
+
+                        <!-- Courses Multi-select Dropdown -->
+                        <div class="mb-3">
+                            <label class="form-label">Select Courses</label>
+                            <div class="dropdown">
+                                <button id="coursesDropdownBtn_SingleStudentMultipleCourses"
+                                        class="form-select dropdown-toggle text-start"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    -- Select Courses --
+                                </button>
+                                <ul class="dropdown-menu p-3" aria-labelledby="coursesDropdownBtn_SingleStudentMultipleCourses"
+                                    style="max-height: 200px; overflow-y: auto;">
+                                    @foreach (var course in Model.Courses.Skip(1))
+                                    {
+                                        <li class="form-check">
+                                            <input class="form-check-input course-checkbox-SingleStudentMultipleCourses"
+                                                   type="checkbox"
+                                                   name="SelectedCourseIds"
+                                                   value="@course.Value"
+                                                   id="chk_course_multiple_@course.Value" />
+                                            <label class="form-check-label" for="chk_course_multiple_@course.Value">
+                                                @course.Text
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Department Field (autofilled via script) -->
+                        <div class="mb-3">
+                            <label class="form-label">Departments</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="SelectedDepartment_SingleStudentMultipleCourses"
+                                   name="SelectedDepartment"
+                                   readonly />
+                        </div>
+
+                        <!-- Campus -->
+                        <div class="mb-3">
+                            <label asp-for="SelectedCampus" class="form-label">Select Campus</label>
+                            <select asp-for="SelectedCampus" asp-items="Model.Campuses" class="form-select"></select>
+                        </div>
+
+                        <!-- Year -->
+                        <div class="mb-3">
+                            <label asp-for="SelectedYear" class="form-label">Select Year</label>
+                            <select asp-for="SelectedYear" asp-items="Model.Years" class="form-select"></select>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="mt-auto text-center">
+                            <button type="submit" class="btn btn-primary">Enroll</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+       </div>
+
+
+        <!-- Enroll Multiple Students in Multiple Courses -->
+        <div class="col-md-6">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-header fw-bold text-center">Enroll Multiple Students In Multiple Courses</div>
+                <div class="card-body d-flex flex-column">
+                    <form asp-action="EnrollMultipleStudentsMultipleCourses" method="post" class="d-flex flex-column flex-grow-1">
+                        <!-- Select Students -->
+                        <div class="mb-3">
+                            <label class="form-label">Select Students</label>
+                            <div class="dropdown">
+                                <button id="multiStudentsDropdownBtn" class="form-select dropdown-toggle text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    -- Select Students --
+                                </button>
+                                <ul class="dropdown-menu p-3" aria-labelledby="multiStudentsDropdownBtn" style="max-height:200px; overflow-y:auto;">
+                                    @foreach (var student in Model.Students.Skip(1))
+                                    {
+                                        <li class="form-check">
+                                            <input class="form-check-input multi-student-checkbox" type="checkbox" name="SelectedStudentIds" value="@student.Value" id="multi_chk_student_@student.Value" />
+                                            <label class="form-check-label" for="multi_chk_student_@student.Value">@student.Text</label>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Select Courses -->
+                        <div class="mb-3">
+                            <label class="form-label">Select Courses</label>
+                            <div class="dropdown">
+                                <button id="multiCoursesDropdownBtn"
+                                        class="form-select dropdown-toggle text-start"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    -- Select Courses --
+                                </button>
+                                <ul class="dropdown-menu p-3" aria-labelledby="multiCoursesDropdownBtn" style="max-height:200px; overflow-y:auto;">
+                                    @foreach (var course in Model.Courses.Skip(1))
+                                    {
+                                        <li class="form-check">
+                                            <input class="form-check-input multi-course-checkbox"
+                                                   type="checkbox"
+                                                   name="SelectedCourseIds"
+                                                   value="@course.Value"
+                                                   id="multi_chk_course_@course.Value" />
+                                            <label class="form-check-label" for="multi_chk_course_@course.Value">@course.Text</label>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Department Field -->
+                        <div class="mb-3">
+                            <label class="form-label">Departments</label>
+                            <input type="text" class="form-control" id="SelectedDepartment_MultipleStudentsMultipleCourses" name="SelectedDepartment" value="@Model.SelectedDepartment" readonly />
+                        </div>
+
+                        <!-- Campus -->
+                        <div class="mb-3">
+                            <label asp-for="SelectedCampus" class="form-label">Select Campus</label>
+                            <select asp-for="SelectedCampus" asp-items="Model.Campuses" class="form-select"></select>
+                        </div>
+
+                        <!-- Year -->
+                        <div class="mb-3">
+                            <label asp-for="SelectedYear" class="form-label">Select Year</label>
+                            <select asp-for="SelectedYear" asp-items="Model.Years" class="form-select"></select>
+                        </div>
+
+                        <div class="mt-auto text-center">
+                            <button type="submit" class="btn btn-primary">Enroll</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const courseDeptMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+            ((IEnumerable<dynamic>)ViewBag.AllCourses)
+                .ToDictionary(c => c.CourseID.ToString(), c => c.Department.ToString())
+        ))
+    </script>
+    <script src="~/js/enrollment-form.js"></script>
+}
