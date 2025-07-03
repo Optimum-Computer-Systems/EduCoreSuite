@@ -4,54 +4,84 @@
     ViewData["Title"] = "Create Course";
 }
 
-<h2>Create Course</h2>
-<p>
-    <a asp-controller="Courses" asp-action="Index" class="btn btn-outline-secondary me-2">Course List</a>
-    <a asp-controller="Courses" asp-action="Create" class="btn btn-secondary me-2">Create Course</a>
-</p>
-
-<form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="Course.CourseName"></label>
-        <input asp-for="Course.CourseName" class="form-control" />
-        <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+<div class="container mt-4">
+    <!-- Back to Course List -->
+    <div class="mb-3">
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold">
+            ← Back to Course List
+        </a>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Course.Department"></label>
-        <select asp-for="Course.Department" class="form-control" asp-items="Model.Departments"></select>
-        <span asp-validation-for="Course.Department" class="text-danger"></span>
-    </div>
+    <!-- Page Title -->
+    <h2 class="fw-bold mb-4">Create Course</h2>
 
-    <div class="form-group">
-        <label asp-for="Course.Programme"></label>
-        <select asp-for="Course.Programme" class="form-control" asp-items="Model.Programmes"></select>
-        <span asp-validation-for="Course.Programme" class="text-danger"></span>
-    </div>
+    <!-- Create Course Form -->
+    <form asp-action="Create" method="post" class="row g-4">
+        <!-- Left Column -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Course.CourseName" class="form-label fw-semibold">Course Name</label>
+                <input asp-for="Course.CourseName" class="form-control" placeholder="Enter Course Name" />
+                <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="Course.StudyLevel"></label>
-        <select asp-for="Course.StudyLevel" class="form-control" asp-items="Model.StudyLevels"></select>
-        <span asp-validation-for="Course.StudyLevel" class="text-danger"></span>
-    </div>
+            <div class="form-group mt-3">
+                <label asp-for="Course.Department" class="form-label fw-semibold">Department</label>
+                <select asp-for="Course.Department" class="form-select" asp-items="Model.Departments">
+                    <option value="">Select department</option>
+                </select>
+                <span asp-validation-for="Course.Department" class="text-danger"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="Course.Campus"></label>
-        <select asp-for="Course.Campus" class="form-control" asp-items="Model.Campuses"></select>
-        <span asp-validation-for="Course.Campus" class="text-danger"></span>
-    </div>
+            <div class="form-group mt-3">
+                <label asp-for="Course.Programme" class="form-label fw-semibold">Programme</label>
+                <select asp-for="Course.Programme" class="form-select" asp-items="Model.Programmes">
+                    <option value="">Select programme</option>
+                </select>
+                <span asp-validation-for="Course.Programme" class="text-danger"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="Course.ExamBody"></label>
-        <select asp-for="Course.ExamBody" class="form-control" asp-items="Model.ExamBodies"></select>
-        <span asp-validation-for="Course.ExamBody" class="text-danger"></span>
-    </div>
+            <div class="form-group mt-3">
+                <label asp-for="Course.StudyLevel" class="form-label fw-semibold">Year/Study Level</label>
+                <select asp-for="Course.StudyLevel" class="form-select" asp-items="Model.StudyLevels">
+                    <option value="">Select year/study level</option>
+                </select>
+                <span asp-validation-for="Course.StudyLevel" class="text-danger"></span>
+            </div>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Course.StudyStatus"></label>
-        <select asp-for="Course.StudyStatus" class="form-control" asp-items="Model.StudyStatuses"></select>
-        <span asp-validation-for="Course.StudyStatus" class="text-danger"></span>
-    </div>
+        <!-- Right Column -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Course.ExamBody" class="form-label fw-semibold">Exam Body</label>
+                <select asp-for="Course.ExamBody" class="form-select" asp-items="Model.ExamBodies">
+                    <option value="">Select exam body</option>
+                </select>
+                <span asp-validation-for="Course.ExamBody" class="text-danger"></span>
+            </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+            <div class="form-group mt-3">
+                <label asp-for="Course.StudyStatus" class="form-label fw-semibold">Study Status</label>
+                <select asp-for="Course.StudyStatus" class="form-select" asp-items="Model.StudyStatuses">
+                    <option value="">Select study status</option>
+                </select>
+                <span asp-validation-for="Course.StudyStatus" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Course.Campus" class="form-label fw-semibold">Campus</label>
+                <select asp-for="Course.Campus" class="form-select" asp-items="Model.Campuses">
+                    <option value="">Select campus</option>
+                </select>
+                <span asp-validation-for="Course.Campus" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary fw-semibold px-5 py-2 mt-4 rounded-pill">
+                Create Course
+            </button>
+        </div>
+    </form>
+</div>
