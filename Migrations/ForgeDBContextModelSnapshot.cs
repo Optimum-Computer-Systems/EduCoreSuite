@@ -60,7 +60,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("CourseID");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_MultipleStudents_MultipleCourses", b =>
@@ -102,7 +102,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("EnrollmentID");
 
-                    b.ToTable("Enrollment_MultipleStudents_MultipleCourses");
+                    b.ToTable("Enrollment_MultipleStudents_MultipleCourses", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_MultipleStudents_SingleCourse", b =>
@@ -144,7 +144,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("EnrollmentID");
 
-                    b.ToTable("Enrollment_MultipleStudents_SingleCourse");
+                    b.ToTable("Enrollment_MultipleStudents_SingleCourse", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_SingleStudent_MultipleCourses", b =>
@@ -186,7 +186,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("EnrollmentID");
 
-                    b.ToTable("Enrollment_SingleStudent_MultipleCourses");
+                    b.ToTable("Enrollment_SingleStudent_MultipleCourses", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_SingleStudent_SingleCourse", b =>
@@ -232,7 +232,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("Enrollment_SingleStudent_SingleCourse");
+                    b.ToTable("Enrollment_SingleStudent_SingleCourse", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Student", b =>
@@ -274,7 +274,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("StudentID");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_SingleStudent_SingleCourse", b =>
