@@ -40,7 +40,7 @@ The system reflects the institution’s operations as prototyped in the official
 - Total faculty count
 - Activity feed with audit trail: new enrollments, course completions, student registrations
 
-> **Implemented by**: *Mercy Migendi* (Frontend), *Brian Vuhuga* (Backend)
+> **Implemented by**: *Mercy Migendi* and  *Brian Vuhuga* 
 
 ---
 
@@ -52,7 +52,7 @@ The system reflects the institution’s operations as prototyped in the official
   - Enroll a student in a course
   - Bulk enrollment: multiple students to one course, or all students to all courses
 
-> **Implemented by**: *Gerry Migiro*, *Elvis Karinge*, *Vincent Omondi Owuor*
+> **Implemented by**: *Gerry Migiro*, *Elvis Karinge*
 
 ---
 
