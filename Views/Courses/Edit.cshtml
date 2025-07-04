@@ -1,0 +1,74 @@
+﻿@model EduCoreSuite.Models.ViewModels.CourseFormViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Course</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Course.CourseID" />
+
+            <div class="form-group">
+                <label asp-for="Course.CourseName" class="control-label"></label>
+                <input asp-for="Course.CourseName" class="form-control" />
+                <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Course.Department" class="control-label"></label>
+                <select asp-for="Course.Department" class="form-control" asp-items="Model.Departments"></select>
+                <span asp-validation-for="Course.Department" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Course.Programme" class="control-label"></label>
+                <select asp-for="Course.Programme" class="form-control" asp-items="Model.Programmes"></select>
+                <span asp-validation-for="Course.Programme" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Course.StudyLevel" class="control-label"></label>
+                <select asp-for="Course.StudyLevel" class="form-control" asp-items="Model.StudyLevels"></select>
+                <span asp-validation-for="Course.StudyLevel" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Course.ExamBody" class="control-label"></label>
+                <select asp-for="Course.ExamBody" class="form-control" asp-items="Model.ExamBodies"></select>
+                <span asp-validation-for="Course.ExamBody" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Course.StudyStatus" class="control-label"></label>
+                <select asp-for="Course.StudyStatus" class="form-control" asp-items="Model.StudyStatuses"></select>
+                <span asp-validation-for="Course.StudyStatus" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Course.Campus" class="control-label"></label>
+                <select asp-for="Course.Campus" class="form-control" asp-items="Model.Campuses"></select>
+                <span asp-validation-for="Course.Campus" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
