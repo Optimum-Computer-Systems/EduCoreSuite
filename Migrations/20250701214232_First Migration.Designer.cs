@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Project_Polaris.Migrations
+namespace EduCoreSuite.Migrations
 {
     [DbContext(typeof(ForgeDBContext))]
     [Migration("20250701214232_First Migration")]

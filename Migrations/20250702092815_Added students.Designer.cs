@@ -4,16 +4,19 @@ using EduCoreSuite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Project_Polaris.Migrations
+namespace EduCoreSuite.Migrations
 {
     [DbContext(typeof(ForgeDBContext))]
-    partial class ForgeDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250702092815_Added students")]
+    partial class Addedstudents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,7 +63,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("CourseID");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_MultipleStudents_MultipleCourses", b =>
@@ -102,7 +105,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("EnrollmentID");
 
-                    b.ToTable("Enrollment_MultipleStudents_MultipleCourses", (string)null);
+                    b.ToTable("Enrollment_MultipleStudents_MultipleCourses");
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_MultipleStudents_SingleCourse", b =>
@@ -144,7 +147,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("EnrollmentID");
 
-                    b.ToTable("Enrollment_MultipleStudents_SingleCourse", (string)null);
+                    b.ToTable("Enrollment_MultipleStudents_SingleCourse");
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_SingleStudent_MultipleCourses", b =>
@@ -186,7 +189,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("EnrollmentID");
 
-                    b.ToTable("Enrollment_SingleStudent_MultipleCourses", (string)null);
+                    b.ToTable("Enrollment_SingleStudent_MultipleCourses");
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_SingleStudent_SingleCourse", b =>
@@ -232,7 +235,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("Enrollment_SingleStudent_SingleCourse", (string)null);
+                    b.ToTable("Enrollment_SingleStudent_SingleCourse");
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Student", b =>
@@ -274,7 +277,7 @@ namespace Project_Polaris.Migrations
 
                     b.HasKey("StudentID");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.EnrollmentModes.Enrollment_SingleStudent_SingleCourse", b =>
