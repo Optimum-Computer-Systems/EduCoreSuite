@@ -2,11 +2,15 @@
 
 ### Supervisor: Nick Silver  
 
+---
+
 ## Executive Summary
 
-**EduCore** is a modular, data-driven university enrollment and academic management platform developed for **Optimum University**. It enables administrators to register students, manage courses, assign enrollments, and generate academic reports, all within a clean, accessible, and normalized system. The application adheres to formal software engineering practices using the ASP.NET MVC framework, Entity Framework ORM, and Microsoft SQL Server as the persistence layer.
+**EduCore** is a modular, data-driven university enrollment and academic management platform. It enables administrators to register students, manage courses, assign enrollments, and generate academic reports, all within a clean, accessible, and normalized system. The application adheres to formal software engineering practices using the ASP.NET MVC framework, Entity Framework ORM, and Microsoft SQL Server as the persistence layer.
 
 The system reflects the institution’s operations as prototyped in the official **Figma wireframes** and is supervised by **Mr. Nick Silver**.
+
+🔗 [View Figma Prototype](https://www.figma.com/proto/k3kXH5IK77TaCMqGO3AAiK/EduCore-UI-System-%E2%80%93-Design-v1?node-id=50-2&t=mNp8QHc2rj79fd4a-1)
 
 ---
 
@@ -18,17 +22,18 @@ The system reflects the institution’s operations as prototyped in the official
 | Backend      | ASP.NET MVC, Entity Framework        |
 | Database     | Microsoft SQL Server                 |
 | Audit Log    | `ActivityLog` for all key operations |
-      
 
 - MVC separation of concerns (Models, Views, Controllers)
 - Code-first Entity Framework with normalized relational schema
 - Git workflows: feature branches (e.g., `vincent`, `gerry`) merged into `forge` for integration
 
+📊 [View System Architecture Diagram (draw.io)](https://drive.google.com/file/d/1-Lf5Uhqk5jsyYNi0-iZWKJOzIQTpDk-s/view?usp=sharing)
+
 ---
 
 ## Figma-Aligned UI Modules
 
-###  1. **Dashboard**
+### 1. **Dashboard**
 
 - Real-time statistics: Today’s enrollments, weekly totals
 - Top enrolled courses (e.g., *Computer Science – 1250*, *Nursing – 150*)
@@ -39,7 +44,7 @@ The system reflects the institution’s operations as prototyped in the official
 
 ---
 
-###  2. **Register**
+### 2. **Register**
 
 - **Add Student** form: Full name, email, gender, date of birth, admission number
 - **Student List**: Paginated, searchable, showing department, progress, year
@@ -51,7 +56,7 @@ The system reflects the institution’s operations as prototyped in the official
 
 ---
 
-###  3. **Courses**
+### 3. **Courses**
 
 - **Course List**:
   - Accordion UI grouped by department
@@ -65,7 +70,7 @@ The system reflects the institution’s operations as prototyped in the official
 
 ---
 
-###  4. **Reports**
+### 4. **Reports**
 
 - Dynamic filtering:
   - Department, course, faculty, year, status
@@ -108,13 +113,13 @@ Tracks student and course-related events with timestamps, action type, and refer
 
 | Feature                          | Status       | Notes                                                                 |
 |----------------------------------|--------------|-----------------------------------------------------------------------|
-| Student Registration             |  Complete  | Validates fields, links to gender, level, programme                   |
-| Course Creation + Listing        |  Complete  | Accordion design by department, relational backend integration        |
-| Enrollment (Single/Bulk)         | Complete  |   Bulk enrollment logic via dropdown filtering and email batch input   |
-| Dashboard Metrics & Activities   | in Dev     |      Fetches recent data, displays live counters, tracks audit logs       |
-| Reports Filtering                |  In Dev    | Filterable UI scaffold completed, export/download logic pending       |
-| Data Normalization               |  Complete  | All dropdowns reference normalized tables                            |
-| Accessibility (WCAG 2.2 AA)      |  Compliant | Semantic HTML, ARIA support, proper label associations                |
+| Student Registration             | Complete     | Validates fields, links to gender, level, programme                   |
+| Course Creation + Listing        | Complete     | Accordion design by department, relational backend integration        |
+| Enrollment (Single/Bulk)         | Complete     | Bulk enrollment logic via dropdown filtering and email batch input    |
+| Dashboard Metrics & Activities   | In Dev       | Fetches recent data, displays live counters, tracks audit logs        |
+| Reports Filtering                | In Dev       | Filterable UI scaffold completed, export/download logic pending       |
+| Data Normalization               | Complete     | All dropdowns reference normalized tables                             |
+| Accessibility (WCAG 2.2 AA)      | Compliant    | Semantic HTML, ARIA support, proper label associations                |
 
 ---
 
@@ -132,23 +137,10 @@ Tracks student and course-related events with timestamps, action type, and refer
 
 | Name                  | Role            | Area of Focus                       |
 |-----------------------|------------------|--------------------------------------|
-| **Vincent Omondi**    | Scrum Master     | Course Module      |
+| **Vincent Omondi**    | Scrum Master     | Course Module                        |
 | Mercy Migendi         | Developer        | Dashboard UI                         |
 | Brian Vuhuga          | Developer        | Dashboard Logic, Metrics             |
 | Gerry Migiro          | Developer        | Student Registration                 |
 | Elvis Karinge         | Developer        | Enrollment Workflow                  |
 
 Project supervised by **Mr. Nick Silver**
-
- 
- 
-
-
-
-
- 
-
-
-
-
-
