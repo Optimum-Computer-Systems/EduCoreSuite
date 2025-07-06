@@ -24,8 +24,8 @@ namespace EduCoreSuite.Services
             // Use .Include() and .ThenInclude() to eager load related data (SubCounty and County)
             // This prevents N+1 query problems when displaying the list.
             return await _context.Institutions
-                .Include(i => i.Subcounty)       // Include the SubCounty object
-                    .ThenInclude(sc => sc.County) // Then include the County object within the SubCounty
+                .Include(i => i.County)       // Include the SubCounty object
+                    .ThenInclude(sc => sc.SubCounties) // Then include the County object within the SubCounty
                 .ToListAsync(); // Execute the query and return as a list
         }
 
@@ -37,8 +37,8 @@ namespace EduCoreSuite.Services
         public async Task<Institution> GetInstitutionByIdAsync(int id)
         {
             return await _context.Institutions
-                .Include(navigationPropertyPath: i => i.Subcounty)
-                    .ThenInclude(sc => sc.County)
+                .Include(navigationPropertyPath: i => i.County)
+                    .ThenInclude(sc => sc.SubCounties)
                 .FirstOrDefaultAsync(i => i.InstitutionID == id); // Find by ID
         }
 

@@ -22,7 +22,8 @@ namespace EduCoreSuite.Controllers
         // GET: Institutions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Institutions.ToListAsync());
+            string institutionName = "Nairobi Institute of Technology";
+            return View( institutionName);
         }
 
         // GET: Institutions/Details/5

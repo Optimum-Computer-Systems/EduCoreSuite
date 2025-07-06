@@ -23,7 +23,7 @@ namespace EduCoreSuite.Models
 
         [Required]
         // Foreign Key property for SubCounty
-        public int SubCountyID { get; set; }
+        public int CountyID { get; set; }
 
         [Required]
         public bool Accredited { get; set; } = false; 
@@ -31,8 +31,8 @@ namespace EduCoreSuite.Models
         [Required]
         [DataType(DataType.DateTime)] 
         public DateTime CreatedAt { get; set; } = DateTime.Now; 
-        [ForeignKey("SubCountyID")] 
+        [ForeignKey("CountyID")] 
         public  int Id { get; set; }
-        public object Subcounty { get; internal set; }
+        public County County { get;  set; }
     }
 }

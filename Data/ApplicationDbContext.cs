@@ -19,6 +19,10 @@ namespace EduCoreSuite.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Add model configurations here if needed
+            modelBuilder.Entity<Subcounty>()
+                .HasOne(sc => sc.County)
+                .WithMany(c => c.SubCounties)
+                .HasForeignKey(sc => sc.CountyID);
         }
     }
 }
