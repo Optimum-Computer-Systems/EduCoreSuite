@@ -6,6 +6,10 @@ namespace EduCoreSuite.Data
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Book> Books { get; set; }
+        public DbSet<Institution> Institutions { get; set; }
+        public DbSet<County> Counties { get; set; }
+        public DbSet<Subcounty> SubCounties { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -15,6 +19,10 @@ namespace EduCoreSuite.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Add model configurations here if needed
+            modelBuilder.Entity<Subcounty>()
+                .HasOne(sc => sc.County)
+                .WithMany(c => c.SubCounties)
+                .HasForeignKey(sc => sc.CountyID);
         }
     }
 }
