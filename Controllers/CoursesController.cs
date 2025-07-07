@@ -192,7 +192,10 @@ namespace EduCoreSuite.Controllers
         {
             new("-- Select Campus --", ""),
             new("Main Campus", "Main Campus"),
-            new("City Campus", "City Campus")
+            new("City Campus", "City Campus"),
+            new("Online Campus", "Online Campus"),
+            new("Downtown Campus", "Downtown Campus"),
+            new("Tech Park", "Tech Park")
         };
 
         private List<SelectListItem> GetExamBodies() => new()
