@@ -40,7 +40,7 @@ namespace EduCoreSuite.Controllers
             {
                 Students = students,
                 Courses = courses,
-                Campuses = new[] { "Main Campus", "City Campus", "City Campus", "Downtown Campus", "Tech Park" }
+                Campuses = new[] { "Main Campus", "City Campus", "Online Campus", "Downtown Campus", "Tech Park" }
                     .Select(c => new SelectListItem { Text = c, Value = c }).ToList(),
                 Years = new[] { "1", "2", "3", "4" }
                     .Select(y => new SelectListItem { Text = y, Value = y }).ToList()
