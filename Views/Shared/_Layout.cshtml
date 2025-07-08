@@ -7,7 +7,6 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <!--<link rel="stylesheet" href="~/Optimum_University.styles.css" asp-append-version="true" />-->
 </head>
 <body>
     @{
@@ -44,6 +43,19 @@
                                 <ul class="dropdown-menu" aria-labelledby="registerDropdown">
                                     <li><a class="dropdown-item" asp-controller="Students" asp-action="Index">Student List</a></li>
                                     <li><a class="dropdown-item" asp-controller="Students" asp-action="Create">Add Student</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- Courses Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark fw-semibold"
+                                   href="#" id="coursesDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    Courses
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Courses" asp-action="Index">Course List</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Courses" asp-action="Create">Add Course</a></li>
                                     <li><hr class="dropdown-divider" /></li>
                                     <li><a class="dropdown-item" asp-controller="Departments" asp-action="Index">Departments</a></li>
                                     <li><a class="dropdown-item" asp-controller="Programmes" asp-action="Index">Programmes</a></li>
@@ -53,9 +65,6 @@
                                 </ul>
                             </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
                             </li>
