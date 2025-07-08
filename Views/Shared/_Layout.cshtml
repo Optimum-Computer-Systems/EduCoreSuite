@@ -33,9 +33,26 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Students" asp-action="Index">Register</a>
+
+                            <!-- Register Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark fw-semibold"
+                                   href="#" id="registerDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    Register
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="registerDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Students" asp-action="Index">Student List</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Students" asp-action="Create">Add Student</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" asp-controller="Departments" asp-action="Index">Departments</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Programmes" asp-action="Index">Programmes</a></li>
+                                    <li><a class="dropdown-item" asp-controller="ExamBodies" asp-action="Index">Exam Bodies</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Campuses" asp-action="Index">Campuses</a></li>
+                                    <li><a class="dropdown-item" asp-controller="StudyLevels" asp-action="Index">Study Levels</a></li>
+                                </ul>
                             </li>
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
                             </li>
