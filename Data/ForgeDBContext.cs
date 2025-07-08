@@ -17,5 +17,6 @@ namespace EduCoreSuite.Data
         public DbSet<Enrollment_MultipleStudents_SingleCourse> Enrollment_MultipleStudents_SingleCourse { get; set; }
         public DbSet<Enrollment_SingleStudent_MultipleCourses> Enrollment_SingleStudent_MultipleCourses { get; set; }
         public DbSet<Enrollment_MultipleStudents_MultipleCourses> Enrollment_MultipleStudents_MultipleCourses { get; set; }
+        public DbSet<EduCoreSuite.Models.Department> Department { get; set; } = default!;
     }
 }
