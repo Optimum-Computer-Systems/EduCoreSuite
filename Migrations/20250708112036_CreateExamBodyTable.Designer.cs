@@ -4,16 +4,19 @@ using EduCoreSuite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Project_Polaris.Migrations
+namespace EduCoreSuite.Migrations
 {
     [DbContext(typeof(ForgeDBContext))]
-    partial class ForgeDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250708112036_CreateExamBodyTable")]
+    partial class CreateExamBodyTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,34 +236,6 @@ namespace Project_Polaris.Migrations
                     b.HasIndex("StudentID");
 
                     b.ToTable("Enrollment_SingleStudent_SingleCourse");
-                });
-
-            modelBuilder.Entity("EduCoreSuite.Models.ExamBody", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ExamBodies");
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Student", b =>

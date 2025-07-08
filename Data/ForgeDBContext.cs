@@ -12,6 +12,8 @@ namespace EduCoreSuite.Data
 
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
+        public DbSet<ExamBody> ExamBodies { get; set; }
+
 
         public DbSet<Enrollment_SingleStudent_SingleCourse> Enrollment_SingleStudent_SingleCourse { get; set; }
         public DbSet<Enrollment_MultipleStudents_SingleCourse> Enrollment_MultipleStudents_SingleCourse { get; set; }
