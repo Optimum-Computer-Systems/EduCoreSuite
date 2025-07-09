@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EduCoreSuite.Models.Student>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Students List";
 }
 
 <h2>Students List</h2>
@@ -11,16 +11,21 @@
     <a asp-action="Create" class="btn btn-outline-secondary">Add Student</a>
 </p>
 
-<table class="table">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.FullName)</th>
             <th>@Html.DisplayNameFor(model => model.Email)</th>
-            <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.Gender)</th>
-            <th>AdmNumber</th>
+            <th>@Html.DisplayNameFor(model => model.AdmissionNumber)</th>
             <th>@Html.DisplayNameFor(model => model.DOB)</th>
-            <th>@Html.DisplayNameFor(model => model.Year)</th>
+            <th>@Html.DisplayNameFor(model => model.Nationality)</th>
+            <th>@Html.DisplayNameFor(model => model.IDNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.Gender)</th>
+            <th>@Html.DisplayNameFor(model => model.Religion)</th>
+            <th>@Html.DisplayNameFor(model => model.Disability)</th>
+            <th>@Html.DisplayNameFor(model => model.Medical)</th>
+            <th>@Html.DisplayNameFor(model => model.MaritalStatus)</th>
+            <th>@Html.DisplayNameFor(model => model.CoCurricular)</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -30,11 +35,16 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.FullName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.Gender)</td>
                 <td>@Html.DisplayFor(modelItem => item.AdmissionNumber)</td>
                 <td>@Html.DisplayFor(modelItem => item.DOB)</td>
-                <td>@Html.DisplayFor(modelItem => item.Year)</td>
+                <td>@Html.DisplayFor(modelItem => item.Nationality)</td>
+                <td>@Html.DisplayFor(modelItem => item.IDNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.Gender)</td>
+                <td>@Html.DisplayFor(modelItem => item.Religion)</td>
+                <td>@Html.DisplayFor(modelItem => item.Disability)</td>
+                <td>@Html.DisplayFor(modelItem => item.Medical)</td>
+                <td>@Html.DisplayFor(modelItem => item.MaritalStatus)</td>
+                <td>@Html.DisplayFor(modelItem => item.CoCurricular)</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.StudentID">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.StudentID">Details</a> |

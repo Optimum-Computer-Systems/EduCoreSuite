@@ -4,60 +4,137 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<h2>Delete Student</h2>
+<h3 class="text-danger">Are you sure you want to delete this student?</h3>
+<hr />
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Student</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FullName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AdmissionNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AdmissionNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DOB)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DOB)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Year)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Year)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="StudentID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<!-- =================== PERSONAL DETAILS =================== -->
+<h4>Personal Details</h4>
+<div class="row">
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.FullName):</strong>
+        <p>@Html.DisplayFor(model => model.FullName)</p>
+    </div>
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.Email):</strong>
+        <p>@Html.DisplayFor(model => model.Email)</p>
+    </div>
+
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.AdmissionNumber):</strong>
+        <p>@Html.DisplayFor(model => model.AdmissionNumber)</p>
+    </div>
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.DOB):</strong>
+        <p>@Html.DisplayFor(model => model.DOB)</p>
+    </div>
+
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.Nationality):</strong>
+        <p>@Html.DisplayFor(model => model.Nationality)</p>
+    </div>
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.IDNumber):</strong>
+        <p>@Html.DisplayFor(model => model.IDNumber)</p>
+    </div>
+
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.Gender):</strong>
+        <p>@Html.DisplayFor(model => model.Gender)</p>
+    </div>
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.Religion):</strong>
+        <p>@Html.DisplayFor(model => model.Religion)</p>
+    </div>
+
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.Disability):</strong>
+        <p>@Html.DisplayFor(model => model.Disability)</p>
+    </div>
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.Medical):</strong>
+        <p>@Html.DisplayFor(model => model.Medical)</p>
+    </div>
+
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.MaritalStatus):</strong>
+        <p>@Html.DisplayFor(model => model.MaritalStatus)</p>
+    </div>
+    <div class="col-md-6">
+        <strong>@Html.DisplayNameFor(model => model.CoCurricular):</strong>
+        <p>@Html.DisplayFor(model => model.CoCurricular)</p>
+    </div>
 </div>
+
+<!-- =================== CONTACT INFO =================== -->
+<h4 class="mt-4">Contact Info</h4>
+<dl class="row">
+    <dt class="col-sm-3">Primary Phone</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.PrimaryPhone)</dd>
+
+    <dt class="col-sm-3">Alt Phone</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.AltPhone)</dd>
+
+    <dt class="col-sm-3">Postal Code</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.PostalCode)</dd>
+
+    <dt class="col-sm-3">County</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.County)</dd>
+
+    <dt class="col-sm-3">Sub-County</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.SubCounty)</dd>
+
+    <dt class="col-sm-3">Town</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Town)</dd>
+
+    <dt class="col-sm-3">Ward</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Ward)</dd>
+</dl>
+
+<!-- =================== EMERGENCY CONTACT =================== -->
+<h4 class="mt-4">Emergency Contact</h4>
+<dl class="row">
+    <dt class="col-sm-3">Emergency Name</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.EmergencyName)</dd>
+
+    <dt class="col-sm-3">Relationship</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Relationship)</dd>
+
+    <dt class="col-sm-3">Emergency Phone</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.EmergencyPhone)</dd>
+
+    <dt class="col-sm-3">Emergency Email</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.EmergencyEmail)</dd>
+
+    <dt class="col-sm-3">Emergency Address</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.EmergencyAddress)</dd>
+</dl>
+
+<!-- =================== ACADEMIC DETAILS =================== -->
+<h4 class="mt-4">Academic Details</h4>
+<dl class="row">
+    <dt class="col-sm-3">Course</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Course)</dd>
+
+    <dt class="col-sm-3">Department</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Department)</dd>
+
+    <dt class="col-sm-3">Faculty</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Faculty)</dd>
+
+    <dt class="col-sm-3">Program</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Program)</dd>
+
+    <dt class="col-sm-3">Exam Body</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.ExamBody)</dd>
+
+    <dt class="col-sm-3">Year</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Year)</dd>
+</dl>
+
+<!-- ===== DELETE FORM ===== -->
+<form asp-action="Delete">
+    <input type="hidden" asp-for="StudentID" />
+    <input type="submit" value="Delete" class="btn btn-danger" />
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
