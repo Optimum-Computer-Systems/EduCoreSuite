@@ -3,6 +3,7 @@ using EduCoreSuite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduCoreSuite.Migrations
 {
     [DbContext(typeof(ForgeDBContext))]
-    partial class ForgeDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250709153635_AddStudyModeAndStatus")]
+    partial class AddStudyModeAndStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,108 +243,6 @@ namespace EduCoreSuite.Migrations
                     b.HasKey("StudentID");
 
                     b.ToTable("Students", (string)null);
-                });
-
-            modelBuilder.Entity("EduCoreSuite.Models.StudyMode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StudyModes", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Daytime attendance on campus",
-                            Name = "Full-Time"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Evening/weekend attendance",
-                            Name = "Part-Time"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Remote/online learning",
-                            Name = "Distance Learning"
-                        });
-                });
-
-            modelBuilder.Entity("EduCoreSuite.Models.StudyStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StudyStatuses", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Currently enrolled",
-                            Name = "Active"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Graduated successfully",
-                            Name = "Completed"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Repeating a class or year",
-                            Name = "Repeating"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Exited before completion",
-                            Name = "Withdrawn"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Temporarily barred for discipline",
-                            Name = "Suspended"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "Permanently removed from programme",
-                            Name = "Expelled"
-                        });
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Programme", b =>

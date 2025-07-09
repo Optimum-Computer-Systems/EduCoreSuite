@@ -30,14 +30,12 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+                                <a class="nav-link text-dark fw-semibold" asp-controller="Home" asp-action="Index">Dashboard</a>
                             </li>
 
-                            <!-- Register Dropdown -->
+                            <!-- Register -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark fw-semibold"
-                                   href="#" id="registerDropdown" role="button"
-                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle text-dark fw-semibold" href="#" id="registerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Register
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="registerDropdown">
@@ -48,9 +46,7 @@
 
                             <!-- Courses Dropdown -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark fw-semibold"
-                                   href="#" id="coursesDropdown" role="button"
-                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle text-dark fw-semibold" href="#" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Courses
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
@@ -61,12 +57,13 @@
                                     <li><a class="dropdown-item" asp-controller="Programmes" asp-action="Index">Programmes</a></li>
                                     <li><a class="dropdown-item" asp-controller="ExamBodies" asp-action="Index">Exam Bodies</a></li>
                                     <li><a class="dropdown-item" asp-controller="Campuses" asp-action="Index">Campuses</a></li>
-                                    <li><a class="dropdown-item" asp-controller="StudyLevels" asp-action="Index">Study Levels</a></li>
+                                    <li><a class="dropdown-item" asp-controller="StudyModes" asp-action="Index">Study Modes</a></li>
+                                    <li><a class="dropdown-item" asp-controller="StudyStatuses" asp-action="Index">Study Statuses</a></li>
                                 </ul>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
+                                <a class="nav-link text-dark fw-semibold" asp-controller="Reports" asp-action="Index">Reports</a>
                             </li>
                         </ul>
                     </div>
@@ -83,7 +80,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - Optimum_University - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - Optimum_University - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
