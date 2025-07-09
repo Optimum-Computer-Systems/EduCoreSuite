@@ -3,16 +3,19 @@ using EduCoreSuite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Project_Polaris.Migrations
+namespace EduCoreSuite.Migrations
 {
     [DbContext(typeof(ForgeDBContext))]
-    partial class ForgeDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250709164354_CreateDepartmentsAndFaculties")]
+    partial class CreateDepartmentsAndFaculties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

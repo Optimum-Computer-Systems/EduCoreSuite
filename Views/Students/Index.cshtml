@@ -1,54 +1,89 @@
 ﻿@model IEnumerable<EduCoreSuite.Models.Student>
 
 @{
-    ViewData["Title"] = "Students List";
+    ViewData["Title"] = "Student List";
 }
 
-<h2>Students List</h2>
+<h2>Student List</h2>
+
 <p>
-    <a asp-controller="Enrollment" asp-action="Index" class="btn btn-outline-secondary me-2">Enrollments</a>
-    <a asp-controller="Students" asp-action="Index" class="btn btn-secondary me-2">Student List</a>
-    <a asp-action="Create" class="btn btn-outline-secondary">Add Student</a>
+    <a asp-action="Create" class="btn btn-primary">Add New Student</a>
 </p>
 
-<table class="table table-bordered table-striped">
-    <thead>
+<table class="table table-bordered table-striped table-responsive-sm">
+    <thead class="table-dark">
         <tr>
-            <th>@Html.DisplayNameFor(model => model.FullName)</th>
-            <th>@Html.DisplayNameFor(model => model.Email)</th>
-            <th>@Html.DisplayNameFor(model => model.AdmissionNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.DOB)</th>
-            <th>@Html.DisplayNameFor(model => model.Nationality)</th>
-            <th>@Html.DisplayNameFor(model => model.IDNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.Gender)</th>
-            <th>@Html.DisplayNameFor(model => model.Religion)</th>
-            <th>@Html.DisplayNameFor(model => model.Disability)</th>
-            <th>@Html.DisplayNameFor(model => model.Medical)</th>
-            <th>@Html.DisplayNameFor(model => model.MaritalStatus)</th>
-            <th>@Html.DisplayNameFor(model => model.CoCurricular)</th>
-            <th>Actions</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Admission No</th>
+            <th>Date of Birth</th>
+            <th>Nationality</th>
+            <th>ID Number</th>
+            <th>Gender</th>
+            <th>Religion</th>
+            <th>Disability</th>
+            <th>Medical</th>
+            <th>Marital Status</th>
+            <th>Co-Curricular</th>
+            <th>Primary Phone</th>
+            <th>Alt Phone</th>
+            <th>Postal Code</th>
+            <th>County</th>
+            <th>SubCounty</th>
+            <th>Town</th>
+            <th>Ward</th>
+            <th>Emergency Name</th>
+            <th>Relationship</th>
+            <th>Emergency Phone</th>
+            <th>Emergency Email</th>
+            <th>Emergency Address</th>
+            <th>Course</th>
+            <th>Department</th>
+            <th>Faculty</th>
+            <th>Program</th>
+            <th>Exam Body</th>
+            <th>Year</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var student in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.AdmissionNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.DOB)</td>
-                <td>@Html.DisplayFor(modelItem => item.Nationality)</td>
-                <td>@Html.DisplayFor(modelItem => item.IDNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.Gender)</td>
-                <td>@Html.DisplayFor(modelItem => item.Religion)</td>
-                <td>@Html.DisplayFor(modelItem => item.Disability)</td>
-                <td>@Html.DisplayFor(modelItem => item.Medical)</td>
-                <td>@Html.DisplayFor(modelItem => item.MaritalStatus)</td>
-                <td>@Html.DisplayFor(modelItem => item.CoCurricular)</td>
+                <td>@student.FullName</td>
+                <td>@student.Email</td>
+                <td>@student.AdmissionNumber</td>
+                <td>@student.DOB</td>
+                <td>@student.Nationality</td>
+                <td>@student.IDNumber</td>
+                <td>@student.Gender</td>
+                <td>@student.Religion</td>
+                <td>@student.Disability</td>
+                <td>@student.Medical</td>
+                <td>@student.MaritalStatus</td>
+                <td>@student.CoCurricular</td>
+                <td>@student.PrimaryPhone</td>
+                <td>@student.AltPhone</td>
+                <td>@student.PostalCode</td>
+                <td>@student.County</td>
+                <td>@student.SubCounty</td>
+                <td>@student.Town</td>
+                <td>@student.Ward</td>
+                <td>@student.EmergencyName</td>
+                <td>@student.Relationship</td>
+                <td>@student.EmergencyPhone</td>
+                <td>@student.EmergencyEmail</td>
+                <td>@student.EmergencyAddress</td>
+                <td>@student.Course</td>
+                <td>@student.Department</td>
+                <td>@student.Faculty</td>
+                <td>@student.Program</td>
+                <td>@student.ExamBody</td>
+                <td>@student.Year</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.StudentID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.StudentID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.StudentID">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@student.StudentID" class="btn btn-sm btn-warning">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@student.StudentID" class="btn btn-sm btn-info">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@student.StudentID" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
         }

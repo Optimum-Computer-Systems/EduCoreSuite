@@ -1,24 +1,22 @@
 ﻿@model EduCoreSuite.Models.Student
-
 @{
     ViewData["Title"] = "Create";
     var maxDOB = DateTime.Today.AddYears(-17).ToString("yyyy-MM-dd");
 }
 
-<h2>Create Student</h2>
+<h2 class="mb-3">Create Student</h2>
 
 <p>
-    <a asp-controller="Enrollment" asp-action="Index" class="btn btn-outline-secondary me-2">Enrollments</a>
     <a asp-controller="Students" asp-action="Index" class="btn btn-outline-secondary me-2">Student List</a>
 </p>
 
 <hr />
 
-<form asp-action="Create">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <!-- ================== PERSONAL DETAILS ================== -->
-        <h4>Personal Details</h4><hr />
+    <!-- ================= PERSONAL DETAILS ================= -->
+    <h4>Personal Details</h4><hr />
     <div class="row g-3">
         <div class="col-md-6">
             <label asp-for="FullName" class="form-label"></label>
@@ -30,7 +28,6 @@
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-
         <div class="col-md-6">
             <label asp-for="AdmissionNumber" class="form-label"></label>
             <input asp-for="AdmissionNumber" class="form-control" placeholder="ADM2024-001" />
@@ -41,7 +38,6 @@
             <input asp-for="DOB" type="date" class="form-control" max="@maxDOB" />
             <span asp-validation-for="DOB" class="text-danger"></span>
         </div>
-
         <div class="col-md-6">
             <label asp-for="Nationality" class="form-label"></label>
             <input asp-for="Nationality" class="form-control" />
@@ -52,11 +48,10 @@
             <input asp-for="IDNumber" class="form-control" />
             <span asp-validation-for="IDNumber" class="text-danger"></span>
         </div>
-
         <div class="col-md-6">
             <label asp-for="Gender" class="form-label"></label>
             <select asp-for="Gender" class="form-select">
-                <option value="">--Gender--</option>
+                <option value="">-- Select Gender --</option>
                 <option>Male</option>
                 <option>Female</option>
             </select>
@@ -65,18 +60,18 @@
         <div class="col-md-6">
             <label asp-for="Religion" class="form-label"></label>
             <select asp-for="Religion" class="form-select">
-                <option value="">--Religion--</option>
+                <option value="">-- Select Religion --</option>
                 <option>Christian</option>
                 <option>Muslim</option>
                 <option>Hindu</option>
+                <option>Other</option>
             </select>
             <span asp-validation-for="Religion" class="text-danger"></span>
         </div>
-
         <div class="col-md-6">
             <label asp-for="Disability" class="form-label"></label>
             <select asp-for="Disability" class="form-select">
-                <option value="">--Disability?--</option>
+                <option value="">-- Disability? --</option>
                 <option>Yes</option>
                 <option>No</option>
             </select>
@@ -87,11 +82,10 @@
             <input asp-for="Medical" class="form-control" />
             <span asp-validation-for="Medical" class="text-danger"></span>
         </div>
-
         <div class="col-md-6">
             <label asp-for="MaritalStatus" class="form-label"></label>
             <select asp-for="MaritalStatus" class="form-select">
-                <option value="">--Marital Status--</option>
+                <option value="">-- Marital Status --</option>
                 <option>Single</option>
                 <option>Married</option>
                 <option>Divorced</option>
@@ -106,141 +100,132 @@
         </div>
     </div>
 
-    <!-- ================== CONTACT INFO ================== -->
+    <!-- ================ CONTACT INFO =================== -->
     <h4 class="mt-4">Contact Info</h4><hr />
-    <div class="form-group">
-        <label asp-for="PrimaryPhone"></label>
-        <input asp-for="PrimaryPhone" class="form-control" placeholder="e.g. +254712345678" />
-        <span asp-validation-for="PrimaryPhone" class="text-danger"></span>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="PrimaryPhone" class="form-label"></label>
+            <input asp-for="PrimaryPhone" class="form-control" />
+            <span asp-validation-for="PrimaryPhone" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="AltPhone" class="form-label"></label>
+            <input asp-for="AltPhone" class="form-control" />
+            <span asp-validation-for="AltPhone" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="PostalCode" class="form-label"></label>
+            <input asp-for="PostalCode" class="form-control" />
+            <span asp-validation-for="PostalCode" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="County" class="form-label"></label>
+            <select asp-for="County" class="form-select" asp-items="ViewBag.Counties"></select>
+            <span asp-validation-for="County" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="SubCounty" class="form-label"></label>
+            <select asp-for="SubCounty" class="form-select" asp-items="ViewBag.SubCounties"></select>
+            <span asp-validation-for="SubCounty" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Town" class="form-label"></label>
+            <input asp-for="Town" class="form-control" />
+            <span asp-validation-for="Town" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Ward" class="form-label"></label>
+            <input asp-for="Ward" class="form-control" />
+            <span asp-validation-for="Ward" class="text-danger"></span>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label asp-for="AltPhone"></label>
-        <input asp-for="AltPhone" class="form-control" placeholder="e.g. +254701234567" />
-        <span asp-validation-for="AltPhone" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="PostalCode"></label>
-        <input asp-for="PostalCode" class="form-control" placeholder="e.g. 00100" />
-        <span asp-validation-for="PostalCode" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="County"></label>
-        <select asp-for="County" class="form-control" asp-items="ViewBag.Counties"></select>
-        <span asp-validation-for="County" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="SubCounty"></label>
-        <select asp-for="SubCounty" class="form-control" asp-items="ViewBag.SubCounties"></select>
-        <span asp-validation-for="SubCounty" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Town"></label>
-        <input asp-for="Town" class="form-control" />
-        <span asp-validation-for="Town" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Ward"></label>
-        <input asp-for="Ward" class="form-control" />
-        <span asp-validation-for="Ward" class="text-danger"></span>
-    </div>
-
-    <!-- ================== EMERGENCY CONTACT ================== -->
+    <!-- ============== EMERGENCY CONTACT =============== -->
     <h4 class="mt-4">Emergency Contact</h4><hr />
-    <div class="form-group">
-        <label asp-for="EmergencyName"></label>
-        <input asp-for="EmergencyName" class="form-control" placeholder="e.g. Jane Doe" />
-        <span asp-validation-for="EmergencyName" class="text-danger"></span>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="EmergencyName" class="form-label"></label>
+            <input asp-for="EmergencyName" class="form-control" />
+            <span asp-validation-for="EmergencyName" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Relationship" class="form-label"></label>
+            <select asp-for="Relationship" class="form-select">
+                <option value="">-- Select --</option>
+                <option>Father</option>
+                <option>Mother</option>
+                <option>Guardian</option>
+                <option>Grandparent</option>
+                <option>Sibling</option>
+            </select>
+            <span asp-validation-for="Relationship" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="EmergencyPhone" class="form-label"></label>
+            <input asp-for="EmergencyPhone" class="form-control" />
+            <span asp-validation-for="EmergencyPhone" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="EmergencyEmail" class="form-label"></label>
+            <input asp-for="EmergencyEmail" class="form-control" />
+            <span asp-validation-for="EmergencyEmail" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="EmergencyAddress" class="form-label"></label>
+            <input asp-for="EmergencyAddress" class="form-control" />
+            <span asp-validation-for="EmergencyAddress" class="text-danger"></span>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Relationship"></label>
-        <select asp-for="Relationship" class="form-control">
-            <option value="">-- Select Relationship --</option>
-            <option>Grandparent</option>
-            <option>Father</option>
-            <option>Mother</option>
-            <option>Sibling</option>
-            <option>Guardian</option>
-        </select>
-        <span asp-validation-for="Relationship" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="EmergencyPhone"></label>
-        <input asp-for="EmergencyPhone" class="form-control" />
-        <span asp-validation-for="EmergencyPhone" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="EmergencyEmail"></label>
-        <input asp-for="EmergencyEmail" class="form-control" />
-        <span asp-validation-for="EmergencyEmail" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="EmergencyAddress"></label>
-        <input asp-for="EmergencyAddress" class="form-control" />
-        <span asp-validation-for="EmergencyAddress" class="text-danger"></span>
-    </div>
-
-    <!-- ================== ACADEMIC DETAILS ================== -->
+    <!-- =============== ACADEMIC DETAILS ================ -->
     <h4 class="mt-4">Academic Details</h4><hr />
-    <div class="form-group">
-        <label asp-for="Course"></label>
-        <select asp-for="Course" class="form-control" asp-items="ViewBag.Courses"></select>
-        <span asp-validation-for="Course" class="text-danger"></span>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Course" class="form-label"></label>
+            <select asp-for="Course" class="form-select" asp-items="ViewBag.Courses"></select>
+            <span asp-validation-for="Course" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Department" class="form-label"></label>
+            <select asp-for="Department" class="form-select" asp-items="ViewBag.Departments"></select>
+            <span asp-validation-for="Department" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Faculty" class="form-label"></label>
+            <select asp-for="Faculty" class="form-select" asp-items="ViewBag.Faculties"></select>
+            <span asp-validation-for="Faculty" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Program" class="form-label"></label>
+            <select asp-for="Program" class="form-select">
+                <option value="">-- Program --</option>
+                <option>Certificate</option>
+                <option>Diploma</option>
+                <option>Degree</option>
+                <option>Masters</option>
+            </select>
+            <span asp-validation-for="Program" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="ExamBody" class="form-label"></label>
+            <select asp-for="ExamBody" class="form-select" asp-items="ViewBag.ExamBodies"></select>
+            <span asp-validation-for="ExamBody" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Year" class="form-label"></label>
+            <select asp-for="Year" class="form-select">
+                <option value="">-- Select Year --</option>
+                <option>1st Year</option>
+                <option>2nd Year</option>
+                <option>3rd Year</option>
+                <option>4th Year</option>
+            </select>
+            <span asp-validation-for="Year" class="text-danger"></span>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Department"></label>
-        <select asp-for="Department" class="form-control" asp-items="ViewBag.Departments"></select>
-        <span asp-validation-for="Department" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Faculty"></label>
-        <select asp-for="Faculty" class="form-control" asp-items="ViewBag.Faculties"></select>
-        <span asp-validation-for="Faculty" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Program"></label>
-        <select asp-for="Program" class="form-control">
-            <option value="">-- Select Program --</option>
-            <option>Certificate</option>
-            <option>Diploma</option>
-            <option>Degree</option>
-            <option>Masters</option>
-        </select>
-        <span asp-validation-for="Program" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ExamBody"></label>
-        <select asp-for="ExamBody" class="form-control" asp-items="ViewBag.ExamBodies"></select>
-        <span asp-validation-for="ExamBody" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Year"></label>
-        <select asp-for="Year" class="form-control">
-            <option value="">-- Select Year --</option>
-            <option>1st Year</option>
-            <option>2nd Year</option>
-            <option>3rd Year</option>
-            <option>4th Year</option>
-        </select>
-        <span asp-validation-for="Year" class="text-danger"></span>
-    </div>
-
-    <!-- Submit -->
-    <div class="form-group mt-3">
+    <!-- SUBMIT -->
+    <div class="mt-4">
         <input type="submit" value="Add Student" class="btn btn-primary" />
     </div>
 </form>
