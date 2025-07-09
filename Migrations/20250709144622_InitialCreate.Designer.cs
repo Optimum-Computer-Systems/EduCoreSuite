@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduCoreSuite.Migrations
 {
     [DbContext(typeof(ForgeDBContext))]
-    [Migration("20250709122443_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20250709144622_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,7 +90,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Campuses");
+                    b.ToTable("Campuses", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Course", b =>
@@ -131,7 +131,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("CourseID");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Department", b =>
@@ -149,7 +149,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("DepartmentID");
 
-                    b.ToTable("Department");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.ExamBody", b =>
@@ -177,7 +177,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ExamBodies");
+                    b.ToTable("ExamBodies", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Programme", b =>
@@ -200,7 +200,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasIndex("DepartmentID");
 
-                    b.ToTable("Programme");
+                    b.ToTable("Programmes", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Student", b =>
@@ -242,7 +242,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("StudentID");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Programme", b =>
