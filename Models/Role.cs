@@ -8,6 +8,6 @@ namespace EduCoreSuite.Models
         public String Name { get; set; }
         public String? Description { get; set; }
         [JsonIgnore]
-        public ICollection<User> Users { get; set; } = new List<User>();
+        public ICollection<User> Users { get; set; } = new List<User>(); //Shows relationship; 1 role has many users
     }
 }
