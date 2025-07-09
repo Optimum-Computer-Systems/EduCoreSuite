@@ -7,10 +7,12 @@ namespace EduCoreSuite.Models.ViewModels
         public string? SelectedDepartment { get; set; }
         public int? SelectedStudentId { get; set; }
         public int? SelectedCourseId { get; set; }
+        public int? SelectedCampusId { get; set; }  // ✅ NEW
 
         public List<SelectListItem> Departments { get; set; } = new();
         public List<SelectListItem> Students { get; set; } = new();
         public List<SelectListItem> Courses { get; set; } = new();
+        public List<SelectListItem> Campuses { get; set; } = new();  // ✅ NEW
 
         public List<EnrollmentReportRow> ReportResults { get; set; } = new();
 

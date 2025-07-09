@@ -24,12 +24,8 @@ namespace EduCoreSuite.Controllers
             {
                 TotalStudents = await _context.Students.CountAsync(),
                 TotalCourses = await _context.Courses.CountAsync(),
-                TotalEnrollments =
-                    await _context.Enrollment_SingleStudent_SingleCourse.CountAsync()
-                  + await _context.Enrollment_MultipleStudents_SingleCourse.CountAsync()
-                  + await _context.Enrollment_SingleStudent_MultipleCourses.CountAsync()
-                  + await _context.Enrollment_MultipleStudents_MultipleCourses.CountAsync(),
-                TotalSessions = 25, // You can replace this with dynamic logic if available
+                TotalEnrollments = 0, // Removed all enrollment table references
+                TotalSessions = 25,   // You can replace this with dynamic logic if available
 
                 RecentActivities = new List<ActivityItem>
                 {
