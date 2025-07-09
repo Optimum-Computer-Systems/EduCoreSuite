@@ -22,7 +22,7 @@ namespace EduCoreSuite.Controllers
         // GET: Programmes
         public async Task<IActionResult> Index()
         {
-            var forgeDBContext = _context.Programme.Include(p => p.Department);
+            var forgeDBContext = _context.Programmes.Include(p => p.Department);
             return View(await forgeDBContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace EduCoreSuite.Controllers
                 return NotFound();
             }
 
-            var programme = await _context.Programme
+            var programme = await _context.Programmes
                 .Include(p => p.Department)
                 .FirstOrDefaultAsync(m => m.ProgrammeID == id);
             if (programme == null)
@@ -48,7 +48,7 @@ namespace EduCoreSuite.Controllers
         // GET: Programmes/Create
         public IActionResult Create()
         {
-            ViewData["DepartmentID"] = new SelectList(_context.Department, "DepartmentID", "Name");
+            ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "Name");
             return View();
         }
 
@@ -66,7 +66,7 @@ namespace EduCoreSuite.Controllers
                 return RedirectToAction(nameof(Index));
             }
  
-            ViewData["DepartmentID"] = new SelectList(_context.Department, "DepartmentID", "Name", programme.DepartmentID);
+            ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "Name", programme.DepartmentID);
             return View(programme);
         }
 
@@ -78,12 +78,12 @@ namespace EduCoreSuite.Controllers
                 return NotFound();
             }
 
-            var programme = await _context.Programme.FindAsync(id);
+            var programme = await _context.Programmes.FindAsync(id);
             if (programme == null)
             {
                 return NotFound();
             }
-            ViewData["DepartmentID"] = new SelectList(_context.Department, "DepartmentID", "Name", programme.DepartmentID);
+            ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "Name", programme.DepartmentID);
             return View(programme);
         }
 
@@ -119,7 +119,7 @@ namespace EduCoreSuite.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentID"] = new SelectList(_context.Department, "DepartmentID", "Name", programme.DepartmentID);
+            ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "Name", programme.DepartmentID);
             return View(programme);
         }
 
@@ -131,7 +131,7 @@ namespace EduCoreSuite.Controllers
                 return NotFound();
             }
 
-            var programme = await _context.Programme
+            var programme = await _context.Programmes
                 .Include(p => p.Department)
                 .FirstOrDefaultAsync(m => m.ProgrammeID == id);
             if (programme == null)
@@ -147,10 +147,10 @@ namespace EduCoreSuite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var programme = await _context.Programme.FindAsync(id);
+            var programme = await _context.Programmes.FindAsync(id);
             if (programme != null)
             {
-                _context.Programme.Remove(programme);
+                _context.Programmes.Remove(programme);
             }
 
             await _context.SaveChangesAsync();
@@ -159,7 +159,7 @@ namespace EduCoreSuite.Controllers
 
         private bool ProgrammeExists(int id)
         {
-            return _context.Programme.Any(e => e.ProgrammeID == id);
+            return _context.Programmes.Any(e => e.ProgrammeID == id);
         }
     }
 }

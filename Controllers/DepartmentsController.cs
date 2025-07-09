@@ -22,7 +22,7 @@ namespace EduCoreSuite.Controllers
         // GET: Departments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Department.ToListAsync());
+            return View(await _context.Departments.ToListAsync());
         }
 
         // GET: Departments/Details/5
@@ -33,7 +33,7 @@ namespace EduCoreSuite.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Department
+            var department = await _context.Departments
                 .FirstOrDefaultAsync(m => m.DepartmentID == id);
             if (department == null)
             {
@@ -73,7 +73,7 @@ namespace EduCoreSuite.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Department.FindAsync(id);
+            var department = await _context.Departments.FindAsync(id);
             if (department == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace EduCoreSuite.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Department
+            var department = await _context.Departments
                 .FirstOrDefaultAsync(m => m.DepartmentID == id);
             if (department == null)
             {
@@ -139,10 +139,10 @@ namespace EduCoreSuite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var department = await _context.Department.FindAsync(id);
+            var department = await _context.Departments.FindAsync(id);
             if (department != null)
             {
-                _context.Department.Remove(department);
+                _context.Departments.Remove(department);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +151,7 @@ namespace EduCoreSuite.Controllers
 
         private bool DepartmentExists(int id)
         {
-            return _context.Department.Any(e => e.DepartmentID == id);
+            return _context.Departments.Any(e => e.DepartmentID == id);
         }
     }
 }
