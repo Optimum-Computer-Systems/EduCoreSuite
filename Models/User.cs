@@ -9,7 +9,9 @@ namespace EduCoreSuite.Models
         public int ID { get; set; }
         [Required]//This belongs to the username 
         public String Username { get; set; }
+
         [Required]
+
         public String FirstName { get; set; }
         public String LastName { get; set; }
 
