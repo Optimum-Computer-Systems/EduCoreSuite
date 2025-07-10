@@ -1,0 +1,22 @@
+﻿@page
+@model EduCoreSuite.Pages.Auth.SignupModel
+<h1>signup page</h1>
+
+<form method="post">
+    <div>
+        <label asp-for="User.FirstName"></label>
+        <input asp-for="User.FirstName" class="form-control" />
+        <span asp-validation-for="User.FirstName" class="text-danger"></span>
+    </div> 
+    <div>
+        <label asp-for="User.LastName"></label>
+        <input asp-for="User.LastName" class="form-control" />
+    </div>
+    <div>
+        <label asp-for="User.Password"></label>
+        <input type="password" asp-for="User.Password" class="form-control" />
+    </div>
+    <div >
+<button class="btn btn-primary">Submit</button>
+    </div>
+</form>
