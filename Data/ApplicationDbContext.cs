@@ -7,6 +7,10 @@ namespace EduCoreSuite.Data
     {
         public DbSet<Book> Books { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -15,6 +19,12 @@ namespace EduCoreSuite.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Add model configurations here if needed
+            //Relationship
+            modelBuilder.Entity<User>()
+               .HasOne(u => u.Role)
+               .WithMany(r => r.Users)
+               .HasForeignKey(u => u.RoleID);
+
         }
     }
 }
