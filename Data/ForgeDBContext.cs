@@ -16,6 +16,9 @@ namespace EduCoreSuite.Data
         public DbSet<Campus> Campuses { get; set; }
         public DbSet<StudyMode> StudyModes { get; set; }
         public DbSet<StudyStatus> StudyStatuses { get; set; }
+        public DbSet<Faculty> Faculties { get; set; }
+        public DbSet<Staff> Staff { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
