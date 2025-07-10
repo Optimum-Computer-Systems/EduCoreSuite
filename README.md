@@ -184,21 +184,4 @@ EduCore uses a **normalized SQL Server** schema with referential integrity, fore
 > Project supervised by **Mr. Nick Silver**
 
 ---
-
-## Next Steps
-
-- Finalize report export functionality (CSV and PDF)
-- Implement role-based access control (Admin, Registrar, Faculty)
-- Integrate unit and integration testing with xUnit and EF In-Memory DB
-- Deploy to Azure App Services with CI/CD using GitHub Actions
-- Improve responsive layout and offline-first experience via service workers
-
----
-
-## Licensing & Acknowledgments
-
-© 2025 EduCore Academic Platform  
-All rights reserved. This software is developed for academic and institutional purposes under the supervision of Mr. Nick Silver.
-
----
-
+ 
