@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EduCoreSuite.Models.Programme>
+@model IEnumerable<EduCoreSuite.Models.Programme>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,6 +16,36 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Level)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccreditedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccreditationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DurationYears)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SemestersPerYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Department)
             </th>
             <th></th>
@@ -28,7 +58,37 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Department.Name)
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Level)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccreditedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccreditationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DurationYears)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SemestersPerYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department.Code)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProgrammeID">Edit</a> |

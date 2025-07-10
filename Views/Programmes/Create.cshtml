@@ -1,6 +1,4 @@
-﻿@model EduCoreSuite.Models.Programme
-
-
+@model EduCoreSuite.Models.Programme
 
 @{
     ViewData["Title"] = "Create";
@@ -11,36 +9,77 @@
 <h4>Programme</h4>
 <hr />
 <div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
+    <div class="col-md-4">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <!-- Programme Name -->
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-
-            <!-- Department Dropdown -->
+            <div class="form-group">
+                <label asp-for="Code" class="control-label"></label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Level" class="control-label"></label>
+                <select asp-for="Level" class="form-control"></select>
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AccreditedBy" class="control-label"></label>
+                <input asp-for="AccreditedBy" class="form-control" />
+                <span asp-validation-for="AccreditedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AccreditationDate" class="control-label"></label>
+                <input asp-for="AccreditationDate" class="form-control" />
+                <span asp-validation-for="AccreditationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DurationYears" class="control-label"></label>
+                <input asp-for="DurationYears" class="form-control" />
+                <span asp-validation-for="DurationYears" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SemestersPerYear" class="control-label"></label>
+                <input asp-for="SemestersPerYear" class="form-control" />
+                <span asp-validation-for="SemestersPerYear" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label"></label>
+                <input asp-for="CreatedAt" class="form-control" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdatedAt" class="control-label"></label>
+                <input asp-for="UpdatedAt" class="form-control" />
+                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedBy" class="control-label"></label>
+                <input asp-for="CreatedBy" class="form-control" />
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="DepartmentID" class="control-label"></label>
-                <select asp-for="DepartmentID" class="form-control" asp-items="ViewBag.DepartmentID">
-                    <option value="">-- Select Department --</option> <!-- Forces valid selection -->
-                </select>
-                <span asp-validation-for="DepartmentID" class="text-danger"></span>
+                <select asp-for="DepartmentID" class ="form-control" asp-items="ViewBag.DepartmentID"></select>
             </div>
-
-            <!-- Submit -->
-            <div class="form-group mt-3">
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div class="mt-3">
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+<div>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
