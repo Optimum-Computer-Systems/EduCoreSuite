@@ -143,10 +143,7 @@ namespace EduCoreSuite.Controllers
             ViewBag.Religions = new SelectList(new[] { "Christianity", "Islam", "Hinduism", "Atheist", "Other" });
             ViewBag.Medicals = new SelectList(new[] { "Normal", "Chronic", "Disabled", "Other" });
             ViewBag.MaritalStatusList = new SelectList(new[] { "Single", "Married", "Divorced", "Widowed" });
-            //ViewBag.Courses = new SelectList(_context.Courses.Select(c => c.CourseName));
-            //ViewBag.Departments = new SelectList(_context.Departments.ToList(), "DepartmentName", "DepartmentName");
-            //ViewBag.Faculties = new SelectList(_context.Faculties.ToList(), "FacultyName", "FacultyName");
-            //ViewBag.ExamBodies = new SelectList(_context.ExamBodies.Select(e => e.Name));
+
             ViewBag.Courses = new SelectList(_context.Courses?.ToList() ?? new List<Course>(), "CourseName", "CourseName");
             ViewBag.Departments = new SelectList(_context.Departments?.ToList() ?? new List<Department>(), "DepartmentName", "DepartmentName");
             ViewBag.Faculties = new SelectList(_context.Faculties?.ToList() ?? new List<Faculty>(), "FacultyName", "FacultyName");
