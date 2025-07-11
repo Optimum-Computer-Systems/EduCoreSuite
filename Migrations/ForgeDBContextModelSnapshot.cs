@@ -272,24 +272,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("FacultyID");
 
-                    b.ToTable("Faculties");
-                });
-
-            modelBuilder.Entity("EduCoreSuite.Models.Faculty", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FacultyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Faculties");
+                    b.ToTable("Faculties", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Programme", b =>
@@ -338,7 +321,7 @@ namespace EduCoreSuite.Migrations
                     b.Property<int>("SemestersPerYear")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ProgrammeID");
@@ -397,7 +380,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("StaffID");
 
-                    b.ToTable("Staff");
+                    b.ToTable("Staff", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Student", b =>
@@ -560,18 +543,18 @@ namespace EduCoreSuite.Migrations
                         {
                             Id = 1,
                             Description = "Daytime attendance on campus",
-                            Name = "Full-Time"
+                            Name = "Full‑Time"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Evening/weekend attendance",
-                            Name = "Part-Time"
+                            Description = "Evening / weekend attendance",
+                            Name = "Part‑Time"
                         },
                         new
                         {
                             Id = 3,
-                            Description = "Remote/online learning",
+                            Description = "Remote / online learning",
                             Name = "Distance Learning"
                         });
                 });
