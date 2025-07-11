@@ -1,0 +1,63 @@
+﻿@model EduCoreSuite.Models.Campus
+
+@{
+    ViewData["Title"] = "Campus Details";
+}
+
+<h1>Campus Details</h1>
+
+<div>
+    <h4>Campus</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Code)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Code)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.County)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.County)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Constituency)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Constituency)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Town)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Town)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PhysicalAddress)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PhysicalAddress)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.WebsiteURL)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.WebsiteURL)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PostalAddress)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PostalAddress)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PrincipalName)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PrincipalName)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TVETRegistrationNumber)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.TVETRegistrationNumber)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.KUCCPSCode)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.KUCCPSCode)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.IsMainCampus)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.IsMainCampus)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.IsActive)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.IsActive)</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+</div>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduCoreSuite.Migrations
 {
     [DbContext(typeof(ForgeDBContext))]
-    [Migration("20250711090245_first migration")]
-    partial class firstmigration
+    [Migration("20250711110938_Initial Migration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,19 +174,12 @@ namespace EduCoreSuite.Migrations
                     b.Property<DateTime?>("DeactivatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DepartmentName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("FacultyID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -262,13 +255,6 @@ namespace EduCoreSuite.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("FacultyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -289,7 +275,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("FacultyID");
 
-                    b.ToTable("Faculties");
+                    b.ToTable("Faculties", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Programme", b =>
@@ -397,7 +383,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("StaffID");
 
-                    b.ToTable("Staff");
+                    b.ToTable("Staff", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Student", b =>
@@ -560,18 +546,18 @@ namespace EduCoreSuite.Migrations
                         {
                             Id = 1,
                             Description = "Daytime attendance on campus",
-                            Name = "Full-Time"
+                            Name = "Full‑Time"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Evening/weekend attendance",
-                            Name = "Part-Time"
+                            Description = "Evening / weekend attendance",
+                            Name = "Part‑Time"
                         },
                         new
                         {
                             Id = 3,
-                            Description = "Remote/online learning",
+                            Description = "Remote / online learning",
                             Name = "Distance Learning"
                         });
                 });

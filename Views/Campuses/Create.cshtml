@@ -1,0 +1,126 @@
+﻿@model EduCoreSuite.Models.Campus
+
+@{
+    ViewData["Title"] = "Create Campus";
+}
+
+<div class="container mt-4">
+    <!-- Back to Campus List -->
+    <div class="mb-3">
+        <a asp-controller="Campuses" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold">
+            ← Back to Campus List
+        </a>
+    </div>
+
+    <!-- Page Title -->
+    <h2 class="fw-bold mb-4">Create Campus</h2>
+
+    <form asp-action="Create" method="post" class="row g-4">
+        <!-- Left Column -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Code" class="form-label fw-semibold">Code</label>
+                <input asp-for="Code" class="form-control" placeholder="e.g. MAIN01" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Name" class="form-label fw-semibold">Campus Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter campus name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="County" class="form-label fw-semibold">County</label>
+                <input asp-for="County" class="form-control" placeholder="Enter county" />
+                <span asp-validation-for="County" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Constituency" class="form-label fw-semibold">Constituency</label>
+                <input asp-for="Constituency" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="Constituency" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Town" class="form-label fw-semibold">Town</label>
+                <input asp-for="Town" class="form-control" placeholder="Enter town" />
+                <span asp-validation-for="Town" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="PhysicalAddress" class="form-label fw-semibold">Physical Address</label>
+                <input asp-for="PhysicalAddress" class="form-control" placeholder="Enter physical address" />
+                <span asp-validation-for="PhysicalAddress" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="WebsiteURL" class="form-label fw-semibold">Website URL</label>
+                <input asp-for="WebsiteURL" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="WebsiteURL" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="PostalAddress" class="form-label fw-semibold">Postal Address</label>
+                <input asp-for="PostalAddress" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="PostalAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="PrincipalName" class="form-label fw-semibold">Principal Name</label>
+                <input asp-for="PrincipalName" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="PrincipalName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="TVETRegistrationNumber" class="form-label fw-semibold">TVET Reg. Number</label>
+                <input asp-for="TVETRegistrationNumber" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="TVETRegistrationNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="KUCCPSCode" class="form-label fw-semibold">KUCCPS Code</label>
+                <input asp-for="KUCCPSCode" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="KUCCPSCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-check mt-3">
+                <input asp-for="IsMainCampus" class="form-check-input" />
+                <label asp-for="IsMainCampus" class="form-check-label fw-semibold">Main Campus</label>
+            </div>
+
+            <div class="form-check mt-2">
+                <input asp-for="IsActive" class="form-check-input" />
+                <label asp-for="IsActive" class="form-check-label fw-semibold">Active</label>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary fw-semibold px-5 py-2 mt-4 rounded-pill">
+                Create Campus
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
