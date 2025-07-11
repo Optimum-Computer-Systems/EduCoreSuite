@@ -148,7 +148,7 @@ namespace EduCoreSuite.Controllers
             //ViewBag.Faculties = new SelectList(_context.Faculties.ToList(), "FacultyName", "FacultyName");
             //ViewBag.ExamBodies = new SelectList(_context.ExamBodies.Select(e => e.Name));
             ViewBag.Courses = new SelectList(_context.Courses?.ToList() ?? new List<Course>(), "CourseName", "CourseName");
-            ViewBag.Departments = new SelectList(_context.Departments?.ToList() ?? new List<Department>(), "DepartmentName", "DepartmentName");
+            ViewBag.Departments = new SelectList(_context.Department?.ToList() ?? new List<Department>(), "DepartmentName", "DepartmentName");
             ViewBag.Faculties = new SelectList(_context.Faculties?.ToList() ?? new List<Faculty>(), "FacultyName", "FacultyName");
             ViewBag.ExamBodies = new SelectList(_context.ExamBodies?.ToList() ?? new List<ExamBody>(), "BodyName", "BodyName");
             ViewBag.Programs = new SelectList(new[] { "Certificate", "Diploma", "Degree", "Masters" });
