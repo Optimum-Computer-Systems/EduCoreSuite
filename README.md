@@ -1,14 +1,14 @@
 # EduCore – Academic Enrollment and Course Management System
 
-### Supervisor: Nick Silver  
+### Supervisor: Mr. Nick Silver  
 
 ---
 
 ## Executive Summary
 
-**EduCore** is a modular, data-driven university enrollment and academic management platform. It enables administrators to register students, manage courses, assign enrollments, and generate academic reports, all within a clean, accessible, and normalized system. The application adheres to formal software engineering practices using the ASP.NET MVC framework, Entity Framework ORM, and Microsoft SQL Server as the persistence layer.
+**EduCore** is a modular, scalable, and data-driven university enrollment and academic management system. It enables administrators to register students, configure academic entities, manage courses, assign enrollments, and generate academic reports. The system follows formal software engineering conventions, using the **ASP.NET MVC** framework, **Entity Framework Core** (Code First), and **Microsoft SQL Server** as the persistence layer.
 
-The system reflects the institution’s operations as prototyped in the official **Figma wireframes** and is supervised by **Mr. Nick Silver**.
+The platform models university operations as designed in the official **Figma wireframes** and was developed under the supervision of **Mr. Nick Silver**.
 
 🔗 [View Figma Prototype](https://www.figma.com/proto/k3kXH5IK77TaCMqGO3AAiK/EduCore-UI-System-%E2%80%93-Design-v1?node-id=50-2&t=mNp8QHc2rj79fd4a-1)
 
@@ -19,13 +19,13 @@ The system reflects the institution’s operations as prototyped in the official
 | Layer        | Technology                          |
 |--------------|--------------------------------------|
 | Frontend     | ASP.NET Razor Views, Bootstrap 5     |
-| Backend      | ASP.NET MVC, Entity Framework        |
+| Backend      | ASP.NET MVC, Entity Framework Core   |
 | Database     | Microsoft SQL Server                 |
 | Audit Log    | `ActivityLog` for all key operations |
 
-- MVC separation of concerns (Models, Views, Controllers)
-- Code-first Entity Framework with normalized relational schema
-- Git workflows: feature branches (e.g., `vincent`, `gerry`) merged into `forge` for integration
+- Separation of concerns via MVC architecture (Models, Views, Controllers)
+- Entity Framework Code First with normalized relational database schema
+- Git-based collaboration using feature branches (e.g., `vincent`, `gerry`) merged into `forge` for integration and testing
 
 📊 [View System Architecture Diagram (draw.io)](https://drive.google.com/file/d/1-Lf5Uhqk5jsyYNi0-iZWKJOzIQTpDk-s/view?usp=sharing)
 
@@ -35,47 +35,77 @@ The system reflects the institution’s operations as prototyped in the official
 
 ### 1. **Dashboard**
 
-- Real-time statistics: Today’s enrollments, weekly totals
-- Top enrolled courses (e.g., *Computer Science – 1250*, *Nursing – 150*)
+- Real-time statistics: today’s enrollments, weekly totals
+- Most enrolled courses (e.g., *Computer Science – 1250*, *Nursing – 150*)
 - Total faculty count
-- Activity feed with audit trail: new enrollments, course completions, student registrations
+- Activity feed with audit trail showing:
+  - New enrollments
+  - Course completions
+  - Student registrations
 
-> **Implemented by**: *Mercy Migendi* and  *Brian Vuhuga* 
+> **Implemented by**: *Mercy Migendi* and *Brian Vuhuga*
 
 ---
 
 ### 2. **Register**
 
-- **Add Student** form: Full name, email, gender, date of birth, admission number
-- **Student List**: Paginated, searchable, showing department, progress, year
+- **Add Student Form**:
+  - Captures: Full name, email, gender, date of birth, national ID, county, phone number, admission number, and campus
+  - Relational dropdowns for: gender, department, program, level, and campus
+- **Student List**:
+  - Paginated, searchable list showing department, progress, academic year
 - **Enrollments**:
-  - Enroll a student in a course
-  - Bulk enrollment: multiple students to one course, or all students to all courses
+  - Enroll student into one or more courses
+  - Bulk enrollment supported:
+    - Multiple students to one course
+    - All students to all courses
+    - Filtered by program or academic year
 
-> **Implemented by**: *Gerry Migiro*, *Elvis Karinge*
+> **Implemented by**: *Gerry Migiro*, *Elvis Karinge*  
+> **Extended by**: *Elvis Karinge* – for enhanced student detail capture
 
 ---
 
-### 3. **Courses**
+### 3. **Courses & Academic Configuration (Dropdown Navigation)**
 
-- **Course List**:
+The "Courses" navigation now includes a **dropdown menu** that leads to modular sub-pages for configuring all academic metadata. This makes the platform scalable and eliminates hardcoded values.
+
+#### Submodules:
+
+- **Course List**
   - Accordion UI grouped by department
-  - Shows course name, level, exam body, study status
+  - Each course shows: name, level, exam body, study status
+- **Add Course Form**
+  - Relational dropdowns for: department, program, exam body, level, campus, study mode, and study status
+- **Departments**
+- **Programs**
+- **Exam Bodies**
+- **Campuses**
+- **Study Modes**
+- **Study Levels**
 
-- **Add Course Form**:
-  - Fields: course name, department, programme, level, exam body, study status, campus
-  - Normalized dropdowns linked to backend reference tables
+Each submodule allows administrators to manage institutional data dynamically from the UI, reflecting updates immediately throughout the system.
 
-> **Implemented by**: *Vincent Omondi Owuor*
+> **Implemented by**: *Vincent Omondi Owuor* and *Gerry Migiro*
 
 ---
 
 ### 4. **Reports**
 
-- Dynamic filtering:
-  - Department, course, faculty, year, status
-- Generated reports include:
-  - Student ID, course, department, exam score, grade, transcript status
+- Dynamic filters:
+  - Department
+  - Course
+  - Faculty
+  - Year
+  - Enrollment Status
+- Report Output Includes:
+  - Student ID
+  - Course
+  - Department
+  - Exam score
+  - Grade
+  - Transcript status
+- Export functionality (CSV, PDF) currently in development
 
 > **[In Development]**
 
@@ -83,29 +113,33 @@ The system reflects the institution’s operations as prototyped in the official
 
 ## Database Schema Overview
 
-EduCore implements a normalized SQL Server database with full referential integrity. Key entities:
+EduCore uses a **normalized SQL Server** schema with referential integrity, foreign key constraints, and support for auditability. The system is extensible, ensuring new data types or structures can be added without affecting core functionality.
 
-### `Students`
-Captures biodata, academic affiliation, gender, and campus.
+### Main Entities
 
-### `Courses`
-Defines academic offerings and links to programmes, levels, departments, and delivery modes.
-
-### `Enrollments`
-Many-to-many table connecting students to courses with status tracking (`Enrolled`, `Completed`, `Dropped`).
+- `Students`: Stores biodata, contact information, department, gender, program, and campus
+- `Courses`: Defines academic offerings and links to departments, programs, levels, study modes, campuses, and exam bodies
+- `Enrollments`: Many-to-many relationship between students and courses, tracking enrollment status
+- `ActivityLog`: Captures entity operations (e.g., "Student Registered", "Course Enrolled") with user reference and timestamp
 
 ### Lookup Tables
-- `Departments`, `Programmes`, `Levels`, `Campuses`
-- `Genders`, `StudyStatuses`, `ExamBodies`
 
-### `ActivityLog`
-Tracks student and course-related events with timestamps, action type, and references.
+- `Departments`
+- `Programs`
+- `ExamBodies`
+- `Campuses`
+- `StudyModes`
+- `StudyLevels`
+- `Genders`
+- `Counties`
+- `StudyStatuses`
 
-#### ER Relationship Highlights:
+### Entity Relationship Highlights
 
-- Students ↔ Enrollments ↔ Courses (Many-to-Many via Enrollments)
-- Programmes, Departments, Levels, Campuses used as foreign key lookups
-- Composite key on `(StudentID, CourseID)` in `Enrollments` ensures uniqueness
+- **Students ↔ Enrollments ↔ Courses** (many-to-many)
+- **Courses** reference multiple normalized lookup entities
+- **Enrollments** use composite primary key (`StudentID`, `CourseID`) to enforce uniqueness
+- **Audit Logs** are linked to user actions for traceability
 
 ---
 
@@ -113,34 +147,41 @@ Tracks student and course-related events with timestamps, action type, and refer
 
 | Feature                          | Status       | Notes                                                                 |
 |----------------------------------|--------------|-----------------------------------------------------------------------|
-| Student Registration             | Complete     | Validates fields, links to gender, level, programme                   |
-| Course Creation + Listing        | Complete     | Accordion design by department, relational backend integration        |
-| Enrollment (Single/Bulk)         | Complete     | Bulk enrollment logic via dropdown filtering and email batch input    |
-| Dashboard Metrics & Activities   | In Dev       | Fetches recent data, displays live counters, tracks audit logs        |
-| Reports Filtering                | In Dev       | Filterable UI scaffold completed, export/download logic pending       |
-| Data Normalization               | Complete     | All dropdowns reference normalized tables                             |
-| Accessibility (WCAG 2.2 AA)      | Compliant    | Semantic HTML, ARIA support, proper label associations                |
+| Student Registration             | ✅ Complete  | Extended to include ID number, county, campus, and contact details   |
+| Course Creation + Listing        | ✅ Complete  | Relational form fields and department-grouped UI                     |
+| Academic Configuration Dropdown  | ✅ Complete  | Dynamic CRUD for all academic lookup tables                          |
+| Enrollment (Single/Bulk)         | ✅ Complete  | Batch assignments supported via filters and dropdown logic           |
+| Dashboard Metrics & Activities   | 🔄 In Dev    | Audit feed implemented; metrics integration in progress              |
+| Reports Filtering & Export       | 🔄 In Dev    | Filtering complete; CSV/PDF export pending                           |
+| Data Normalization               | ✅ Complete  | All form inputs reference backend lookup tables                      |
+| Accessibility (WCAG 2.2 AA)      | ✅ Compliant | Semantic HTML, ARIA attributes, proper form labels                   |
 
 ---
 
 ## Development Standards
 
-- **Branching Model**: Feature branches → `forge` for staging
-- **Commits**: Conventional commits (`feat:`, `fix:`, `refactor:`)
-- **Code Reviews**: Peer reviews required for all merges
-- **Security**: Input validation, SQL constraints, no direct SQL execution
-- **Testing**: Manual UI testing + DB-level constraint verification
+| Area               | Enforcement Details                                                     |
+|--------------------|--------------------------------------------------------------------------|
+| **Branching**      | Git feature branches → `forge` integration branch                        |
+| **Commits**        | Conventional format: `feat:`, `fix:`, `refactor:`, etc.                  |
+| **Code Reviews**   | Mandatory peer reviews for all pull requests                             |
+| **Security**       | Form validation, SQL injection protection, EF-safe queries only          |
+| **Testing**        | Manual UI walkthroughs, DB constraints, and schema validation            |
+| **Accessibility**  | Conformance to WCAG 2.2 AA via semantic HTML, ARIA roles, tab order      |
 
 ---
 
 ## Team Roles & Division of Work
 
-| Name                  | Role            | Area of Focus                       |
-|-----------------------|------------------|--------------------------------------|
-| **Vincent Omondi**    | Scrum Master     | Course Module                        |
-| Mercy Migendi         | Developer        | Dashboard UI                         |
-| Brian Vuhuga          | Developer        | Dashboard Logic, Metrics             |
-| Gerry Migiro          | Developer        | Student Registration                 |
-| Elvis Karinge         | Developer        | Enrollment Workflow                  |
+| Name                    | Role            | Area of Focus                                         |
+|-------------------------|------------------|--------------------------------------------------------|
+| **Vincent Omondi**      | Scrum Master     | Course module, academic configuration dropdowns        |
+| Gerry Migiro            | Developer        | Student registration, dropdown integrations            |
+| Elvis Karinge           | Developer        | Enhanced student form, bulk enrollment logic           |
+| Mercy Migendi           | Developer        | Dashboard UI and page composition                      |
+| Brian Vuhuga            | Developer        | Dashboard logic, real-time metric calculations         |
 
-Project supervised by **Mr. Nick Silver**
+> Project supervised by **Mr. Nick Silver**
+
+---
+ 

@@ -6,27 +6,113 @@ namespace EduCoreSuite.Models
     {
         public int StudentID { get; set; }
 
-        [Required(ErrorMessage = "Full name is required")]
+        // ----------- Personal Details -----------
+        [Required]
         [RegularExpression(@"^([A-Za-z]+\s[A-Za-z]+.*)$", ErrorMessage = "Please enter at least two names")]
-        [StringLength(100, ErrorMessage = "Full name can't exceed 100 characters")]
-        public string FullName { get; set; }
+        [StringLength(100)]
+        public string FullName { get; set; } = string.Empty;
 
-        public string Email { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "Phone number is required")]
-        [RegularExpression(@"^(07\d{8}|\+2547\d{8})$", ErrorMessage = "Phone number must start with 07 or +2547 and be 10 or 13 digits long")]
-        public string PhoneNumber { get; set; }
-
-        public string Gender { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Admission Number is required")]
-
-        public string AdmissionNumber { get; set; } = string.Empty;
+        [Required]
+        [DataType(DataType.Date)]
         public string DOB { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Year is required")]
-        [RegularExpression(@"^(1st Year|2nd Year|3rd Year|4th Year)$", ErrorMessage = "Please select a valid year")]
-        public string Year { get; set; } = string.Empty;
-        public Student() { }
+        [Required]
+        public string Religion { get; set; } = string.Empty;
 
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        public string Gender { get; set; } = string.Empty;
+
+        [Required]
+        public string Disability { get; set; } = string.Empty;
+
+        [Required]
+        public string AdmissionNumber { get; set; } = string.Empty;
+
+        [Required]
+        public string Nationality { get; set; } = string.Empty;
+
+        [Required]
+        public string Medical { get; set; } = string.Empty;
+
+        [Required]
+        [RegularExpression(@"^\d{8,}$")]
+        public string IDNumber { get; set; } = string.Empty;
+
+        [Required]
+        public string MaritalStatus { get; set; } = string.Empty;
+
+        [Required]
+        public string CoCurricular { get; set; } = string.Empty;
+
+        // ----------- Contact Info -----------
+        [Required]
+        [RegularExpression(@"^(\+?\d{10,13})$")]
+        public string PrimaryPhone { get; set; } = string.Empty;
+
+        [Required]
+        [RegularExpression(@"^(\+?\d{10,13})$")]
+        public string AltPhone { get; set; } = string.Empty;
+
+        [Required]
+        [RegularExpression(@"^\d{5}$")]
+        public string PostalCode { get; set; } = string.Empty;
+
+        [Required]
+        public string County { get; set; } = string.Empty;
+
+        [Required]
+        public string SubCounty { get; set; } = string.Empty;
+
+        [Required]
+        [RegularExpression(@"^[A-Za-z\s\-]+$")]
+        public string Town { get; set; } = string.Empty;
+
+        [Required]
+        [RegularExpression(@"^[A-Za-z\s\-]+$")]
+        public string Ward { get; set; } = string.Empty;
+
+        // ----------- Emergency Contact -----------
+        [Required]
+        [RegularExpression(@"^([A-Za-z]+\s[A-Za-z]+.*)$")]
+        public string EmergencyName { get; set; } = string.Empty;
+
+        [Required]
+        public string Relationship { get; set; } = string.Empty;
+
+        [Required]
+        [RegularExpression(@"^(\+?\d{10,13})$")]
+        public string EmergencyPhone { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        public string EmergencyEmail { get; set; } = string.Empty;
+
+        [Required]
+        public string EmergencyAddress { get; set; } = string.Empty;
+
+        // ----------- Academic Details -----------
+        [Required]
+        public string Course { get; set; } = string.Empty;
+
+        [Required]
+        public string Department { get; set; } = string.Empty;
+
+        [Required]
+        public string Faculty { get; set; } = string.Empty;
+
+        [Required]
+        [RegularExpression(@"^(Certificate|Diploma|Degree|Masters)$")]
+        public string Program { get; set; } = string.Empty;
+
+        [Required]
+        public string ExamBody { get; set; } = string.Empty;
+
+        [Required]
+        [RegularExpression(@"^(1st Year|2nd Year|3rd Year|4th Year)$")]
+        public string Year { get; set; } = string.Empty;
     }
 }

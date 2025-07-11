@@ -1,44 +1,49 @@
 ﻿@model IEnumerable<EduCoreSuite.Models.Student>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Student List";
 }
 
-<h2>Students List</h2>
+<h2>Student List</h2>
+
 <p>
-    <a asp-controller="Enrollment" asp-action="Index" class="btn btn-outline-secondary me-2">Enrollments</a>
-    <a asp-controller="Students" asp-action="Index" class="btn btn-secondary me-2">Student List</a>
-    <a asp-action="Create" class="btn btn-outline-secondary">Add Student</a>
+    <a asp-action="Create" class="btn btn-primary">Add New Student</a>
 </p>
 
-<table class="table">
-    <thead>
+<table class="table table-bordered table-striped table-responsive-sm">
+    <thead class="table-dark">
         <tr>
-            <th>@Html.DisplayNameFor(model => model.FullName)</th>
-            <th>@Html.DisplayNameFor(model => model.Email)</th>
-            <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.Gender)</th>
-            <th>AdmNumber</th>
-            <th>@Html.DisplayNameFor(model => model.DOB)</th>
-            <th>@Html.DisplayNameFor(model => model.Year)</th>
-            <th>Actions</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Admission No</th>
+            <th>Gender</th>
+            <th>Course</th>
+            <th>Department</th>
+            <th>Faculty</th>
+            <th>Program</th>
+            <th>Exam Body</th>
+            <th>Year</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var student in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.Gender)</td>
-                <td>@Html.DisplayFor(modelItem => item.AdmissionNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.DOB)</td>
-                <td>@Html.DisplayFor(modelItem => item.Year)</td>
+                <td>@student.FullName</td>
+                <td>@student.Email</td>
+                <td>@student.AdmissionNumber</td>
+               
+                <td>@student.Course</td>
+                <td>@student.Department</td>
+                <td>@student.Faculty</td>
+                <td>@student.Program</td>
+                <td>@student.ExamBody</td>
+                <td>@student.Year</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.StudentID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.StudentID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.StudentID">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@student.StudentID" class="btn btn-sm btn-warning">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@student.StudentID" class="btn btn-sm btn-info">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@student.StudentID" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
         }
