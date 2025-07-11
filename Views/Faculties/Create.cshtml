@@ -1,4 +1,4 @@
-@model EduCoreSuite.Models.Programme
+﻿@model EduCoreSuite.Models.Faculty
 
 @{
     ViewData["Title"] = "Create";
@@ -6,7 +6,7 @@
 
 <h1>Create</h1>
 
-<h4>Programme</h4>
+<h4>Faculty</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,34 +18,9 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Level" class="control-label"></label>
-                <select asp-for="Level" class="form-control"></select>
-                <span asp-validation-for="Level" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccreditedBy" class="control-label"></label>
-                <input asp-for="AccreditedBy" class="form-control" />
-                <span asp-validation-for="AccreditedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccreditationDate" class="control-label"></label>
-                <input asp-for="AccreditationDate" class="form-control" />
-                <span asp-validation-for="AccreditationDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DurationYears" class="control-label"></label>
-                <input asp-for="DurationYears" class="form-control" />
-                <span asp-validation-for="DurationYears" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SemestersPerYear" class="control-label"></label>
-                <input asp-for="SemestersPerYear" class="form-control" />
-                <span asp-validation-for="SemestersPerYear" class="text-danger"></span>
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
@@ -68,8 +43,14 @@
                 <span asp-validation-for="CreatedBy" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DepartmentID" class="control-label"></label>
-                <select asp-for="DepartmentID" class ="form-control" asp-items="ViewBag.DepartmentID"></select>
+                <label asp-for="UpdatedBy" class="control-label"></label>
+                <input asp-for="UpdatedBy" class="form-control" />
+                <span asp-validation-for="UpdatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                </label>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

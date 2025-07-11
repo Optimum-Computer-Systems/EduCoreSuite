@@ -5,7 +5,7 @@
 namespace EduCoreSuite.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,7 +57,7 @@ namespace EduCoreSuite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Department",
+                name: "Departments",
                 columns: table => new
                 {
                     DepartmentID = table.Column<int>(type: "int", nullable: false)
@@ -66,7 +66,7 @@ namespace EduCoreSuite.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Department", x => x.DepartmentID);
+                    table.PrimaryKey("PK_Departments", x => x.DepartmentID);
                 });
 
             migrationBuilder.CreateTable(
@@ -140,7 +140,7 @@ namespace EduCoreSuite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Programme",
+                name: "Programmes",
                 columns: table => new
                 {
                     ProgrammeID = table.Column<int>(type: "int", nullable: false)
@@ -150,18 +150,18 @@ namespace EduCoreSuite.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Programme", x => x.ProgrammeID);
+                    table.PrimaryKey("PK_Programmes", x => x.ProgrammeID);
                     table.ForeignKey(
-                        name: "FK_Programme_Department_DepartmentID",
+                        name: "FK_Programmes_Departments_DepartmentID",
                         column: x => x.DepartmentID,
-                        principalTable: "Department",
+                        principalTable: "Departments",
                         principalColumn: "DepartmentID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Programme_DepartmentID",
-                table: "Programme",
+                name: "IX_Programmes_DepartmentID",
+                table: "Programmes",
                 column: "DepartmentID");
         }
 
@@ -178,16 +178,20 @@ namespace EduCoreSuite.Migrations
                 name: "ExamBodies");
 
             migrationBuilder.DropTable(
+<<<<<<<< HEAD:Migrations/20250711100308_Initial Migration.cs
                 name: "Faculties");
 
             migrationBuilder.DropTable(
                 name: "Programme");
+========
+                name: "Programmes");
+>>>>>>>> vincent:Migrations/20250709144622_InitialCreate.cs
 
             migrationBuilder.DropTable(
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "Department");
+                name: "Departments");
         }
     }
 }
