@@ -3,13 +3,21 @@ using EduCoreSuite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EduCoreSuite.Controllers
 {
-    public class ProgrammesController(ForgeDBContext context) : Controller
+    public class ProgrammesController : Controller
     {
-        private readonly ForgeDBContext _context = context;
+        private readonly ForgeDBContext _context;
 
+        public ProgrammesController(ForgeDBContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Programmes
         public async Task<IActionResult> Index()
         {
             var programmes = await _context.Programmes
@@ -20,75 +28,55 @@ namespace EduCoreSuite.Controllers
             return View(programmes);
         }
 
+        // GET: Programmes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id is null) return NotFound();
+            if (id == null) return NotFound();
 
             var programme = await _context.Programmes
                 .Include(p => p.Department)
                 .FirstOrDefaultAsync(p => p.ProgrammeID == id);
 
-            return programme is null ? NotFound() : View(programme);
+            if (programme == null) return NotFound();
+            return View(programme);
         }
 
+        // GET: Programmes/Create
         public IActionResult Create()
         {
-            ViewData["DepartmentID"] = new SelectList(
-                _context.Departments
-                    .Where(d => d.IsActive && !d.IsDeleted)
-                    .OrderBy(d => d.Name),
-                "DepartmentID",
-                "Name"
-            );
+            PopulateDepartmentsDropdown();
             return View();
         }
 
+        // POST: Programmes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Code,Level,AccreditedBy,AccreditationDate,DurationYears,SemestersPerYear,IsActive,DepartmentID")] Programme programme)
         {
             if (ModelState.IsValid)
             {
-                programme.CreatedAt = programme.UpdatedAt = DateTime.UtcNow;
-                programme.CreatedBy = User.Identity?.Name ?? "system";
-
-                _context.Programmes.Add(programme);
+                _context.Add(programme);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["DepartmentID"] = new SelectList(
-                _context.Departments
-                    .Where(d => d.IsActive && !d.IsDeleted)
-                    .OrderBy(d => d.Name),
-                "DepartmentID",
-                "Name",
-                programme.DepartmentID
-            );
+            PopulateDepartmentsDropdown(programme.DepartmentID);
             return View(programme);
         }
 
+        // GET: Programmes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id is null) return NotFound();
+            if (id == null) return NotFound();
 
-            var programme = await _context.Programmes
-                .Include(p => p.Department)
-                .FirstOrDefaultAsync(p => p.ProgrammeID == id);
+            var programme = await _context.Programmes.FindAsync(id);
+            if (programme == null) return NotFound();
 
-            if (programme is null) return NotFound();
-
-            ViewData["DepartmentID"] = new SelectList(
-                _context.Departments
-                    .Where(d => d.IsActive && !d.IsDeleted)
-                    .OrderBy(d => d.Name),
-                "DepartmentID",
-                "Name",
-                programme.DepartmentID
-            );
+            PopulateDepartmentsDropdown(programme.DepartmentID);
             return View(programme);
         }
 
+        // POST: Programmes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProgrammeID,Name,Code,Level,AccreditedBy,AccreditationDate,DurationYears,SemestersPerYear,IsActive,DepartmentID")] Programme programme)
@@ -97,44 +85,38 @@ namespace EduCoreSuite.Controllers
 
             if (ModelState.IsValid)
             {
-                programme.UpdatedAt = DateTime.UtcNow;
-
                 try
                 {
-                    _context.Programmes.Update(programme);
+                    _context.Update(programme);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Programmes.Any(e => e.ProgrammeID == programme.ProgrammeID)) return NotFound();
+                    if (!_context.Programmes.Any(e => e.ProgrammeID == programme.ProgrammeID))
+                        return NotFound();
                     throw;
                 }
-
-                return RedirectToAction(nameof(Index));
             }
 
-            ViewData["DepartmentID"] = new SelectList(
-                _context.Departments
-                    .Where(d => d.IsActive && !d.IsDeleted)
-                    .OrderBy(d => d.Name),
-                "DepartmentID",
-                "Name",
-                programme.DepartmentID
-            );
+            PopulateDepartmentsDropdown(programme.DepartmentID);
             return View(programme);
         }
 
+        // GET: Programmes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id is null) return NotFound();
+            if (id == null) return NotFound();
 
             var programme = await _context.Programmes
                 .Include(p => p.Department)
                 .FirstOrDefaultAsync(p => p.ProgrammeID == id);
 
-            return programme is null ? NotFound() : View(programme);
+            if (programme == null) return NotFound();
+            return View(programme);
         }
 
+        // POST: Programmes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -146,6 +128,19 @@ namespace EduCoreSuite.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private void PopulateDepartmentsDropdown(object? selectedDept = null)
+        {
+            ViewData["DepartmentID"] = new SelectList(
+                _context.Departments
+                    .Where(d => d.IsActive && !d.IsDeleted)
+                    .OrderBy(d => d.Name)
+                    .Select(d => new { d.DepartmentID, d.Name }),
+                "DepartmentID",
+                "Name",
+                selectedDept
+            );
         }
     }
 }

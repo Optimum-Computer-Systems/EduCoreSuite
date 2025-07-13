@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EduCoreSuite.Models
@@ -16,25 +15,7 @@ namespace EduCoreSuite.Models
         [StringLength(255)]
         public string? Description { get; set; }
 
-        // === Metadata ===
-
-        [Required]
-        public bool IsActive { get; set; } = true;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public DateTime? UpdatedAt { get; set; }
-
-        [StringLength(100)]
-        public string CreatedBy { get; set; } = "system";
-
-        [StringLength(100)]
-        public string? UpdatedBy { get; set; }
-
-        public bool IsDeleted { get; set; } = false;
-
-        // === Navigation ===
-
+        // Navigation
         public ICollection<Department> Departments { get; set; } = new List<Department>();
     }
 }
