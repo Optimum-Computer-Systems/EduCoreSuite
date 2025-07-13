@@ -1,70 +1,79 @@
 ﻿@model EduCoreSuite.Models.ViewModels.CourseFormViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Course";
 }
 
-<h1>Edit</h1>
-
-<h4>Course</h4>
+<h1>Edit Course</h1>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Course.CourseID" />
 
-            <div class="form-group">
-                <label asp-for="Course.CourseName" class="control-label"></label>
+            <div class="form-group mt-3">
+                <label asp-for="Course.CourseName" class="control-label">Course Name</label>
                 <input asp-for="Course.CourseName" class="form-control" />
                 <span asp-validation-for="Course.CourseName" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Course.Department" class="control-label"></label>
-                <select asp-for="Course.Department" class="form-control" asp-items="Model.Departments"></select>
-                <span asp-validation-for="Course.Department" class="text-danger"></span>
+            <div class="form-group mt-3">
+                <label asp-for="Course.DepartmentID" class="control-label">Department</label>
+                <select asp-for="Course.DepartmentID" class="form-control" asp-items="Model.Departments">
+                    <option value="">Select Department</option>
+                </select>
+                <span asp-validation-for="Course.DepartmentID" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Course.Programme" class="control-label"></label>
-                <select asp-for="Course.Programme" class="form-control" asp-items="Model.Programmes"></select>
-                <span asp-validation-for="Course.Programme" class="text-danger"></span>
+            <div class="form-group mt-3">
+                <label asp-for="Course.ProgrammeID" class="control-label">Programme</label>
+                <select asp-for="Course.ProgrammeID" class="form-control" asp-items="Model.Programmes">
+                    <option value="">Select Programme</option>
+                </select>
+                <span asp-validation-for="Course.ProgrammeID" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Course.StudyLevel" class="control-label"></label>
-                <select asp-for="Course.StudyLevel" class="form-control" asp-items="Model.StudyLevels"></select>
-                <span asp-validation-for="Course.StudyLevel" class="text-danger"></span>
+            <div class="form-group mt-3">
+                <label asp-for="Course.CampusID" class="control-label">Campus</label>
+                <select asp-for="Course.CampusID" class="form-control" asp-items="Model.Campuses">
+                    <option value="">Select Campus</option>
+                </select>
+                <span asp-validation-for="Course.CampusID" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Course.ExamBody" class="control-label"></label>
-                <select asp-for="Course.ExamBody" class="form-control" asp-items="Model.ExamBodies"></select>
-                <span asp-validation-for="Course.ExamBody" class="text-danger"></span>
+            <div class="form-group mt-3">
+                <label asp-for="Course.ExamBodyID" class="control-label">Exam Body</label>
+                <select asp-for="Course.ExamBodyID" class="form-control" asp-items="Model.ExamBodies">
+                    <option value="">Select Exam Body</option>
+                </select>
+                <span asp-validation-for="Course.ExamBodyID" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Course.StudyStatus" class="control-label"></label>
-                <select asp-for="Course.StudyStatus" class="form-control" asp-items="Model.StudyStatuses"></select>
-                <span asp-validation-for="Course.StudyStatus" class="text-danger"></span>
+            <div class="form-group mt-3">
+                <label asp-for="Course.StudyStatusID" class="control-label">Study Status</label>
+                <select asp-for="Course.StudyStatusID" class="form-control" asp-items="Model.StudyStatuses">
+                    <option value="">Select Study Status</option>
+                </select>
+                <span asp-validation-for="Course.StudyStatusID" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Course.Campus" class="control-label"></label>
-                <select asp-for="Course.Campus" class="form-control" asp-items="Model.Campuses"></select>
-                <span asp-validation-for="Course.Campus" class="text-danger"></span>
+            <div class="form-group mt-3">
+                <label asp-for="Course.StudyModeID" class="control-label">Study Mode</label>
+                <select asp-for="Course.StudyModeID" class="form-control" asp-items="Model.StudyModes">
+                    <option value="">Select Study Mode</option>
+                </select>
+                <span asp-validation-for="Course.StudyModeID" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
             </div>
+
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
