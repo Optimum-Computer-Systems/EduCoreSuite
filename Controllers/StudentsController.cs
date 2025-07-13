@@ -137,38 +137,87 @@ namespace EduCoreSuite.Controllers
             return _context.Students.Any(e => e.StudentID == id);
         }
 
-        private void PopulateDropdowns()
-        {
-            ViewBag.GenderList = new SelectList(new[] { "Male", "Female", "Other" });
-            ViewBag.Religions = new SelectList(new[] { "Christianity", "Islam", "Hinduism", "Atheist", "Other" });
-            ViewBag.Medicals = new SelectList(new[] { "Normal", "Chronic", "Disabled", "Other" });
-            ViewBag.MaritalStatusList = new SelectList(new[] { "Single", "Married", "Divorced", "Widowed" });
-            //ViewBag.Courses = new SelectList(_context.Courses.Select(c => c.CourseName));
-            //ViewBag.Departments = new SelectList(_context.Departments.ToList(), "DepartmentName", "DepartmentName");
-            //ViewBag.Faculties = new SelectList(_context.Faculties.ToList(), "FacultyName", "FacultyName");
-            //ViewBag.ExamBodies = new SelectList(_context.ExamBodies.Select(e => e.Name));
-            ViewBag.Courses = new SelectList(_context.Courses?.ToList() ?? new List<Course>(), "CourseName", "CourseName");
-            ViewBag.Departments = new SelectList(_context.Departments?.ToList() ?? new List<Department>(), "DepartmentName", "DepartmentName");
-            ViewBag.Faculties = new SelectList(_context.Faculties?.ToList() ?? new List<Faculty>(), "FacultyName", "FacultyName");
-            ViewBag.ExamBodies = new SelectList(_context.ExamBodies?.ToList() ?? new List<ExamBody>(), "BodyName", "BodyName");
-            ViewBag.Programs = new SelectList(new[] { "Certificate", "Diploma", "Degree", "Masters" });
-            ViewBag.Years = new SelectList(new[] { "1st Year", "2nd Year", "3rd Year", "4th Year" });
+// StudentsController.cs  ── only the helper has changed
+private void PopulateDropdowns()
+{
+    // --- simple look‑ups (no tables) ------------------------------
+    ViewBag.GenderList       = new SelectList(new[] { "Male", "Female", "Other" });
+    ViewBag.Religions        = new SelectList(new[] { "Christianity", "Islam", "Hinduism", "Atheist", "Other" });
+    ViewBag.Medicals         = new SelectList(new[] { "Normal", "Chronic", "Disabled", "Other" });
+    ViewBag.MaritalStatusList= new SelectList(new[] { "Single", "Married", "Divorced", "Widowed" });
+    ViewBag.Years            = new SelectList(new[] { "1st Year", "2nd Year", "3rd Year", "4th Year" });
 
-            ViewBag.Counties = new SelectList(CountySubCountyData.CountySubCountyDict.Keys);
+    // --- database‑driven lists ------------------------------------
+    // NB:  ID field first (model‑binding)  |  Display field second
+    ViewBag.Courses      = new SelectList(
+        _context.Courses?.AsNoTracking().ToList() ?? new List<Course>(),
+        nameof(Course.CourseID), nameof(Course.CourseName));
+
+    ViewBag.Departments  = new SelectList(
+        _context.Departments?.AsNoTracking().ToList() ?? new List<Department>(),
+        nameof(Department.DepartmentID), nameof(Department.Name));
+
+    ViewBag.Faculties    = new SelectList(
+        _context.Faculties?.AsNoTracking().ToList() ?? new List<Faculty>(),
+        nameof(Faculty.FacultyID), nameof(Faculty.Name));
+
+    ViewBag.ExamBodies   = new SelectList(
+        _context.ExamBodies?.AsNoTracking().ToList() ?? new List<ExamBody>(),
+        nameof(ExamBody.Id), nameof(ExamBody.Name));
+
+    // ――――― NEW items from the navigation snapshot ―――――
+    ViewBag.Campuses     = new SelectList(
+        _context.Campuses?.AsNoTracking().ToList() ?? new List<Campus>(),
+        nameof(Campus.Id), nameof(Campus.Name));
+
+    ViewBag.Programmes   = new SelectList(
+        _context.Programmes?.AsNoTracking().ToList() ?? new List<Programme>(),
+        nameof(Programme.ProgrammeID), nameof(Programme.Name));
+
+    ViewBag.Staff        = new SelectList(
+        _context.Staff?.AsNoTracking().ToList() ?? new List<Staff>(),
+        nameof(Staff.StaffID), nameof(Staff.FullName));
+
+    ViewBag.StudyModes   = new SelectList(
+        _context.StudyModes?.AsNoTracking().ToList() ?? new List<StudyMode>(),
+        nameof(StudyMode.Id), nameof(StudyMode.Name));
+
+    ViewBag.StudyStatuses= new SelectList(
+        _context.StudyStatuses?.AsNoTracking().ToList() ?? new List<StudyStatus>(),
+        nameof(StudyStatus.Id), nameof(StudyStatus.Name));
+
+            ViewBag.Counties = new SelectList(
+                _context.Counties              // DbSet<CountySubCounty>
+                        .AsNoTracking()
+                        .OrderBy(c => c.CountyName)
+                        .ToList(),
+                nameof(CountySubCounty.CountyID),     // value field
+                nameof(CountySubCounty.CountyName));  // text  field
+
             ViewBag.SubCounties = new SelectList(
-                CountySubCountyData.CountySubCountyDict.SelectMany(kvp => kvp.Value).Distinct().OrderBy(x => x).ToList()
-            );
+                Enumerable.Empty<SubCounty>(),         // blank on first load
+                nameof(SubCounty.SubCountyID),
+                nameof(SubCounty.SubCountyName));
+
         }
 
-        // Optional JSON method if needed in future
+
         [HttpGet]
-        public JsonResult GetSubCounties(string county)
+        public JsonResult GetSubCounties(int countyId)
         {
-            var subCounties = CountySubCountyData.CountySubCountyDict
-                .FirstOrDefault(c => c.Key.Equals(county, System.StringComparison.OrdinalIgnoreCase)).Value
-                ?? new List<string>();
+            var data = _context.SubCounties        // DbSet<SubCounty>
+                               .AsNoTracking()
+                               .Where(s => s.CountyID == countyId)
+                               .OrderBy(s => s.SubCountyName)
+                               .Select(s => new
+                               {
+                                   s.SubCountyID,
+                                   s.SubCountyName
+                               })
+                               .ToList();
 
-            return Json(subCounties);
+            return Json(data);
         }
+
     }
 }
