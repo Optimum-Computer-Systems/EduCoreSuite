@@ -22,19 +22,7 @@ namespace EduCoreSuite.Models
         [StringLength(100)]
         public string Role { get; set; } = "Lecturer"; // e.g., Lecturer, Dean, Registrar, HOD
 
-        // === Metadata ===
-
-        public bool IsActive { get; set; } = true;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public DateTime? UpdatedAt { get; set; }
-
-        [StringLength(100)]
-        public string CreatedBy { get; set; } = "system";
-
-        [StringLength(100)]
-        public string? UpdatedBy { get; set; }
+         
 
         public bool IsDeleted { get; set; } = false;
 

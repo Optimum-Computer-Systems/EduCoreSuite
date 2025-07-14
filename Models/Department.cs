@@ -24,8 +24,8 @@ namespace EduCoreSuite.Models
 
         // === Relationships ===
 
-        [Required]
-        public int FacultyID { get; set; }
+        [Required(ErrorMessage ="Please select a faculty.")]
+        public int? FacultyID { get; set; }
 
         [ForeignKey("FacultyID")]
         public Faculty Faculty { get; set; } = null!;
