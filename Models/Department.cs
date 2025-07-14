@@ -26,7 +26,7 @@ namespace EduCoreSuite.Models
         public int FacultyID { get; set; }
 
         [ForeignKey(nameof(FacultyID))]
-        public Faculty Faculty { get; set; } = null!;
+        public Faculty? Faculty { get; set; }
 
         public ICollection<Programme> Programmes { get; set; } = new List<Programme>();
 
