@@ -50,12 +50,16 @@ namespace EduCoreSuite.Controllers
         }
 
         // POST: ExamBodies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Country")] ExamBody examBody)
         {
+            // Check for duplicate ExamBody Name
+            if (await _context.ExamBodies.AnyAsync(e => e.Name.ToLower() == examBody.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "An exam body with this name already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(examBody);
@@ -82,8 +86,6 @@ namespace EduCoreSuite.Controllers
         }
 
         // POST: ExamBodies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Country")] ExamBody examBody)
@@ -91,6 +93,12 @@ namespace EduCoreSuite.Controllers
             if (id != examBody.Id)
             {
                 return NotFound();
+            }
+
+            // Check for duplicate ExamBody Name (excluding current exam body)
+            if (await _context.ExamBodies.AnyAsync(e => e.Id != id && e.Name.ToLower() == examBody.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "An exam body with this name already exists.");
             }
 
             if (ModelState.IsValid)
@@ -152,6 +160,26 @@ namespace EduCoreSuite.Controllers
         private bool ExamBodyExists(int id)
         {
             return _context.ExamBodies.Any(e => e.Id == id);
+        }
+
+        // AJAX endpoint for real-time duplicate checking
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateName(string name, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.ExamBodies.AnyAsync(e => e.Id != excludeId && e.Name.ToLower() == name.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.ExamBodies.AnyAsync(e => e.Name.ToLower() == name.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "An exam body with this name already exists." : "" });
         }
     }
 }
