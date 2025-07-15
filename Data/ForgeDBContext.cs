@@ -18,6 +18,10 @@ namespace EduCoreSuite.Data
         public DbSet<ActivityLog> ActivityLogs { get; set; }
 
         public DbSet<ExamBody> ExamBodies { get; set; }
+        public DbSet<CountySubCounty> Counties { get; set; }
+        public DbSet<SubCounty> SubCounties { get; set; }
+
+
         public DbSet<Department> Departments { get; set; }
         public DbSet<Programme> Programmes { get; set; }
         public DbSet<Campus> Campuses { get; set; }

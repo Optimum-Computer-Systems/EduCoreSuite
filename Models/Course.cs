@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,26 +30,32 @@ namespace EduCoreSuite.Models
         // Foreign Keys & Navigation Properties
         [Display(Name = "Department")]
         public int DepartmentID { get; set; }
+        [ValidateNever]
         public Department Department { get; set; } = null!;
 
         [Display(Name = "Programme")]
         public int ProgrammeID { get; set; }
+        [ValidateNever]
         public Programme Programme { get; set; } = null!;
 
         [Display(Name = "Campus")]
         public int CampusID { get; set; }
+        [ValidateNever]
         public Campus Campus { get; set; } = null!;
 
         [Display(Name = "Exam Body")]
         public int ExamBodyID { get; set; }
+        [ValidateNever]
         public ExamBody ExamBody { get; set; } = null!;
 
         [Display(Name = "Study Status")]
         public int StudyStatusID { get; set; }
+        [ValidateNever]
         public StudyStatus StudyStatus { get; set; } = null!;
 
         [Display(Name = "Study Mode")]
         public int StudyModeID { get; set; }
+        [ValidateNever]
         public StudyMode StudyMode { get; set; } = null!;
 
         // Timestamp for dashboard analytics
