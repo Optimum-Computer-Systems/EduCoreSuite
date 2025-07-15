@@ -182,21 +182,38 @@ namespace EduCoreSuite.Controllers
                 _context.StudyStatuses?.AsNoTracking().ToList() ?? new List<StudyStatus>(),
                 nameof(StudyStatus.Id), nameof(StudyStatus.Name));
 
-            // Fixed County & SubCounty
             ViewBag.Counties = new SelectList(
-                 _context.Counties
-                     .AsNoTracking()
-                     .OrderBy(c => c.Name)
-                     .ToList(),
-                 nameof(County.Id),        
-                 nameof(County.Name));     
-
+                _context.Counties              // DbSet<CountySubCounty>
+                        .AsNoTracking()
+                        .OrderBy(c => c.CountyName)
+                        .ToList(),
+                nameof(CountySubCounty.CountyID),     // value field
+                nameof(CountySubCounty.CountyName));  // text  field
 
             ViewBag.SubCounties = new SelectList(
-                 Enumerable.Empty<SubCounty>(),
+                Enumerable.Empty<SubCounty>(),         // blank on first load
                 nameof(SubCounty.SubCountyID),
                 nameof(SubCounty.SubCountyName));
 
         }
+
+
+        [HttpGet]
+        public JsonResult GetSubCounties(int countyId)
+        {
+            var data = _context.SubCounties        // DbSet<SubCounty>
+                               .AsNoTracking()
+                               .Where(s => s.CountyID == countyId)
+                               .OrderBy(s => s.SubCountyName)
+                               .Select(s => new
+                               {
+                                   s.SubCountyID,
+                                   s.SubCountyName
+                               })
+                               .ToList();
+
+            return Json(data);
+        }
+
     }
 }

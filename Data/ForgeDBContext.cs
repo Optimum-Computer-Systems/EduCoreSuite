@@ -14,10 +14,9 @@ namespace EduCoreSuite.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<ExamBody> ExamBodies { get; set; }
-
-        // Add these properly
-        public DbSet<County> Counties { get; set; }
+        public DbSet<CountySubCounty> Counties { get; set; }
         public DbSet<SubCounty> SubCounties { get; set; }
+
 
         public DbSet<Department> Departments { get; set; }
         public DbSet<Programme> Programmes { get; set; }
