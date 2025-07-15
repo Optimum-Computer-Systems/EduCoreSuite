@@ -7,7 +7,10 @@ namespace EduCoreSuite.Models
     {
         public int CourseID { get; set; }
 
-        [Required, StringLength(200)]
+        [Required(ErrorMessage = "Course name is required")]
+        [StringLength(200, ErrorMessage = "Course name cannot exceed 200 characters")]
+        [RegularExpression(@"^[A-Za-z][A-Za-z\s&\-().,0-9]+$", ErrorMessage = "Please enter a professional course name (e.g., Bachelor of Computer Science, Diploma in Business Management)")]
+        [Display(Name = "Course Name")]
         public string CourseName { get; set; } = string.Empty;
 
         // Foreign Keys & Navigation Properties
