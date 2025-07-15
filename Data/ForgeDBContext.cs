@@ -13,11 +13,13 @@ namespace EduCoreSuite.Data
         // ---------- DbSet properties ----------
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<ExamBody> ExamBodies { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; } //  NEW
+        public DbSet<Session> Sessions { get; set; }
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
 
+        public DbSet<ExamBody> ExamBodies { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Programme> Programmes { get; set; }
-
         public DbSet<Campus> Campuses { get; set; }
         public DbSet<StudyMode> StudyModes { get; set; }
         public DbSet<StudyStatus> StudyStatuses { get; set; }
@@ -29,9 +31,10 @@ namespace EduCoreSuite.Data
         {
             base.OnModelCreating(mb);
 
-            // Table‑name mapping (optional but keeps DB tidy)
+            // ---------- Table mapping ----------
             mb.Entity<Student>().ToTable("Students");
             mb.Entity<Course>().ToTable("Courses");
+            mb.Entity<Enrollment>().ToTable("Enrollments"); //  NEW
             mb.Entity<ExamBody>().ToTable("ExamBodies");
             mb.Entity<Department>().ToTable("Departments");
             mb.Entity<Programme>().ToTable("Programmes");
@@ -41,16 +44,25 @@ namespace EduCoreSuite.Data
             mb.Entity<Faculty>().ToTable("Faculties");
             mb.Entity<Staff>().ToTable("Staff");
 
-            // --- Seed reference data ---
+            // ---------- Relationships ----------
+            mb.Entity<Enrollment>()
+              .HasOne(e => e.Student)
+              .WithMany()
+              .HasForeignKey(e => e.StudentID);
 
-            // Study modes common in Kenyan universities
+            mb.Entity<Enrollment>()
+              .HasOne(e => e.Course)
+              .WithMany(c => c.Enrollments)
+              .HasForeignKey(e => e.CourseID);
+
+            // ---------- Seed reference data ----------
+
             mb.Entity<StudyMode>().HasData(
                 new StudyMode { Id = 1, Name = "Full‑Time", Description = "Daytime attendance on campus" },
                 new StudyMode { Id = 2, Name = "Part‑Time", Description = "Evening / weekend attendance" },
                 new StudyMode { Id = 3, Name = "Distance Learning", Description = "Remote / online learning" }
             );
 
-            // Typical progression statuses
             mb.Entity<StudyStatus>().HasData(
                 new StudyStatus { Id = 1, Name = "Active", Description = "Currently enrolled" },
                 new StudyStatus { Id = 2, Name = "Completed", Description = "Graduated successfully" },

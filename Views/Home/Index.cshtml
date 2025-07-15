@@ -1,4 +1,4 @@
-﻿@model dynamic
+﻿@model EduCoreSuite.Models.ViewModels.DashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -9,18 +9,10 @@
         <!-- Sidebar -->
         <div class="col-md-2 bg-light vh-100 p-3">
             <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Students" asp-action="Index">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Courses" asp-action="Index">Courses</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark fw-semibold" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
-                </li>
+                <li class="nav-item"><a class="nav-link text-dark fw-semibold" asp-page="/Dashboard">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link text-dark fw-semibold" asp-page="/Students/Index">Register</a></li>
+                <li class="nav-item"><a class="nav-link text-dark fw-semibold" asp-page="/Courses/Index">Courses</a></li>
+                <li class="nav-item"><a class="nav-link text-dark fw-semibold" asp-page="/Reports/Index">Reports</a></li>
             </ul>
         </div>
 
@@ -28,67 +20,66 @@
         <div class="col-md-10 p-4">
             <h2 class="mb-4">Dashboard</h2>
 
+            <!-- Summary Cards -->
             <div class="row mb-4">
                 <div class="col-md-3">
                     <div class="bg-white border rounded p-3 text-center">
                         <h6>Total Students</h6>
-                        <h3>1,250</h3>
-                        <span class="text-success">+10%</span>
+                        <h3>@Model.TotalStudents</h3>
+                        <span class="@(Model.StudentGrowthPercent < 0 ? "text-danger" : "text-success")">
+                            @(Model.StudentGrowthPercent >= 0 ? "+" : "")@Model.StudentGrowthPercent.ToString("F1")%
+                        </span>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="bg-white border rounded p-3 text-center">
                         <h6>Total Courses</h6>
-                        <h3>150</h3>
-                        <span class="text-success">+5%</span>
+                        <h3>@Model.TotalCourses</h3>
+                        <span class="@(Model.CourseGrowthPercent < 0 ? "text-danger" : "text-success")">
+                            @(Model.CourseGrowthPercent >= 0 ? "+" : "")@Model.CourseGrowthPercent.ToString("F1")%
+                        </span>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="bg-white border rounded p-3 text-center">
                         <h6>Total Enrollments</h6>
-                        <h3>800</h3>
-                        <span class="text-success">+8%</span>
+                        <h3>@Model.TotalEnrollments</h3>
+                        <span class="@(Model.EnrollmentGrowthPercent < 0 ? "text-danger" : "text-success")">
+                            @(Model.EnrollmentGrowthPercent >= 0 ? "+" : "")@Model.EnrollmentGrowthPercent.ToString("F1")%
+                        </span>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="bg-white border rounded p-3 text-center">
                         <h6>Total Sessions</h6>
-                        <h3>25</h3>
-                        <span class="text-success">+2%</span>
+                        <h3>@Model.TotalSessions</h3>
+                        <span class="@(Model.SessionGrowthPercent < 0 ? "text-danger" : "text-success")">
+                            @(Model.SessionGrowthPercent >= 0 ? "+" : "")@Model.SessionGrowthPercent.ToString("F1")%
+                        </span>
                     </div>
                 </div>
             </div>
 
+            <!-- Activity & Top Courses -->
             <div class="row">
                 <!-- Activity Feed -->
                 <div class="col-md-8">
                     <h4>Recent Activity Feed</h4>
                     <ul class="list-group">
-                        <li class="list-group-item">
-                            <strong>New Enrollment</strong><br />
-                            <small class="text-muted">2 hours ago</small><br />
-                            New Student, Ethan Carter, Enrolled in Introduction To Programming.
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Course Completion Report</strong><br />
-                            <small class="text-muted">4 hours ago</small><br />
-                            Completion Rate For Advanced Mathematics Increased By 5%
-                        </li>
-                        <li class="list-group-item">
-                            <strong>New Course Added</strong><br />
-                            <small class="text-muted">6 hours ago</small><br />
-                            Digital Marketing Fundamentals Added To Catalog
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Exam Completion</strong><br />
-                            <small class="text-muted">8 hours ago</small><br />
-                            Noah Walker Completed Final Exam For Operating Systems
-                        </li>
-                        <li class="list-group-item">
-                            <strong>System Maintenance</strong><br />
-                            <small class="text-muted">10 hours ago</small><br />
-                            Maintenance Scheduled Tomorrow, 10pm to 12am
-                        </li>
+                        @if (Model.RecentActivities.Any())
+                        {
+                            @foreach (var activity in Model.RecentActivities)
+                            {
+                                <li class="list-group-item">
+                                    <strong>@activity.Title</strong> — @activity.Description<br />
+                                    <small class="text-muted">@activity.TimeAgo</small>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item">No recent activities recorded.</li>
+                        }
                     </ul>
                 </div>
 
@@ -96,21 +87,20 @@
                 <div class="col-md-4">
                     <h4>Most Enrolled Courses</h4>
                     <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between">
-                            Introduction To Programming <span class="badge bg-secondary">120 Students</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            Data Science Essentials <span class="badge bg-secondary">105 Students</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            Advanced Mathematics <span class="badge bg-secondary">95 Students</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            Digital Marketing Fundamentals <span class="badge bg-secondary">85 Students</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            Business Analytics <span class="badge bg-secondary">75 Students</span>
-                        </li>
+                        @if (Model.TopCourses.Any())
+                        {
+                            @foreach (var course in Model.TopCourses)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @course.CourseName
+                                    <span class="badge bg-primary">@course.StudentCount</span>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item">No enrollment data available.</li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EduCoreSuite.Models
 {
@@ -68,11 +69,11 @@ namespace EduCoreSuite.Models
         public string SubCounty { get; set; } = string.Empty;
 
         [Required]
-        [RegularExpression(@"^[A-Za-z\s\-]+$")]
+        [RegularExpression(@"^[A-Za-z\s\\-]+$")]
         public string Town { get; set; } = string.Empty;
 
         [Required]
-        [RegularExpression(@"^[A-Za-z\s\-]+$")]
+        [RegularExpression(@"^[A-Za-z\s\\-]+$")]
         public string Ward { get; set; } = string.Empty;
 
         // ----------- Emergency Contact -----------
@@ -114,5 +115,10 @@ namespace EduCoreSuite.Models
         [Required]
         [RegularExpression(@"^(1st Year|2nd Year|3rd Year|4th Year)$")]
         public string Year { get; set; } = string.Empty;
+
+        // ----------- Enrollment Tracking for Dashboard -----------
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime EnrollmentDate { get; set; } = DateTime.UtcNow;
     }
 }

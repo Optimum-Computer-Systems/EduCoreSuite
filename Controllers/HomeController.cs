@@ -1,9 +1,9 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using EduCoreSuite.Data;
 using EduCoreSuite.Models;
 using EduCoreSuite.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace EduCoreSuite.Controllers
 {
@@ -20,55 +20,75 @@ namespace EduCoreSuite.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var sevenDaysAgo = DateTime.UtcNow.AddDays(-7);
+
+            //  Current Totals
+            int studentCount = await _context.Students.CountAsync();
+            int courseCount = await _context.Courses.CountAsync();
+            int enrollmentCount = await _context.Enrollments.CountAsync();
+            int sessionCount = await _context.Sessions.CountAsync();
+
+            //  Weekly Counts (for growth calculation)
+            int prevStudents = await _context.Students
+                .CountAsync(s => s.EnrollmentDate >= sevenDaysAgo);
+            int prevCourses = await _context.Courses
+                .CountAsync(c => c.CreatedAt >= sevenDaysAgo);
+            int prevEnrollments = await _context.Enrollments
+                .CountAsync(e => e.EnrolledAt >= sevenDaysAgo);
+            int prevSessions = await _context.Sessions
+                .CountAsync(s => s.ScheduledDate >= sevenDaysAgo);
+
+            //  Load Most Enrolled Courses — null-safe query
+            var topCourses = await _context.Enrollments
+                .GroupBy(e => e.CourseID)
+                .OrderByDescending(g => g.Count())
+                .Take(5)
+                .Select(g => new CourseStat
+                {
+                    CourseName = _context.Courses
+                        .Where(c => c.CourseID == g.Key)
+                        .Select(c => c.CourseName)
+                        .FirstOrDefault() ?? "Unknown",
+                    StudentCount = g.Count()
+                }).ToListAsync();
+
+            //  Load Recent Activity Logs
+            var activities = await _context.ActivityLogs
+                .OrderByDescending(a => a.Timestamp)
+                .Take(5)
+                .Select(a => new ActivityItem
+                {
+                    Title = a.Category,
+                    Description = a.Description,
+                    TimeAgo = $"{(DateTime.UtcNow - a.Timestamp).Hours} hours ago"
+                }).ToListAsync();
+
             var vm = new DashboardViewModel
             {
-                TotalStudents = await _context.Students.CountAsync(),
-                TotalCourses = await _context.Courses.CountAsync(),
-                TotalEnrollments = 0, // Removed all enrollment table references
-                TotalSessions = 25,   // You can replace this with dynamic logic if available
+                TotalStudents = studentCount,
+                TotalCourses = courseCount,
+                TotalEnrollments = enrollmentCount,
+                TotalSessions = sessionCount,
 
-                RecentActivities = new List<ActivityItem>
-                {
-                    new ActivityItem
-                    {
-                        Title = "New Enrollment",
-                        TimeAgo = "2 hours ago",
-                        Description = "New Student, Ethan Carter, Enrolled in Introduction To Programming."
-                    },
-                    new ActivityItem
-                    {
-                        Title = "Course Completion Report",
-                        TimeAgo = "4 hours ago",
-                        Description = "Completion Rate For Advanced Mathematics Increased By 5%"
-                    },
-                    new ActivityItem
-                    {
-                        Title = "New Course Added",
-                        TimeAgo = "6 hours ago",
-                        Description = "Digital Marketing Fundamentals Added To Catalog"
-                    },
-                    new ActivityItem
-                    {
-                        Title = "Exam Completion",
-                        TimeAgo = "8 hours ago",
-                        Description = "Noah Walker Completed Final Exam For Operating Systems"
-                    },
-                    new ActivityItem
-                    {
-                        Title = "System Maintenance",
-                        TimeAgo = "10 hours ago",
-                        Description = "Maintenance Scheduled Tomorrow, 10pm to 12am"
-                    }
-                }
+                StudentGrowthPercent = CalculateGrowth(studentCount, prevStudents),
+                CourseGrowthPercent = CalculateGrowth(courseCount, prevCourses),
+                EnrollmentGrowthPercent = CalculateGrowth(enrollmentCount, prevEnrollments),
+                SessionGrowthPercent = CalculateGrowth(sessionCount, prevSessions),
+
+                TopCourses = topCourses,
+                RecentActivities = activities
             };
 
             return View(vm);
         }
 
-        public IActionResult Privacy()
+        private double CalculateGrowth(int current, int previous)
         {
-            return View();
+            if (previous == 0) return current == 0 ? 0 : 100;
+            return Math.Round(((double)(current - previous) / previous) * 100, 2);
         }
+
+        public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

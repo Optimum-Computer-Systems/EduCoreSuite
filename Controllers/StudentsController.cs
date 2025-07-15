@@ -13,7 +13,7 @@ namespace EduCoreSuite.Controllers
     public class StudentsController : Controller
     {
         private readonly ForgeDBContext _context;
-        private object f;
+        
 
         public StudentsController(ForgeDBContext context)
         {
