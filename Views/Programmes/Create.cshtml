@@ -87,4 +87,44 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script>
+        $(document).ready(function() {
+            // Real-time validation for Programme Name
+            $('#Name').on('blur', function() {
+                var name = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Name"]');
+                
+                if (name) {
+                    $.get('@Url.Action("CheckDuplicateName", "Programmes")', { name: name }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Name').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Name').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Programme Code
+            $('#Code').on('blur', function() {
+                var code = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Code"]');
+                
+                if (code) {
+                    $.get('@Url.Action("CheckDuplicateCode", "Programmes")', { code: code }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Code').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Code').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }

@@ -53,6 +53,18 @@ namespace EduCoreSuite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Code,Level,AccreditedBy,AccreditationDate,DurationYears,SemestersPerYear,IsActive,DepartmentID")] Programme programme)
         {
+            // Check for duplicate Programme Name
+            if (await _context.Programmes.AnyAsync(p => p.Name.ToLower() == programme.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A programme with this name already exists.");
+            }
+
+            // Check for duplicate Programme Code
+            if (await _context.Programmes.AnyAsync(p => p.Code.ToLower() == programme.Code.ToLower()))
+            {
+                ModelState.AddModelError("Code", "A programme with this code already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(programme);
@@ -82,6 +94,18 @@ namespace EduCoreSuite.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("ProgrammeID,Name,Code,Level,AccreditedBy,AccreditationDate,DurationYears,SemestersPerYear,IsActive,DepartmentID")] Programme programme)
         {
             if (id != programme.ProgrammeID) return NotFound();
+
+            // Check for duplicate Programme Name (excluding current programme)
+            if (await _context.Programmes.AnyAsync(p => p.ProgrammeID != id && p.Name.ToLower() == programme.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A programme with this name already exists.");
+            }
+
+            // Check for duplicate Programme Code (excluding current programme)
+            if (await _context.Programmes.AnyAsync(p => p.ProgrammeID != id && p.Code.ToLower() == programme.Code.ToLower()))
+            {
+                ModelState.AddModelError("Code", "A programme with this code already exists.");
+            }
 
             if (ModelState.IsValid)
             {
@@ -141,6 +165,45 @@ namespace EduCoreSuite.Controllers
                 "Name",
                 selectedDept
             );
+        }
+
+        // AJAX endpoints for real-time duplicate checking
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateName(string name, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Programmes.AnyAsync(p => p.ProgrammeID != excludeId && p.Name.ToLower() == name.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Programmes.AnyAsync(p => p.Name.ToLower() == name.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A programme with this name already exists." : "" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateCode(string code, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Programmes.AnyAsync(p => p.ProgrammeID != excludeId && p.Code.ToLower() == code.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Programmes.AnyAsync(p => p.Code.ToLower() == code.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A programme with this code already exists." : "" });
         }
     }
 }
