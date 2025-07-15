@@ -80,4 +80,28 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script>
+        $(document).ready(function() {
+            var currentCourseId = @Model.Course.CourseID;
+
+            // Real-time validation for Course Name
+            $('#Course_CourseName').on('blur', function() {
+                var courseName = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Course.CourseName"]');
+                
+                if (courseName) {
+                    $.get('@Url.Action("CheckDuplicateCourseName", "Courses")', { courseName: courseName, excludeId: currentCourseId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Course_CourseName').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Course_CourseName').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }

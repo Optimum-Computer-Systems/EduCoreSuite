@@ -59,6 +59,18 @@ namespace EduCoreSuite.Controllers
         {
             selectedStaff ??= Array.Empty<int>();
 
+            // Check for duplicate Department Name
+            if (await _context.Departments.AnyAsync(d => !d.IsDeleted && d.Name.ToLower() == department.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A department with this name already exists.");
+            }
+
+            // Check for duplicate Department Code
+            if (await _context.Departments.AnyAsync(d => !d.IsDeleted && d.Code.ToLower() == department.Code.ToLower()))
+            {
+                ModelState.AddModelError("Code", "A department with this code already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 department.IsActive = true;
@@ -99,6 +111,18 @@ namespace EduCoreSuite.Controllers
             if (id != department.DepartmentID) return NotFound();
 
             selectedStaff ??= Array.Empty<int>();
+
+            // Check for duplicate Department Name (excluding current department)
+            if (await _context.Departments.AnyAsync(d => !d.IsDeleted && d.DepartmentID != id && d.Name.ToLower() == department.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A department with this name already exists.");
+            }
+
+            // Check for duplicate Department Code (excluding current department)
+            if (await _context.Departments.AnyAsync(d => !d.IsDeleted && d.DepartmentID != id && d.Code.ToLower() == department.Code.ToLower()))
+            {
+                ModelState.AddModelError("Code", "A department with this code already exists.");
+            }
 
             if (ModelState.IsValid)
             {
@@ -165,6 +189,45 @@ namespace EduCoreSuite.Controllers
         {
             ViewData["FacultyID"] = new SelectList(_context.Faculties, "FacultyID", "Name", facultyId);
             ViewData["StaffList"] = new MultiSelectList(_context.Staff, "StaffID", "FullName", staffIds);
+        }
+
+        // AJAX endpoints for real-time duplicate checking
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateName(string name, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Departments.AnyAsync(d => !d.IsDeleted && d.DepartmentID != excludeId && d.Name.ToLower() == name.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Departments.AnyAsync(d => !d.IsDeleted && d.Name.ToLower() == name.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A department with this name already exists." : "" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateCode(string code, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Departments.AnyAsync(d => !d.IsDeleted && d.DepartmentID != excludeId && d.Code.ToLower() == code.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Departments.AnyAsync(d => !d.IsDeleted && d.Code.ToLower() == code.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A department with this code already exists." : "" });
         }
     }
 }

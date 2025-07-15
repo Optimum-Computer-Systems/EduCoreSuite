@@ -84,4 +84,26 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script>
+        $(document).ready(function() {
+            // Real-time validation for Course Name
+            $('#Course_CourseName').on('blur', function() {
+                var courseName = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Course.CourseName"]');
+                
+                if (courseName) {
+                    $.get('@Url.Action("CheckDuplicateCourseName", "Courses")', { courseName: courseName }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Course_CourseName').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Course_CourseName').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }

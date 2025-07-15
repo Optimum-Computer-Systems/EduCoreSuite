@@ -60,4 +60,46 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <script>
+        $(document).ready(function() {
+            var currentDepartmentId = @Model.DepartmentID;
+
+            // Real-time validation for Department Name
+            $('#Name').on('blur', function() {
+                var name = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Name"]');
+                
+                if (name) {
+                    $.get('@Url.Action("CheckDuplicateName", "Departments")', { name: name, excludeId: currentDepartmentId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Name').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Name').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Department Code
+            $('#Code').on('blur', function() {
+                var code = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Code"]');
+                
+                if (code) {
+                    $.get('@Url.Action("CheckDuplicateCode", "Departments")', { code: code, excludeId: currentDepartmentId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Code').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Code').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }

@@ -53,6 +53,12 @@ namespace EduCoreSuite.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseFormViewModel vm)
         {
+            // Check for duplicate Course Name
+            if (await _context.Courses.AnyAsync(c => c.CourseName.ToLower() == vm.Course.CourseName.ToLower()))
+            {
+                ModelState.AddModelError("Course.CourseName", "A course with this name already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Courses.Add(vm.Course);
@@ -77,6 +83,12 @@ namespace EduCoreSuite.Controllers
         public async Task<IActionResult> Edit(int id, CourseFormViewModel vm)
         {
             if (id != vm.Course.CourseID) return NotFound();
+
+            // Check for duplicate Course Name (excluding current course)
+            if (await _context.Courses.AnyAsync(c => c.CourseID != id && c.CourseName.ToLower() == vm.Course.CourseName.ToLower()))
+            {
+                ModelState.AddModelError("Course.CourseName", "A course with this name already exists.");
+            }
 
             if (ModelState.IsValid)
             {
@@ -149,5 +161,25 @@ namespace EduCoreSuite.Controllers
 
         private bool CourseExists(int id) =>
             _context.Courses.Any(e => e.CourseID == id);
+
+        // AJAX endpoint for real-time duplicate checking
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateCourseName(string courseName, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(courseName))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Courses.AnyAsync(c => c.CourseID != excludeId && c.CourseName.ToLower() == courseName.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Courses.AnyAsync(c => c.CourseName.ToLower() == courseName.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A course with this name already exists." : "" });
+        }
     }
 }
