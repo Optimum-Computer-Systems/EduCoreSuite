@@ -9,114 +9,127 @@ namespace EduCoreSuite.Controllers
     public class StudentsController : Controller
     {
         private readonly ForgeDBContext _context;
-        private object f;
 
         public StudentsController(ForgeDBContext context)
         {
             _context = context;
         }
 
-        // GET: Students
+        // ------------------------- INDEX & DETAILS -------------------------
+
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Students.ToListAsync());
+            var students = await _context.Students.AsNoTracking().ToListAsync();
+            return View(students);
         }
 
-        // GET: Students/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
-            var student = await _context.Students.FirstOrDefaultAsync(m => m.StudentID == id);
-            if (student == null)
-                return NotFound();
-
-            return View(student);
+            var student = await _context.Students.AsNoTracking()
+                                                 .FirstOrDefaultAsync(s => s.StudentID == id);
+            return student == null ? NotFound() : View(student);
         }
 
-        // GET: Students/Create
+        // ------------------------- CREATE -------------------------
+
         public IActionResult Create()
         {
             PopulateDropdowns();
             return View();
         }
 
-        // POST: Students/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Student student)
         {
-            if (ModelState.IsValid)
+            // Duplicate check
+            if (await IsDuplicateAsync(student))
             {
-                _context.Add(student);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError(string.Empty,
+                    "A student with the same Admission Number, Email, or National ID already exists.");
             }
 
-            PopulateDropdowns();
-            return View(student);
+            // Validate SubCounty
+            if (!_context.SubCounties.Any(s => s.SubCountyID == student.SubCountyID && s.CountyID == student.CountyID))
+            {
+                ModelState.AddModelError("SubCountyID", "Invalid sub-county selection.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                PopulateDropdowns(student.CountyID);
+                return View(student);
+            }
+
+            _context.Add(student);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Students/Edit/5
+        // ------------------------- EDIT -------------------------
+
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var student = await _context.Students.FindAsync(id);
-            if (student == null)
-                return NotFound();
+            if (student == null) return NotFound();
 
-            PopulateDropdowns();
+            PopulateDropdowns(student.CountyID);
             return View(student);
         }
 
-        // POST: Students/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Student student)
         {
-            if (id != student.StudentID)
-                return NotFound();
+            if (id != student.StudentID) return NotFound();
 
-            if (ModelState.IsValid)
+            if (await IsDuplicateAsync(student, id))
             {
-                try
-                {
-                    _context.Update(student);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StudentExists(student.StudentID))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError(string.Empty,
+                    "Another student already uses this Admission Number, Email, or National ID.");
             }
 
-            PopulateDropdowns();
-            return View(student);
+            // Validate SubCounty
+            if (!_context.SubCounties.Any(s => s.SubCountyID == student.SubCountyID && s.CountyID == student.CountyID))
+            {
+                ModelState.AddModelError("SubCountyID", "Invalid sub-county selection.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                PopulateDropdowns(student.CountyID);
+                return View(student);
+            }
+
+            try
+            {
+                _context.Update(student);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await _context.Students.AnyAsync(e => e.StudentID == id))
+                    return NotFound();
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Students/Delete/5
+        // ------------------------- DELETE -------------------------
+
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
-            var student = await _context.Students.FirstOrDefaultAsync(m => m.StudentID == id);
-            if (student == null)
-                return NotFound();
-
-            return View(student);
+            var student = await _context.Students.AsNoTracking()
+                                                 .FirstOrDefaultAsync(s => s.StudentID == id);
+            return student == null ? NotFound() : View(student);
         }
 
-        // POST: Students/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var student = await _context.Students.FindAsync(id);
@@ -128,92 +141,87 @@ namespace EduCoreSuite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StudentExists(int id)
+        // ------------------------- DUPLICATE CHECK -------------------------
+
+        private async Task<bool> IsDuplicateAsync(Student s, int excludeId = 0)
         {
-            return _context.Students.Any(e => e.StudentID == id);
+            return await _context.Students.AsNoTracking()
+                .AnyAsync(x =>
+                       x.StudentID != excludeId &&
+                      (x.AdmissionNumber == s.AdmissionNumber ||
+                       x.Email == s.Email ||
+                       x.IDNumber == s.IDNumber));
         }
 
-        // StudentsController.cs  ── only the helper has changed
-        private void PopulateDropdowns()
+        // ------------------------- DROPDOWNS -------------------------
+
+        private void PopulateDropdowns(int? countyId = null)
         {
-            // --- simple look‑ups (no tables) ------------------------------
-            ViewBag.GenderList = new SelectList(new[] { "Male", "Female", "Other" });
-            ViewBag.Religions = new SelectList(new[] { "Christianity", "Islam", "Hinduism", "Atheist", "Other" });
-            ViewBag.Medicals = new SelectList(new[] { "Normal", "Chronic", "Disabled", "Other" });
-            ViewBag.MaritalStatusList = new SelectList(new[] { "Single", "Married", "Divorced", "Widowed" });
-            ViewBag.Years = new SelectList(new[] { "1st Year", "2nd Year", "3rd Year", "4th Year" });
+            ViewBag.Courses = BuildSelectList(
+                _context.Courses, c => c.CourseName, "-- Select Course --");
 
-            // --- database‑driven lists ------------------------------------
-            // NB:  ID field first (model‑binding)  |  Display field second
-            ViewBag.Courses = new SelectList(
-                _context.Courses?.AsNoTracking().ToList() ?? new List<Course>(),
-                nameof(Course.CourseID), nameof(Course.CourseName));
+            ViewBag.Departments = BuildSelectList(
+                _context.Departments, d => d.Name, "-- Select Department --");
 
-            ViewBag.Departments = new SelectList(
-                _context.Departments?.AsNoTracking().ToList() ?? new List<Department>(),
-                nameof(Department.DepartmentID), nameof(Department.Name));
+            ViewBag.Faculties = BuildSelectList(
+                _context.Faculties, f => f.Name, "-- Select Faculty --");
 
-            ViewBag.Faculties = new SelectList(
-                _context.Faculties?.AsNoTracking().ToList() ?? new List<Faculty>(),
-                nameof(Faculty.FacultyID), nameof(Faculty.Name));
-
-            ViewBag.ExamBodies = new SelectList(
-                _context.ExamBodies?.AsNoTracking().ToList() ?? new List<ExamBody>(),
-                nameof(ExamBody.Id), nameof(ExamBody.Name));
-
-            // ――――― NEW items from the navigation snapshot ―――――
-            ViewBag.Campuses = new SelectList(
-                _context.Campuses?.AsNoTracking().ToList() ?? new List<Campus>(),
-                nameof(Campus.Id), nameof(Campus.Name));
-
-            ViewBag.Programmes = new SelectList(
-                _context.Programmes?.AsNoTracking().ToList() ?? new List<Programme>(),
-                nameof(Programme.ProgrammeID), nameof(Programme.Name));
-
-            ViewBag.Staff = new SelectList(
-                _context.Staff?.AsNoTracking().ToList() ?? new List<Staff>(),
-                nameof(Staff.StaffID), nameof(Staff.FullName));
-
-            ViewBag.StudyModes = new SelectList(
-                _context.StudyModes?.AsNoTracking().ToList() ?? new List<StudyMode>(),
-                nameof(StudyMode.Id), nameof(StudyMode.Name));
-
-            ViewBag.StudyStatuses = new SelectList(
-                _context.StudyStatuses?.AsNoTracking().ToList() ?? new List<StudyStatus>(),
-                nameof(StudyStatus.Id), nameof(StudyStatus.Name));
+            ViewBag.ExamBodies = BuildSelectList(
+                _context.ExamBodies, e => e.Name, "-- Select Exam Body --");
 
             ViewBag.Counties = new SelectList(
-                _context.Counties              // DbSet<CountySubCounty>
-                        .AsNoTracking()
-                        .OrderBy(c => c.CountyName)
-                        .ToList(),
-                nameof(CountySubCounty.CountyID),     // value field
-                nameof(CountySubCounty.CountyName));  // text  field
+                _context.Counties.AsNoTracking()
+                                 .OrderBy(c => c.CountyName)
+                                 .ToList(),
+                nameof(CountySubCounty.CountyID),
+                nameof(CountySubCounty.CountyName),
+                countyId);
 
             ViewBag.SubCounties = new SelectList(
-                Enumerable.Empty<SubCounty>(),         // blank on first load
+                countyId == null
+                    ? Enumerable.Empty<SubCounty>()
+                    : _context.SubCounties
+                              .Where(sc => sc.CountyID == countyId)
+                              .OrderBy(sc => sc.SubCountyName)
+                              .ToList(),
                 nameof(SubCounty.SubCountyID),
                 nameof(SubCounty.SubCountyName));
-
         }
 
+        private static IEnumerable<SelectListItem> BuildSelectList<T>(
+            IQueryable<T> query,
+            Func<T, string> selector,
+            string placeholder) where T : class
+        {
+            var list = query.AsNoTracking()
+                            .Select(item => new SelectListItem
+                            {
+                                Value = selector(item),
+                                Text = selector(item)
+                            })
+                            .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Value = "",
+                Text = placeholder
+            });
+
+            return list;
+        }
+
+        // ------------------------- AJAX: SUBCOUNTIES -------------------------
 
         [HttpGet]
         public JsonResult GetSubCounties(int countyId)
         {
-            var data = _context.SubCounties        // DbSet<SubCounty>
-                               .AsNoTracking()
+            var data = _context.SubCounties.AsNoTracking()
                                .Where(s => s.CountyID == countyId)
                                .OrderBy(s => s.SubCountyName)
-                               .Select(s => new
-                               {
-                                   s.SubCountyID,
-                                   s.SubCountyName
-                               })
+                               .Select(s => new { s.SubCountyID, s.SubCountyName })
                                .ToList();
 
             return Json(data);
         }
-
     }
 }
