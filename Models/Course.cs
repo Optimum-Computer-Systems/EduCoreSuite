@@ -1,15 +1,49 @@
-﻿namespace EduCoreSuite.Models
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EduCoreSuite.Models
 {
     public class Course
     {
         public int CourseID { get; set; }
+
+        [Required(ErrorMessage = "Course name is required")]
+        [StringLength(200, ErrorMessage = "Course name cannot exceed 200 characters")]
+        [RegularExpression(@"^[A-Za-z][A-Za-z\s&\-().,0-9]+$", ErrorMessage = "Please enter a professional course name (e.g., Bachelor of Computer Science, Diploma in Business Management)")]
+        [Display(Name = "Course Name")]
         public string CourseName { get; set; } = string.Empty;
-        public string Department { get; set; } = string.Empty;
-        public string Programme { get; set; } = string.Empty;
-        public string StudyLevel { get; set; } = string.Empty;
-        public string ExamBody { get; set; } = string.Empty;
-        public string StudyStatus { get; set; } = string.Empty;
-        public string Campus { get; set; } = string.Empty;
+
+        // Foreign Keys & Navigation Properties
+        [Display(Name = "Department")]
+        public int DepartmentID { get; set; }
+        [ValidateNever]
+        public Department Department { get; set; } = null!;
+
+        [Display(Name = "Programme")]
+        public int ProgrammeID { get; set; }
+        [ValidateNever]
+        public Programme Programme { get; set; } = null!;
+
+        [Display(Name = "Campus")]
+        public int CampusID { get; set; }
+        [ValidateNever]
+        public Campus Campus { get; set; } = null!;
+
+        [Display(Name = "Exam Body")]
+        public int ExamBodyID { get; set; }
+        [ValidateNever]
+        public ExamBody ExamBody { get; set; } = null!;
+
+        [Display(Name = "Study Status")]
+        public int StudyStatusID { get; set; }
+        [ValidateNever]
+        public StudyStatus StudyStatus { get; set; } = null!;
+
+        [Display(Name = "Study Mode")]
+        public int StudyModeID { get; set; }
+        [ValidateNever]
+        public StudyMode StudyMode { get; set; } = null!;
 
         public Course() { }
     }

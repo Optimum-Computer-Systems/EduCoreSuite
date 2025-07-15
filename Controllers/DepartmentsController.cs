@@ -27,23 +27,20 @@ namespace EduCoreSuite.Controllers
                 .Include(d => d.DepartmentHeads)
                 .Where(d => !d.IsDeleted)
                 .ToListAsync();
-
             return View(departments);
         }
 
         // GET: Departments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var department = await _context.Departments
                 .Include(d => d.Faculty)
                 .Include(d => d.DepartmentHeads)
                 .FirstOrDefaultAsync(m => m.DepartmentID == id && !m.IsDeleted);
 
-            if (department == null)
-                return NotFound();
+            if (department == null) return NotFound();
 
             return View(department);
         }
@@ -51,8 +48,7 @@ namespace EduCoreSuite.Controllers
         // GET: Departments/Create
         public IActionResult Create()
         {
-            ViewData["FacultyID"] = new SelectList(_context.Faculties, "FacultyID", "Name");
-            ViewData["StaffList"] = new MultiSelectList(_context.Staff, "StaffID", "FullName");
+            PopulateSelections();
             return View();
         }
 
@@ -61,13 +57,24 @@ namespace EduCoreSuite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Department department, int[] selectedStaff)
         {
+            selectedStaff ??= Array.Empty<int>();
+
+            // Check for duplicate Department Name
+            if (await _context.Departments.AnyAsync(d => !d.IsDeleted && d.Name.ToLower() == department.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A department with this name already exists.");
+            }
+
+            // Check for duplicate Department Code
+            if (await _context.Departments.AnyAsync(d => !d.IsDeleted && d.Code.ToLower() == department.Code.ToLower()))
+            {
+                ModelState.AddModelError("Code", "A department with this code already exists.");
+            }
+
             if (ModelState.IsValid)
             {
-                department.CreatedAt = DateTime.UtcNow;
-                department.CreatedBy = User.Identity?.Name ?? "system";
                 department.IsActive = true;
                 department.IsDeleted = false;
-
                 department.DepartmentHeads = _context.Staff
                     .Where(s => selectedStaff.Contains(s.StaffID))
                     .ToList();
@@ -77,32 +84,22 @@ namespace EduCoreSuite.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["FacultyID"] = new SelectList(_context.Faculties, "FacultyID", "Name", department.FacultyID);
-            ViewData["StaffList"] = new MultiSelectList(_context.Staff, "StaffID", "FullName", selectedStaff);
+            PopulateSelections(department.FacultyID, selectedStaff);
             return View(department);
         }
 
         // GET: Departments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var department = await _context.Departments
                 .Include(d => d.DepartmentHeads)
                 .FirstOrDefaultAsync(d => d.DepartmentID == id);
 
-            if (department == null)
-                return NotFound();
+            if (department == null) return NotFound();
 
-            ViewData["FacultyID"] = new SelectList(_context.Faculties, "FacultyID", "Name", department.FacultyID);
-            ViewData["StaffList"] = new MultiSelectList(
-                _context.Staff,
-                "StaffID",
-                "FullName",
-                department.DepartmentHeads.Select(s => s.StaffID)
-            );
-
+            PopulateSelections(department.FacultyID, department.DepartmentHeads.Select(s => s.StaffID).ToArray());
             return View(department);
         }
 
@@ -111,64 +108,58 @@ namespace EduCoreSuite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Department department, int[] selectedStaff)
         {
-            if (id != department.DepartmentID)
-                return NotFound();
+            if (id != department.DepartmentID) return NotFound();
+
+            selectedStaff ??= Array.Empty<int>();
+
+            // Check for duplicate Department Name (excluding current department)
+            if (await _context.Departments.AnyAsync(d => !d.IsDeleted && d.DepartmentID != id && d.Name.ToLower() == department.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A department with this name already exists.");
+            }
+
+            // Check for duplicate Department Code (excluding current department)
+            if (await _context.Departments.AnyAsync(d => !d.IsDeleted && d.DepartmentID != id && d.Code.ToLower() == department.Code.ToLower()))
+            {
+                ModelState.AddModelError("Code", "A department with this code already exists.");
+            }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var existing = await _context.Departments
-                        .Include(d => d.DepartmentHeads)
-                        .FirstOrDefaultAsync(d => d.DepartmentID == id);
+                var existing = await _context.Departments
+                    .Include(d => d.DepartmentHeads)
+                    .FirstOrDefaultAsync(d => d.DepartmentID == id);
 
-                    if (existing == null)
-                        return NotFound();
+                if (existing == null) return NotFound();
 
-                    existing.Name = department.Name;
-                    existing.Code = department.Code;
-                    existing.Description = department.Description;
-                    existing.FacultyID = department.FacultyID;
-                    existing.IsActive = department.IsActive;
-                    existing.UpdatedAt = DateTime.UtcNow;
-                    existing.UpdatedBy = User.Identity?.Name ?? "system";
+                existing.Name = department.Name;
+                existing.Code = department.Code;
+                existing.Description = department.Description;
+                existing.FacultyID = department.FacultyID;
+                existing.IsActive = department.IsActive;
+                existing.DepartmentHeads = _context.Staff
+                    .Where(s => selectedStaff.Contains(s.StaffID))
+                    .ToList();
 
-                    existing.DepartmentHeads.Clear();
-                    existing.DepartmentHeads = _context.Staff
-                        .Where(s => selectedStaff.Contains(s.StaffID))
-                        .ToList();
-
-                    _context.Update(existing);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DepartmentExists(department.DepartmentID))
-                        return NotFound();
-
-                    throw;
-                }
-
+                _context.Update(existing);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["FacultyID"] = new SelectList(_context.Faculties, "FacultyID", "Name", department.FacultyID);
-            ViewData["StaffList"] = new MultiSelectList(_context.Staff, "StaffID", "FullName", selectedStaff);
+            PopulateSelections(department.FacultyID, selectedStaff);
             return View(department);
         }
 
         // GET: Departments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var department = await _context.Departments
                 .Include(d => d.Faculty)
                 .FirstOrDefaultAsync(m => m.DepartmentID == id && !m.IsDeleted);
 
-            if (department == null)
-                return NotFound();
+            if (department == null) return NotFound();
 
             return View(department);
         }
@@ -184,9 +175,6 @@ namespace EduCoreSuite.Controllers
             {
                 department.IsDeleted = true;
                 department.IsActive = false;
-                department.UpdatedAt = DateTime.UtcNow;
-                department.UpdatedBy = User.Identity?.Name ?? "system";
-
                 _context.Update(department);
                 await _context.SaveChangesAsync();
             }
@@ -194,9 +182,52 @@ namespace EduCoreSuite.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DepartmentExists(int id)
+        private bool DepartmentExists(int id) =>
+            _context.Departments.Any(e => e.DepartmentID == id && !e.IsDeleted);
+
+        private void PopulateSelections(int? facultyId = null, int[]? staffIds = null)
         {
-            return _context.Departments.Any(e => e.DepartmentID == id && !e.IsDeleted);
+            ViewData["FacultyID"] = new SelectList(_context.Faculties, "FacultyID", "Name", facultyId);
+            ViewData["StaffList"] = new MultiSelectList(_context.Staff, "StaffID", "FullName", staffIds);
+        }
+
+        // AJAX endpoints for real-time duplicate checking
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateName(string name, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Departments.AnyAsync(d => !d.IsDeleted && d.DepartmentID != excludeId && d.Name.ToLower() == name.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Departments.AnyAsync(d => !d.IsDeleted && d.Name.ToLower() == name.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A department with this name already exists." : "" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateCode(string code, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Departments.AnyAsync(d => !d.IsDeleted && d.DepartmentID != excludeId && d.Code.ToLower() == code.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Departments.AnyAsync(d => !d.IsDeleted && d.Code.ToLower() == code.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A department with this code already exists." : "" });
         }
     }
 }

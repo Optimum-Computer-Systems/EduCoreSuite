@@ -10,9 +10,9 @@ namespace EduCoreSuite.Models.ViewModels
 
         public List<SelectListItem> Departments { get; set; } = new();
         public List<SelectListItem> Programmes { get; set; } = new();
-        public List<SelectListItem> StudyLevels { get; set; } = new();
         public List<SelectListItem> Campuses { get; set; } = new();
         public List<SelectListItem> ExamBodies { get; set; } = new();
         public List<SelectListItem> StudyStatuses { get; set; } = new();
+        public List<SelectListItem> StudyModes { get; set; } = new();
     }
 }
