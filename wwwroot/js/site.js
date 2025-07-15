@@ -20,3 +20,34 @@ togglePasswordIcon.addEventListener('click', function () {
     this.classList.toggle('bi-eye-slash');
 })
 
+//Password Requirements List
+passwordInput.addEventListener('input', function () {
+    const value = passwordInput.value;
+
+    //checking the rules
+    toggleRequirement('lengthCheck', value.length >=8);
+    toggleRequirement('uppercaseCheck', /[A-Z]/.test(value));
+    toggleRequirement('lowercaseCheck', /[a-z]/.test(value));
+    toggleRequirement('numberCheck', /\d/.test(value));
+})
+
+function toggleRequirement(elementId, isValid) {
+    const element = document.getElementById(elementId);
+    const icon = document.querySelector('i');
+
+    if (isValid) {
+        element.classList.remove('text-danger');
+        element.classList.add('text-success');
+
+        icon.classList.remove('bi-x-circle-fill');
+        icon.classList.add('bi-check-circle-fill')
+    }
+    else {
+        element.classList.remove('text-success');
+        element.classList.add('text-danger');
+        
+        icon.classList.remove('bi-check-circle-fill')
+        icon.classList.add('bi-x-circle-fill');        
+    }
+}
+
