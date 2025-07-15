@@ -36,7 +36,7 @@ namespace EduCoreSuite.Models
         [Required] public int SubCountyID { get; set; }
 
         // navigation props (optional when posting, useful when reading)
-        public CountySubCounty? County { get; set; }
+        public County? County { get; set; }
         public SubCounty? SubCounty { get; set; }
 
         [Required, RegularExpression(@"^[A-Za-z\s\-]+$")] public string Town { get; set; } = string.Empty;

@@ -5,25 +5,33 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EduCoreSuite.Models
 {
     [Table("Counties")]
-    public class CountySubCounty
+    public class County
     {
-        [Key] public int CountyID { get; set; }
+        [Key]
+        public int Id { get; set; }
 
-        [Required] public string CountyName { get; set; } = string.Empty;
+        [Required]
+        public string Name { get; set; } = string.Empty;
 
-        // Nav‑prop
+        // Navigation property to SubCounties
         public ICollection<SubCounty> SubCounties { get; set; } = new List<SubCounty>();
     }
 
     [Table("SubCounties")]
     public class SubCounty
     {
-        [Key] public int SubCountyID { get; set; }
+        [Key]
+        public int SubCountyID { get; set; }
 
-        [Required] public string SubCountyName { get; set; } = string.Empty;
+        [Required]
+        public string SubCountyName { get; set; } = string.Empty;
 
-        // FK + nav‑prop
-        public int CountyID { get; set; }
-        public CountySubCounty County { get; set; } = null!;
+        // Foreign Key
+        public int CountyId { get; set; }
+        public object CountyID { get; internal set; }
+
+        // Navigation property
+        [ForeignKey("CountyId")]
+        public County County { get; set; } = null!;
     }
 }

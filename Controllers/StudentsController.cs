@@ -137,87 +137,67 @@ namespace EduCoreSuite.Controllers
             return _context.Students.Any(e => e.StudentID == id);
         }
 
-// StudentsController.cs  ── only the helper has changed
-private void PopulateDropdowns()
-{
-    // --- simple look‑ups (no tables) ------------------------------
-    ViewBag.GenderList       = new SelectList(new[] { "Male", "Female", "Other" });
-    ViewBag.Religions        = new SelectList(new[] { "Christianity", "Islam", "Hinduism", "Atheist", "Other" });
-    ViewBag.Medicals         = new SelectList(new[] { "Normal", "Chronic", "Disabled", "Other" });
-    ViewBag.MaritalStatusList= new SelectList(new[] { "Single", "Married", "Divorced", "Widowed" });
-    ViewBag.Years            = new SelectList(new[] { "1st Year", "2nd Year", "3rd Year", "4th Year" });
+        // StudentsController.cs  ── only the helper has changed
+        private void PopulateDropdowns()
+        {
+            ViewBag.GenderList = new SelectList(new[] { "Male", "Female", "Other" });
+            ViewBag.Religions = new SelectList(new[] { "Christianity", "Islam", "Hinduism", "Atheist", "Other" });
+            ViewBag.Medicals = new SelectList(new[] { "Normal", "Chronic", "Disabled", "Other" });
+            ViewBag.MaritalStatusList = new SelectList(new[] { "Single", "Married", "Divorced", "Widowed" });
+            ViewBag.Years = new SelectList(new[] { "1st Year", "2nd Year", "3rd Year", "4th Year" });
 
-    // --- database‑driven lists ------------------------------------
-    // NB:  ID field first (model‑binding)  |  Display field second
-    ViewBag.Courses      = new SelectList(
-        _context.Courses?.AsNoTracking().ToList() ?? new List<Course>(),
-        nameof(Course.CourseID), nameof(Course.CourseName));
+            ViewBag.Courses = new SelectList(
+                _context.Courses?.AsNoTracking().ToList() ?? new List<Course>(),
+                nameof(Course.CourseID), nameof(Course.CourseName));
 
-    ViewBag.Departments  = new SelectList(
-        _context.Departments?.AsNoTracking().ToList() ?? new List<Department>(),
-        nameof(Department.DepartmentID), nameof(Department.Name));
+            ViewBag.Departments = new SelectList(
+                _context.Departments?.AsNoTracking().ToList() ?? new List<Department>(),
+                nameof(Department.DepartmentID), nameof(Department.Name));
 
-    ViewBag.Faculties    = new SelectList(
-        _context.Faculties?.AsNoTracking().ToList() ?? new List<Faculty>(),
-        nameof(Faculty.FacultyID), nameof(Faculty.Name));
+            ViewBag.Faculties = new SelectList(
+                _context.Faculties?.AsNoTracking().ToList() ?? new List<Faculty>(),
+                nameof(Faculty.FacultyID), nameof(Faculty.Name));
 
-    ViewBag.ExamBodies   = new SelectList(
-        _context.ExamBodies?.AsNoTracking().ToList() ?? new List<ExamBody>(),
-        nameof(ExamBody.Id), nameof(ExamBody.Name));
+            ViewBag.ExamBodies = new SelectList(
+                _context.ExamBodies?.AsNoTracking().ToList() ?? new List<ExamBody>(),
+                nameof(ExamBody.Id), nameof(ExamBody.Name));
 
-    // ――――― NEW items from the navigation snapshot ―――――
-    ViewBag.Campuses     = new SelectList(
-        _context.Campuses?.AsNoTracking().ToList() ?? new List<Campus>(),
-        nameof(Campus.Id), nameof(Campus.Name));
+            ViewBag.Campuses = new SelectList(
+                _context.Campuses?.AsNoTracking().ToList() ?? new List<Campus>(),
+                nameof(Campus.Id), nameof(Campus.Name));
 
-    ViewBag.Programmes   = new SelectList(
-        _context.Programmes?.AsNoTracking().ToList() ?? new List<Programme>(),
-        nameof(Programme.ProgrammeID), nameof(Programme.Name));
+            ViewBag.Programmes = new SelectList(
+                _context.Programmes?.AsNoTracking().ToList() ?? new List<Programme>(),
+                nameof(Programme.ProgrammeID), nameof(Programme.Name));
 
-    ViewBag.Staff        = new SelectList(
-        _context.Staff?.AsNoTracking().ToList() ?? new List<Staff>(),
-        nameof(Staff.StaffID), nameof(Staff.FullName));
+            ViewBag.Staff = new SelectList(
+                _context.Staff?.AsNoTracking().ToList() ?? new List<Staff>(),
+                nameof(Staff.StaffID), nameof(Staff.FullName));
 
-    ViewBag.StudyModes   = new SelectList(
-        _context.StudyModes?.AsNoTracking().ToList() ?? new List<StudyMode>(),
-        nameof(StudyMode.Id), nameof(StudyMode.Name));
+            ViewBag.StudyModes = new SelectList(
+                _context.StudyModes?.AsNoTracking().ToList() ?? new List<StudyMode>(),
+                nameof(StudyMode.Id), nameof(StudyMode.Name));
 
-    ViewBag.StudyStatuses= new SelectList(
-        _context.StudyStatuses?.AsNoTracking().ToList() ?? new List<StudyStatus>(),
-        nameof(StudyStatus.Id), nameof(StudyStatus.Name));
+            ViewBag.StudyStatuses = new SelectList(
+                _context.StudyStatuses?.AsNoTracking().ToList() ?? new List<StudyStatus>(),
+                nameof(StudyStatus.Id), nameof(StudyStatus.Name));
 
+            // Fixed County & SubCounty
             ViewBag.Counties = new SelectList(
-                _context.Counties              // DbSet<CountySubCounty>
-                        .AsNoTracking()
-                        .OrderBy(c => c.CountyName)
-                        .ToList(),
-                nameof(CountySubCounty.CountyID),     // value field
-                nameof(CountySubCounty.CountyName));  // text  field
+                 _context.Counties
+                     .AsNoTracking()
+                     .OrderBy(c => c.Name)
+                     .ToList(),
+                 nameof(County.Id),        
+                 nameof(County.Name));     
+
 
             ViewBag.SubCounties = new SelectList(
-                Enumerable.Empty<SubCounty>(),         // blank on first load
+                 Enumerable.Empty<SubCounty>(),
                 nameof(SubCounty.SubCountyID),
                 nameof(SubCounty.SubCountyName));
 
         }
-
-
-        [HttpGet]
-        public JsonResult GetSubCounties(int countyId)
-        {
-            var data = _context.SubCounties        // DbSet<SubCounty>
-                               .AsNoTracking()
-                               .Where(s => s.CountyID == countyId)
-                               .OrderBy(s => s.SubCountyName)
-                               .Select(s => new
-                               {
-                                   s.SubCountyID,
-                                   s.SubCountyName
-                               })
-                               .ToList();
-
-            return Json(data);
-        }
-
     }
 }
+

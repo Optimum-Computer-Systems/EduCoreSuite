@@ -50,15 +50,6 @@ namespace EduCoreSuite.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("Constituency")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("County")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -420,9 +411,8 @@ namespace EduCoreSuite.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("County")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CountyID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Course")
                         .IsRequired()
@@ -513,9 +503,8 @@ namespace EduCoreSuite.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubCounty")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("SubCountyID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Town")
                         .IsRequired()
@@ -530,6 +519,10 @@ namespace EduCoreSuite.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentID");
+
+                    b.HasIndex("CountyID");
+
+                    b.HasIndex("SubCountyID");
 
                     b.ToTable("Students", (string)null);
                 });
@@ -693,6 +686,25 @@ namespace EduCoreSuite.Migrations
                         .IsRequired();
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("EduCoreSuite.Models.Student", b =>
+                {
+                    b.HasOne("EduCoreSuite.Models.County", "County")
+                        .WithMany()
+                        .HasForeignKey("CountyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduCoreSuite.Models.SubCounty", "SubCounty")
+                        .WithMany()
+                        .HasForeignKey("SubCountyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("County");
+
+                    b.Navigation("SubCounty");
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.SubCounty", b =>

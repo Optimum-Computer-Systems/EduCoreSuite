@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using EduCoreSuite.Data;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Services.AddDbContext<ForgeDBContext>(options =>
         sqlOptions => sqlOptions.EnableRetryOnFailure()
     )
 );
+builder.Services.AddDbContext<ForgeDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // Add MVC services
 builder.Services.AddControllersWithViews();
