@@ -50,12 +50,16 @@ namespace EduCoreSuite.Controllers
         }
 
         // POST: StudyModes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] StudyMode studyMode)
         {
+            // Check for duplicate StudyMode Name
+            if (await _context.StudyModes.AnyAsync(s => s.Name.ToLower() == studyMode.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A study mode with this name already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(studyMode);
@@ -82,8 +86,6 @@ namespace EduCoreSuite.Controllers
         }
 
         // POST: StudyModes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] StudyMode studyMode)
@@ -91,6 +93,12 @@ namespace EduCoreSuite.Controllers
             if (id != studyMode.Id)
             {
                 return NotFound();
+            }
+
+            // Check for duplicate StudyMode Name (excluding current study mode)
+            if (await _context.StudyModes.AnyAsync(s => s.Id != id && s.Name.ToLower() == studyMode.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A study mode with this name already exists.");
             }
 
             if (ModelState.IsValid)
@@ -152,6 +160,26 @@ namespace EduCoreSuite.Controllers
         private bool StudyModeExists(int id)
         {
             return _context.StudyModes.Any(e => e.Id == id);
+        }
+
+        // AJAX endpoint for real-time duplicate checking
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateName(string name, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.StudyModes.AnyAsync(s => s.Id != excludeId && s.Name.ToLower() == name.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.StudyModes.AnyAsync(s => s.Name.ToLower() == name.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A study mode with this name already exists." : "" });
         }
     }
 }

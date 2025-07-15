@@ -47,6 +47,19 @@ namespace EduCoreSuite.Controllers
             [Bind("FullName,Title,StaffNumber,Role,IsDeleted")]
             Staff staff)
         {
+            // Check for duplicate Staff FullName
+            if (await _context.Staff.AnyAsync(s => !s.IsDeleted && s.FullName.ToLower() == staff.FullName.ToLower()))
+            {
+                ModelState.AddModelError("FullName", "A staff member with this name already exists.");
+            }
+
+            // Check for duplicate Staff Number (if provided)
+            if (!string.IsNullOrWhiteSpace(staff.StaffNumber) && 
+                await _context.Staff.AnyAsync(s => !s.IsDeleted && s.StaffNumber != null && s.StaffNumber.ToLower() == staff.StaffNumber.ToLower()))
+            {
+                ModelState.AddModelError("StaffNumber", "A staff member with this staff number already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(staff);
@@ -76,6 +89,19 @@ namespace EduCoreSuite.Controllers
             Staff staff)
         {
             if (id != staff.StaffID) return NotFound();
+
+            // Check for duplicate Staff FullName (excluding current staff)
+            if (await _context.Staff.AnyAsync(s => !s.IsDeleted && s.StaffID != id && s.FullName.ToLower() == staff.FullName.ToLower()))
+            {
+                ModelState.AddModelError("FullName", "A staff member with this name already exists.");
+            }
+
+            // Check for duplicate Staff Number (if provided, excluding current staff)
+            if (!string.IsNullOrWhiteSpace(staff.StaffNumber) && 
+                await _context.Staff.AnyAsync(s => !s.IsDeleted && s.StaffID != id && s.StaffNumber != null && s.StaffNumber.ToLower() == staff.StaffNumber.ToLower()))
+            {
+                ModelState.AddModelError("StaffNumber", "A staff member with this staff number already exists.");
+            }
 
             if (ModelState.IsValid)
             {
@@ -121,6 +147,45 @@ namespace EduCoreSuite.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        // AJAX endpoints for real-time duplicate checking
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateFullName(string fullName, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(fullName))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Staff.AnyAsync(s => !s.IsDeleted && s.StaffID != excludeId && s.FullName.ToLower() == fullName.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Staff.AnyAsync(s => !s.IsDeleted && s.FullName.ToLower() == fullName.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A staff member with this name already exists." : "" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateStaffNumber(string staffNumber, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(staffNumber))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Staff.AnyAsync(s => !s.IsDeleted && s.StaffID != excludeId && s.StaffNumber != null && s.StaffNumber.ToLower() == staffNumber.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Staff.AnyAsync(s => !s.IsDeleted && s.StaffNumber != null && s.StaffNumber.ToLower() == staffNumber.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A staff member with this staff number already exists." : "" });
         }
     }
 }

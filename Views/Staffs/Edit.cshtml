@@ -56,6 +56,50 @@
     </div>
 </div>
 
-@{
-    Html.RenderPartial("_ValidationScriptsPartial");
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+    <script>
+        $(document).ready(function() {
+            var currentStaffId = @Model.StaffID;
+
+            // Real-time validation for Staff FullName
+            $('#FullName').on('blur', function() {
+                var fullName = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="FullName"]');
+                
+                if (fullName) {
+                    $.get('@Url.Action("CheckDuplicateFullName", "Staffs")', { fullName: fullName, excludeId: currentStaffId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#FullName').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#FullName').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Staff Number
+            $('#StaffNumber').on('blur', function() {
+                var staffNumber = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="StaffNumber"]');
+                
+                if (staffNumber) {
+                    $.get('@Url.Action("CheckDuplicateStaffNumber", "Staffs")', { staffNumber: staffNumber, excludeId: currentStaffId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#StaffNumber').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#StaffNumber').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }
