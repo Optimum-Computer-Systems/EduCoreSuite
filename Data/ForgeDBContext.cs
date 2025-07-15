@@ -20,19 +20,17 @@ namespace EduCoreSuite.Data
 
         public DbSet<Department> Departments { get; set; }
         public DbSet<Programme> Programmes { get; set; }
-
         public DbSet<Campus> Campuses { get; set; }
         public DbSet<StudyMode> StudyModes { get; set; }
         public DbSet<StudyStatus> StudyStatuses { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Staff> Staff { get; set; }
 
-        // ---------- Fluent API / seed data ----------
         protected override void OnModelCreating(ModelBuilder mb)
         {
             base.OnModelCreating(mb);
 
-            // Table‑name mapping (optional but keeps DB tidy)
+            // Table‑name mapping
             mb.Entity<Student>().ToTable("Students");
             mb.Entity<Course>().ToTable("Courses");
             mb.Entity<ExamBody>().ToTable("ExamBodies");
@@ -44,16 +42,13 @@ namespace EduCoreSuite.Data
             mb.Entity<Faculty>().ToTable("Faculties");
             mb.Entity<Staff>().ToTable("Staff");
 
-            // --- Seed reference data ---
-
-            // Study modes common in Kenyan universities
+            // Seed reference data
             mb.Entity<StudyMode>().HasData(
                 new StudyMode { Id = 1, Name = "Full‑Time", Description = "Daytime attendance on campus" },
                 new StudyMode { Id = 2, Name = "Part‑Time", Description = "Evening / weekend attendance" },
                 new StudyMode { Id = 3, Name = "Distance Learning", Description = "Remote / online learning" }
             );
 
-            // Typical progression statuses
             mb.Entity<StudyStatus>().HasData(
                 new StudyStatus { Id = 1, Name = "Active", Description = "Currently enrolled" },
                 new StudyStatus { Id = 2, Name = "Completed", Description = "Graduated successfully" },
@@ -62,6 +57,13 @@ namespace EduCoreSuite.Data
                 new StudyStatus { Id = 5, Name = "Suspended", Description = "Temporarily barred for discipline" },
                 new StudyStatus { Id = 6, Name = "Expelled", Description = "Permanently removed from programme" }
             );
+
+            // ⚠️ Fix for SQL Server multiple cascade paths issue
+            mb.Entity<Course>()
+                .HasOne(c => c.Programme)
+                .WithMany()
+                .HasForeignKey(c => c.ProgrammeID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

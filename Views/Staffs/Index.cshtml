@@ -1,89 +1,43 @@
 ﻿@model IEnumerable<EduCoreSuite.Models.Staff>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Staff Index";
 }
 
-<h1>Index</h1>
+<h1>Staff</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StaffNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Role)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.FullName)</th>
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.StaffNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.Role)</th>
+            
+            <th>@Html.DisplayNameFor(model => model.IsDeleted)</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StaffNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.StaffID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.StaffID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.StaffID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(_ => item.FullName)</td>
+                <td>@Html.DisplayFor(_ => item.Title)</td>
+                <td>@Html.DisplayFor(_ => item.StaffNumber)</td>
+                <td>@Html.DisplayFor(_ => item.Role)</td>
+           
+                <td>@Html.DisplayFor(_ => item.IsDeleted)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.StaffID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.StaffID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.StaffID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

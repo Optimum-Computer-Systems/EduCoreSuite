@@ -20,68 +20,150 @@
 
     @if (!(currentController == "Reports"))
     {
-        <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" style="background-color: #b0b0b0;">
-                <div class="container-fluid">
-                    <a class="navbar-brand text-dark d-flex align-items-center fw-bold gap-2" asp-area="" asp-controller="Home" asp-action="Index">
-                        <img src="~/Resources/Logo.svg" alt="Logo" width="28" height="28" style="filter: brightness(0) saturate(100%); transform: scale(1.1);" />
-                        <span>Optimum University</span>
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-semibold" asp-controller="Home" asp-action="Index">Dashboard</a>
-                            </li>
+        <!-- Top Header Bar -->
+        <header class="top-header bg-white border-bottom shadow-sm">
+            <div class="container-fluid px-3">
+                <div class="d-flex align-items-center justify-content-between py-2">
+                    <!-- Left: Logo + University Name + Sidebar Toggle -->
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="btn btn-link p-0 sidebar-toggle d-lg-none" type="button">
+                            <i class="bi bi-list fs-4 text-dark"></i>
+                        </button>
+                        <a class="text-decoration-none d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                            <img src="~/Resources/Logo.svg" alt="Logo" width="28" height="28" style="filter: brightness(0) saturate(100%);" />
+                            <h4 class="mb-0 fw-bold text-primary d-none d-md-block">Optimum University</h4>
+                        </a>
+                    </div>
 
-                            <!-- Register -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark fw-semibold" href="#" id="registerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Register
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="registerDropdown">
-                                    <li><a class="dropdown-item" asp-controller="Students" asp-action="Index">Student List</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Students" asp-action="Create">Add Student</a></li>
-                                </ul>
-                            </li>
+                    <!-- Right: User Info & Actions -->
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-muted small d-none d-md-block">Education Management System</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-person-circle fs-5 text-muted"></i>
+                            <span class="text-dark fw-medium d-none d-sm-block">Admin User</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-                            <!-- Courses Dropdown -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark fw-semibold" href="#" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Courses
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
-                                    <li><a class="dropdown-item" asp-controller="Courses" asp-action="Index">Course List</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Courses" asp-action="Create">Add Course</a></li>
-                                    <li><hr class="dropdown-divider" /></li>
-                                    <li><a class="dropdown-item" asp-controller="Departments" asp-action="Index">Departments</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Programmes" asp-action="Index">Programmes</a></li>
-                                    <li><a class="dropdown-item" asp-controller="ExamBodies" asp-action="Index">Exam Bodies</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Campuses" asp-action="Index">Campuses</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Faculties" asp-action="Index">Faculties</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Staffs" asp-action="Index">Staff</a></li>
-                                    <li><a class="dropdown-item" asp-controller="StudyModes" asp-action="Index">Study Modes</a></li>
-                                    <li><a class="dropdown-item" asp-controller="StudyStatuses" asp-action="Index">Study Statuses</a></li>
-                                </ul>
-                            </li>
+        <!-- Sidebar Navigation -->
+        <div class="sidebar-container">
+            <nav class="sidebar bg-dark text-white" id="sidebar">
+                <div class="sidebar-content">
+                    <!-- Sidebar Header -->
+                    <div class="sidebar-header p-3 border-bottom border-secondary">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-mortarboard-fill text-primary fs-5"></i>
+                            <span class="fw-bold">EduCore Suite</span>
+                        </div>
+                    </div>
 
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-semibold" asp-controller="Reports" asp-action="Index">Reports</a>
-                            </li>
-                        </ul>
+                    <!-- Navigation Menu -->
+                    <div class="sidebar-menu">
+                        <!-- Dashboard -->
+                        <div class="menu-section">
+                            <a class="menu-item @(currentController == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </div>
+
+                        <!-- Institution Setup -->
+                        <div class="menu-section">
+                            <div class="menu-header">
+                                <i class="bi bi-building"></i>
+                                <span>Institution Setup</span>
+                            </div>
+                            <a class="menu-item @(currentController == "Campuses" ? "active" : "")" asp-controller="Campuses" asp-action="Index">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>Campuses</span>
+                            </a>
+                            <a class="menu-item @(currentController == "Faculties" ? "active" : "")" asp-controller="Faculties" asp-action="Index">
+                                <i class="bi bi-mortarboard"></i>
+                                <span>Faculties</span>
+                            </a>
+                            <a class="menu-item @(currentController == "Departments" ? "active" : "")" asp-controller="Departments" asp-action="Index">
+                                <i class="bi bi-diagram-3"></i>
+                                <span>Departments</span>
+                            </a>
+                        </div>
+
+                        <!-- Academic Programs -->
+                        <div class="menu-section">
+                            <div class="menu-header">
+                                <i class="bi bi-journal-bookmark"></i>
+                                <span>Academic Programs</span>
+                            </div>
+                            <a class="menu-item @(currentController == "Programmes" ? "active" : "")" asp-controller="Programmes" asp-action="Index">
+                                <i class="bi bi-collection"></i>
+                                <span>Programmes</span>
+                            </a>
+                            <a class="menu-item @(currentController == "Courses" ? "active" : "")" asp-controller="Courses" asp-action="Index">
+                                <i class="bi bi-book"></i>
+                                <span>Courses</span>
+                            </a>
+                        </div>
+
+                        <!-- People Management -->
+                        <div class="menu-section">
+                            <div class="menu-header">
+                                <i class="bi bi-people"></i>
+                                <span>People Management</span>
+                            </div>
+                            <a class="menu-item @(currentController == "Staffs" ? "active" : "")" asp-controller="Staffs" asp-action="Index">
+                                <i class="bi bi-person-badge"></i>
+                                <span>Staff</span>
+                            </a>
+                            <a class="menu-item @(currentController == "Students" ? "active" : "")" asp-controller="Students" asp-action="Index">
+                                <i class="bi bi-person-check"></i>
+                                <span>Students</span>
+                            </a>
+                        </div>
+
+                        <!-- System Configuration -->
+                        <div class="menu-section">
+                            <div class="menu-header">
+                                <i class="bi bi-gear"></i>
+                                <span>Configuration</span>
+                            </div>
+                            <a class="menu-item @(currentController == "StudyModes" ? "active" : "")" asp-controller="StudyModes" asp-action="Index">
+                                <i class="bi bi-clock"></i>
+                                <span>Study Modes</span>
+                            </a>
+                            <a class="menu-item @(currentController == "StudyStatuses" ? "active" : "")" asp-controller="StudyStatuses" asp-action="Index">
+                                <i class="bi bi-check-circle"></i>
+                                <span>Study Status</span>
+                            </a>
+                            <a class="menu-item @(currentController == "ExamBodies" ? "active" : "")" asp-controller="ExamBodies" asp-action="Index">
+                                <i class="bi bi-award"></i>
+                                <span>Exam Bodies</span>
+                            </a>
+                        </div>
+
+                        <!-- Reports & Analytics -->
+                        <div class="menu-section">
+                            <a class="menu-item @(currentController == "Reports" ? "active" : "")" asp-controller="Reports" asp-action="Index">
+                                <i class="bi bi-graph-up"></i>
+                                <span>Reports & Analytics</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </nav>
-        </header>
+
+            <!-- Sidebar Overlay for Mobile -->
+            <div class="sidebar-overlay d-lg-none" id="sidebarOverlay"></div>
+        </div>
     }
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="container-fluid px-4">
+            <main role="main" class="py-4">
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
     <footer class="border-top footer text-muted">
@@ -89,9 +171,12 @@
             &copy; 2025 - Optimum_University - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

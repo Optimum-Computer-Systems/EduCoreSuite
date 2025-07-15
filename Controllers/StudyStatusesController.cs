@@ -50,12 +50,16 @@ namespace EduCoreSuite.Controllers
         }
 
         // POST: StudyStatuses/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] StudyStatus studyStatus)
         {
+            // Check for duplicate StudyStatus Name
+            if (await _context.StudyStatuses.AnyAsync(s => s.Name.ToLower() == studyStatus.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A study status with this name already exists.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(studyStatus);
@@ -82,8 +86,6 @@ namespace EduCoreSuite.Controllers
         }
 
         // POST: StudyStatuses/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] StudyStatus studyStatus)
@@ -91,6 +93,12 @@ namespace EduCoreSuite.Controllers
             if (id != studyStatus.Id)
             {
                 return NotFound();
+            }
+
+            // Check for duplicate StudyStatus Name (excluding current study status)
+            if (await _context.StudyStatuses.AnyAsync(s => s.Id != id && s.Name.ToLower() == studyStatus.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A study status with this name already exists.");
             }
 
             if (ModelState.IsValid)
@@ -152,6 +160,26 @@ namespace EduCoreSuite.Controllers
         private bool StudyStatusExists(int id)
         {
             return _context.StudyStatuses.Any(e => e.Id == id);
+        }
+
+        // AJAX endpoint for real-time duplicate checking
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateName(string name, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.StudyStatuses.AnyAsync(s => s.Id != excludeId && s.Name.ToLower() == name.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.StudyStatuses.AnyAsync(s => s.Name.ToLower() == name.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A study status with this name already exists." : "" });
         }
     }
 }
