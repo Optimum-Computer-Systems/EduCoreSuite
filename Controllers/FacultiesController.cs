@@ -35,6 +35,12 @@ namespace EduCoreSuite.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Description")] Faculty faculty)
         {
+            // Check for duplicate Faculty Name
+            if (await _context.Faculties.AnyAsync(f => f.Name.ToLower() == faculty.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A faculty with this name already exists.");
+            }
+
             if (!ModelState.IsValid)
                 return View(faculty);
 
@@ -57,6 +63,12 @@ namespace EduCoreSuite.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("FacultyID,Name,Description")] Faculty faculty)
         {
             if (id != faculty.FacultyID) return NotFound();
+
+            // Check for duplicate Faculty Name (excluding current faculty)
+            if (await _context.Faculties.AnyAsync(f => f.FacultyID != id && f.Name.ToLower() == faculty.Name.ToLower()))
+            {
+                ModelState.AddModelError("Name", "A faculty with this name already exists.");
+            }
 
             if (!ModelState.IsValid)
                 return View(faculty);
@@ -99,6 +111,26 @@ namespace EduCoreSuite.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        // AJAX endpoint for real-time duplicate checking
+        [HttpGet]
+        public async Task<IActionResult> CheckDuplicateName(string name, int? excludeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Json(new { isValid = true });
+
+            bool isDuplicate;
+            if (excludeId.HasValue)
+            {
+                isDuplicate = await _context.Faculties.AnyAsync(f => f.FacultyID != excludeId && f.Name.ToLower() == name.ToLower());
+            }
+            else
+            {
+                isDuplicate = await _context.Faculties.AnyAsync(f => f.Name.ToLower() == name.ToLower());
+            }
+
+            return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A faculty with this name already exists." : "" });
         }
     }
 }
