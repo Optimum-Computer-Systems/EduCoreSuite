@@ -117,4 +117,82 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script>
+        $(document).ready(function() {
+            var currentCampusId = @Model.Id;
+
+            // Real-time validation for Campus Code
+            $('#Code').on('blur', function() {
+                var code = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Code"]');
+                
+                if (code) {
+                    $.get('@Url.Action("CheckDuplicateCode", "Campuses")', { code: code, excludeId: currentCampusId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Code').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Code').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Campus Name
+            $('#Name').on('blur', function() {
+                var name = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Name"]');
+                
+                if (name) {
+                    $.get('@Url.Action("CheckDuplicateName", "Campuses")', { name: name, excludeId: currentCampusId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Name').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Name').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Email
+            $('#Email').on('blur', function() {
+                var email = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Email"]');
+                
+                if (email) {
+                    $.get('@Url.Action("CheckDuplicateEmail", "Campuses")', { email: email, excludeId: currentCampusId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Email').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Email').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Phone Number
+            $('#PhoneNumber').on('blur', function() {
+                var phone = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="PhoneNumber"]');
+                
+                if (phone) {
+                    $.get('@Url.Action("CheckDuplicatePhone", "Campuses")', { phone: phone, excludeId: currentCampusId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#PhoneNumber').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#PhoneNumber').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }
