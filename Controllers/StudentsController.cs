@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EduCoreSuite.Data;
+using EduCoreSuite.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using EduCoreSuite.Data;
-using EduCoreSuite.Models;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using NuGet.Protocol.Plugins;
 
 namespace EduCoreSuite.Controllers
 {
@@ -140,12 +136,15 @@ namespace EduCoreSuite.Controllers
         // StudentsController.cs  ── only the helper has changed
         private void PopulateDropdowns()
         {
+            // --- simple look‑ups (no tables) ------------------------------
             ViewBag.GenderList = new SelectList(new[] { "Male", "Female", "Other" });
             ViewBag.Religions = new SelectList(new[] { "Christianity", "Islam", "Hinduism", "Atheist", "Other" });
             ViewBag.Medicals = new SelectList(new[] { "Normal", "Chronic", "Disabled", "Other" });
             ViewBag.MaritalStatusList = new SelectList(new[] { "Single", "Married", "Divorced", "Widowed" });
             ViewBag.Years = new SelectList(new[] { "1st Year", "2nd Year", "3rd Year", "4th Year" });
 
+            // --- database‑driven lists ------------------------------------
+            // NB:  ID field first (model‑binding)  |  Display field second
             ViewBag.Courses = new SelectList(
                 _context.Courses?.AsNoTracking().ToList() ?? new List<Course>(),
                 nameof(Course.CourseID), nameof(Course.CourseName));
@@ -162,6 +161,7 @@ namespace EduCoreSuite.Controllers
                 _context.ExamBodies?.AsNoTracking().ToList() ?? new List<ExamBody>(),
                 nameof(ExamBody.Id), nameof(ExamBody.Name));
 
+            // ――――― NEW items from the navigation snapshot ―――――
             ViewBag.Campuses = new SelectList(
                 _context.Campuses?.AsNoTracking().ToList() ?? new List<Campus>(),
                 nameof(Campus.Id), nameof(Campus.Name));
@@ -200,4 +200,3 @@ namespace EduCoreSuite.Controllers
         }
     }
 }
-

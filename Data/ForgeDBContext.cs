@@ -27,12 +27,11 @@ namespace EduCoreSuite.Data
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Staff> Staff { get; set; }
 
-        // ---------- Fluent API / seed data ----------
         protected override void OnModelCreating(ModelBuilder mb)
         {
             base.OnModelCreating(mb);
 
-            // ---------- Table Mappings ----------
+            // Table‑name mapping
             mb.Entity<Student>().ToTable("Students");
             mb.Entity<Course>().ToTable("Courses");
             mb.Entity<ExamBody>().ToTable("ExamBodies");
@@ -44,17 +43,7 @@ namespace EduCoreSuite.Data
             mb.Entity<Faculty>().ToTable("Faculties");
             mb.Entity<Staff>().ToTable("Staff");
 
-            // ✔️ Add these:
-            mb.Entity<County>().ToTable("Counties");
-            mb.Entity<SubCounty>().ToTable("SubCounties");
-
-            // ---------- Relationships ----------
-            mb.Entity<SubCounty>()
-              .HasOne<County>()
-              .WithMany(c => c.SubCounties)
-              .HasForeignKey(s => s.CountyID);
-
-            // ---------- Seed Data (optional) ----------
+            // Seed reference data
             mb.Entity<StudyMode>().HasData(
                 new StudyMode { Id = 1, Name = "Full‑Time", Description = "Daytime attendance on campus" },
                 new StudyMode { Id = 2, Name = "Part‑Time", Description = "Evening / weekend attendance" },
@@ -69,6 +58,13 @@ namespace EduCoreSuite.Data
                 new StudyStatus { Id = 5, Name = "Suspended", Description = "Temporarily barred for discipline" },
                 new StudyStatus { Id = 6, Name = "Expelled", Description = "Permanently removed from programme" }
             );
+
+            // ⚠️ Fix for SQL Server multiple cascade paths issue
+            mb.Entity<Course>()
+                .HasOne(c => c.Programme)
+                .WithMany()
+                .HasForeignKey(c => c.ProgrammeID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

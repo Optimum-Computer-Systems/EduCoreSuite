@@ -120,7 +120,9 @@
         </div>
         <div class="col-md-6">
             <label asp-for="CountyID" class="form-label">County</label>
-            <select asp-for="CountyID" class="form-select" asp-items="ViewBag.Counties"></select>
+            <select asp-for="CountyID" class="form-select" asp-items="ViewBag.Counties">
+             <option value="">-- Select County --</option>
+            </select>
             <span asp-validation-for="CountyID" class="text-danger"></span>
         
         </div>

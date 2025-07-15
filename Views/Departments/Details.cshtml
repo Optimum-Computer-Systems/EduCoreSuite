@@ -1,24 +1,51 @@
 ﻿@model EduCoreSuite.Models.Department
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Department Details";
 }
 
-<h1>Details</h1>
+<h1>@ViewData["Title"]</h1>
 
-<div>
-    <h4>Department</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
+<div class="card mb-4">
+    <div class="card-header">
+        <h4 class="card-title">@Model.Name</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Code</dt>
+            <dd class="col-sm-9">@Model.Code</dd>
+
+            <dt class="col-sm-3">Description</dt>
+            <dd class="col-sm-9">@Model.Description</dd>
+
+            <dt class="col-sm-3">Faculty</dt>
+            <dd class="col-sm-9">@Model.Faculty?.Name</dd>
+
+            <dt class="col-sm-3">Active</dt>
+            <dd class="col-sm-9">@Model.IsActive ? "Yes" : "No"</dd>
+
+            <dt class="col-sm-3">Department Heads</dt>
+            <dd class="col-sm-9">
+                @if (Model.DepartmentHeads?.Any() == true)
+                {
+                    <ul class="mb-0">
+                        @foreach (var head in Model.DepartmentHeads)
+                        {
+                            <li>@head.FullName (@head.Role)</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <em>No heads assigned</em>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.DepartmentID" class="btn btn-primary">Edit</a>
+        <a asp-action="Delete" asp-route-id="@Model.DepartmentID" class="btn btn-danger ml-2">Delete</a>
+        <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.DepartmentID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+

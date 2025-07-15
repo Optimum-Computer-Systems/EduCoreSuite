@@ -1,5 +1,4 @@
-﻿using NuGet.Protocol.Plugins;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,49 +7,39 @@ namespace EduCoreSuite.Models
 {
     public class Department
     {
+        public bool IsDeleted { get; set; } = false;
         [Key]
         public int DepartmentID { get; set; }
 
         [Required(ErrorMessage = "Department name is required")]
         [StringLength(100, ErrorMessage = "Department name cannot exceed 100 characters")]
+        [RegularExpression(@"^[A-Za-z][A-Za-z\s&\-().,]+$", ErrorMessage = "Please enter a professional department name (e.g., Computer Science, Business Administration, Information Technology)")]
+        [Display(Name = "Department Name")]
         public string Name { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(20)]
-        public string Code { get; set; } = string.Empty; // e.g., "CS", "MKT", "PHY"
+        [Required(ErrorMessage = "Department code is required")]
+        [StringLength(20, ErrorMessage = "Department code cannot exceed 20 characters")]
+        [RegularExpression(@"^[A-Z][A-Z0-9]*$", ErrorMessage = "Please enter a valid department code (e.g., CS, IT, BUS, COMP)")]
+        [Display(Name = "Department Code")]
+        public string Code { get; set; } = string.Empty;
 
-        [StringLength(255)]
-        public string Description { get; set; } = string.Empty;
+        [StringLength(255, ErrorMessage = "Description cannot exceed 255 characters")]
+        [RegularExpression(@"^[A-Za-z][A-Za-z\s&\-().,0-9]*$", ErrorMessage = "Please enter a professional description")]
+        [Display(Name = "Description")]
+        public string? Description { get; set; }
 
-        // === Relationships ===
-
-        [Required]
+        [Required(ErrorMessage = "Please select a faculty.")]
         public int FacultyID { get; set; }
 
-        [ForeignKey("FacultyID")]
-        public Faculty Faculty { get; set; } = null!;
+        [ForeignKey(nameof(FacultyID))]
+        public Faculty? Faculty { get; set; }
 
         public ICollection<Programme> Programmes { get; set; } = new List<Programme>();
 
-        public ICollection<Staff> DepartmentHeads { get; set; } = new List<Staff>(); // optional many-to-many
+        public ICollection<Staff> DepartmentHeads { get; set; } = new List<Staff>();
 
-        // === Metadata ===
-
+        // === Status ===
         [Required]
-        public bool IsActive { get; set; } = true; // Status: Active/Inactive
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public DateTime? UpdatedAt { get; set; }
-
-        public DateTime? DeactivatedAt { get; set; }
-
-        [StringLength(100)]
-        public string CreatedBy { get; set; } = "system";
-
-        [StringLength(100)]
-        public string? UpdatedBy { get; set; }
-
-        public bool IsDeleted { get; set; } = false;
+        public bool IsActive { get; set; } = true;
     }
 }
