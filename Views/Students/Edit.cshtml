@@ -78,8 +78,14 @@
             <span asp-validation-for="Disability" class="text-danger"></span>
         </div>
         <div class="col-md-6">
-            <label asp-for="Medical" class="form-label"></label>
-            <input asp-for="Medical" class="form-control" />
+           <label asp-for="Medical" class="form-label"></label>
+            <select asp-for="Medical" class="form-select">
+                <option value="">-- Select --</option>
+                <option>Normal</option>
+                <option>Chronic</option>
+                <option>Disabled</option>
+                <option>Other</option>
+            </select>
             <span asp-validation-for="Medical" class="text-danger"></span>
         </div>
 
