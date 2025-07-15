@@ -42,9 +42,9 @@
     <div class="col-md-6"><strong>Alt Phone:</strong> @Model.AltPhone</div>
 
     <div class="col-md-6"><strong>Postal Code:</strong> @Model.PostalCode</div>
-    <div class="col-md-6"><strong>County:</strong> @Model.County</div>
+    <div class="col-md-6"><strong>County:</strong> @Model.County?.CountyName</div>
+    <div class="col-md-6"><strong>SubCounty:</strong> @Model.SubCounty?.SubCountyName</div>
 
-    <div class="col-md-6"><strong>SubCounty:</strong> @Model.SubCounty</div>
     <div class="col-md-6"><strong>Town/Estate:</strong> @Model.Town</div>
 
     <div class="col-md-6"><strong>Ward:</strong> @Model.Ward</div>

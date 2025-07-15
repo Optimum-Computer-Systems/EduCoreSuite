@@ -27,10 +27,15 @@ namespace EduCoreSuite.Controllers
         {
             if (id == null) return NotFound();
 
-            var student = await _context.Students.AsNoTracking()
-                                                 .FirstOrDefaultAsync(s => s.StudentID == id);
+            var student = await _context.Students
+                .Include(s => s.County)
+                .Include(s => s.SubCounty)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.StudentID == id);
+
             return student == null ? NotFound() : View(student);
         }
+
 
         // ------------------------- CREATE -------------------------
 
