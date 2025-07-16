@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EduCoreSuite.Data;
 using EduCoreSuite.Models;
@@ -45,13 +46,36 @@ namespace EduCoreSuite.Controllers
         // GET: Campuses/Create
         public IActionResult Create()
         {
+            PopulateDropdowns();
             return View();
+        }
+        
+        // Helper method to populate dropdowns
+        private void PopulateDropdowns(int? countyId = null)
+        {
+            ViewBag.Counties = new SelectList(
+                _context.Counties.AsNoTracking()
+                                 .OrderBy(c => c.CountyName)
+                                 .ToList(),
+                nameof(CountySubCounty.CountyID),
+                nameof(CountySubCounty.CountyName),
+                countyId);
+
+            ViewBag.SubCounties = new SelectList(
+                countyId == null
+                    ? Enumerable.Empty<SubCounty>()
+                    : _context.SubCounties
+                              .Where(sc => sc.CountyID == countyId)
+                              .OrderBy(sc => sc.SubCountyName)
+                              .ToList(),
+                nameof(SubCounty.SubCountyID),
+                nameof(SubCounty.SubCountyName));
         }
 
         // POST: Campuses/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Name,County,Constituency,Town,PhysicalAddress,PhoneNumber,Email,WebsiteURL,PostalAddress,PrincipalName,TVETRegistrationNumber,KUCCPSCode,IsMainCampus,IsActive")] Campus campus)
+        public async Task<IActionResult> Create([Bind("Id,Code,Name,CountyID,SubCountyID,Town,PhysicalAddress,PhoneNumber,Email,WebsiteURL,PostalAddress,PrincipalName,TVETRegistrationNumber,KUCCPSCode,IsMainCampus,IsActive")] Campus campus)
         {
             // Check for duplicate Code
             if (await _context.Campuses.AnyAsync(c => c.Code.ToLower() == campus.Code.ToLower()))
@@ -101,13 +125,15 @@ namespace EduCoreSuite.Controllers
             {
                 return NotFound();
             }
+            
+            PopulateDropdowns(campus.CountyID);
             return View(campus);
         }
 
         // POST: Campuses/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Name,County,Constituency,Town,PhysicalAddress,PhoneNumber,Email,WebsiteURL,PostalAddress,PrincipalName,TVETRegistrationNumber,KUCCPSCode,IsMainCampus,IsActive")] Campus campus)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Name,CountyID,SubCountyID,Town,PhysicalAddress,PhoneNumber,Email,WebsiteURL,PostalAddress,PrincipalName,TVETRegistrationNumber,KUCCPSCode,IsMainCampus,IsActive")] Campus campus)
         {
             if (id != campus.Id)
             {
@@ -276,6 +302,22 @@ namespace EduCoreSuite.Controllers
             }
 
             return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A campus with this phone number already exists." : "" });
+        }
+        
+
+
+        // ------------------------- AJAX: SUBCOUNTIES -------------------------
+
+        [HttpGet]
+        public JsonResult GetSubCounties(int countyId)
+        {
+            var data = _context.SubCounties.AsNoTracking()
+                               .Where(s => s.CountyID == countyId)
+                               .OrderBy(s => s.SubCountyName)
+                               .Select(s => new { s.SubCountyID, s.SubCountyName })
+                               .ToList();
+
+            return Json(data);
         }
     }
 }

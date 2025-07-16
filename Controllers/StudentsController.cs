@@ -50,9 +50,8 @@ namespace EduCoreSuite.Controllers
                     "A student with the same Admission Number, Email, or National ID already exists.");
             }
 
-            // Validate SubCounty if both CountyID and SubCountyID are provided
-            if (student.CountyID.HasValue && student.SubCountyID.HasValue && 
-                !_context.SubCounties.Any(s => s.SubCountyID == student.SubCountyID && s.CountyID == student.CountyID))
+            // Validate SubCounty
+            if (!_context.SubCounties.Any(s => s.SubCountyID == student.SubCountyID && s.CountyID == student.CountyID))
             {
                 ModelState.AddModelError("SubCountyID", "Invalid sub-county selection.");
             }
@@ -92,9 +91,8 @@ namespace EduCoreSuite.Controllers
                     "Another student already uses this Admission Number, Email, or National ID.");
             }
 
-            // Validate SubCounty if both CountyID and SubCountyID are provided
-            if (student.CountyID.HasValue && student.SubCountyID.HasValue && 
-                !_context.SubCounties.Any(s => s.SubCountyID == student.SubCountyID && s.CountyID == student.CountyID))
+            // Validate SubCounty
+            if (!_context.SubCounties.Any(s => s.SubCountyID == student.SubCountyID && s.CountyID == student.CountyID))
             {
                 ModelState.AddModelError("SubCountyID", "Invalid sub-county selection.");
             }
@@ -157,7 +155,7 @@ namespace EduCoreSuite.Controllers
 
         // ------------------------- DROPDOWNS -------------------------
 
-        private void PopulateDropdowns(int? countyId = null)
+        private void PopulateDropdowns(int countyId = 0)
         {
             ViewBag.Courses = BuildSelectList(
                 _context.Courses, c => c.CourseName, "-- Select Course --");
@@ -180,7 +178,7 @@ namespace EduCoreSuite.Controllers
                 countyId);
 
             ViewBag.SubCounties = new SelectList(
-                countyId == null
+                countyId == 0
                     ? Enumerable.Empty<SubCounty>()
                     : _context.SubCounties
                               .Where(sc => sc.CountyID == countyId)
