@@ -1,11 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using System.Text.Json.Serialization;
 
 namespace EduCoreSuite.Models
 {
     public class User
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         [Required]//This belongs to the username 
         public String Username { get; set; }
@@ -24,6 +27,7 @@ namespace EduCoreSuite.Models
 
         public int RoleID { get; set; }
         [ForeignKey("RoleID")]
-        public Role Role { get; set; }
+        [JsonIgnore]
+        public Role? Role { get; set; }
     }
 }

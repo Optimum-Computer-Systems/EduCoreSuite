@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduCoreSuite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250710175543_AddTables")]
-    partial class AddTables
+    [Migration("20250716081048_AddUserTable")]
+    partial class AddUserTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,32 @@ namespace EduCoreSuite.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Description = "Student with limited system access",
+                            Name = "Student"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "Administrator with unlimited access",
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Lecturer with limited system access",
+                            Name = "Lecturer"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Description = "Staff user with limited access",
+                            Name = "Staff"
+                        });
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.User", b =>
