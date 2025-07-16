@@ -79,7 +79,13 @@
         </div>
         <div class="col-md-6">
             <label asp-for="Medical" class="form-label"></label>
-            <input asp-for="Medical" class="form-control" />
+            <select asp-for="Medical" class="form-select">
+                <option value="">-- Select --</option>
+                <option>Normal</option>
+                <option>Chronic</option>
+                <option>Disabled</option>
+                <option>Other</option>
+            </select>
             <span asp-validation-for="Medical" class="text-danger"></span>
         </div>
         <div class="col-md-6">
@@ -120,15 +126,17 @@
         </div>
         <div class="col-md-6">
             <label asp-for="CountyID" class="form-label">County</label>
-            <select asp-for="CountyID" class="form-select" asp-items="ViewBag.Counties"></select>
+            <select asp-for="CountyID" class="form-select" asp-items="ViewBag.Counties">
+             <option value="">-- Select County --</option>
+            </select>
             <span asp-validation-for="CountyID" class="text-danger"></span>
-        
         </div>
         <div class="col-md-6">
             <label asp-for="SubCountyID" class="form-label">Sub‑county</label>
-            <select asp-for="SubCountyID" class="form-select" asp-items="ViewBag.SubCounties"></select>
+            <select asp-for="SubCountyID" class="form-select" asp-items="ViewBag.SubCounties">
+             <option value="">-- Select Sub‑county --</option>
+            </select>
             <span asp-validation-for="SubCountyID" class="text-danger"></span>
-        
         </div>
         <div class="col-md-6">
             <label asp-for="Town" class="form-label"></label>

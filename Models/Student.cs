@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EduCoreSuite.Models
 {
@@ -31,11 +30,15 @@ namespace EduCoreSuite.Models
         [Required, RegularExpression(@"^(\+?\d{10,13})$")] public string AltPhone { get; set; } = string.Empty;
         [Required, RegularExpression(@"^\d{5}$")] public string PostalCode { get; set; } = string.Empty;
 
-        // 👉 NEW: foreign keys instead of raw strings
-        [Required] public int CountyID { get; set; }
-        [Required] public int SubCountyID { get; set; }
+        // Foreign keys
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid County.")]
+        public int? CountyID { get; set; }
 
-        // navigation props (optional when posting, useful when reading)
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Sub-county.")]
+        public int? SubCountyID { get; set; }
+
+
+        // Navigation (optional for posting)
         public CountySubCounty? County { get; set; }
         public SubCounty? SubCounty { get; set; }
 
@@ -53,9 +56,12 @@ namespace EduCoreSuite.Models
         [Required] public string Course { get; set; } = string.Empty;
         [Required] public string Department { get; set; } = string.Empty;
         [Required] public string Faculty { get; set; } = string.Empty;
+
         [Required, RegularExpression(@"^(Certificate|Diploma|Degree|Masters)$")]
         public string Program { get; set; } = string.Empty;
+
         [Required] public string ExamBody { get; set; } = string.Empty;
+
         [Required, RegularExpression(@"^(1st Year|2nd Year|3rd Year|4th Year)$")]
         public string Year { get; set; } = string.Empty;
     }
