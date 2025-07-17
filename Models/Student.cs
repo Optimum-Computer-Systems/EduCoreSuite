@@ -31,14 +31,11 @@ namespace EduCoreSuite.Models
         [Required, RegularExpression(@"^\d{5}$")] public string PostalCode { get; set; } = string.Empty;
 
         // Foreign keys
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid County.")]
+        [Required, Range(1, int.MaxValue, ErrorMessage = "Please select a valid County.")]
         public int CountyID { get; set; }
 
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Sub-county.")]
+        [Required, Range(1, int.MaxValue, ErrorMessage = "Please select a valid Sub-county.")]
         public int SubCountyID { get; set; }
-
 
         // Navigation (optional for posting)
         public CountySubCounty? County { get; set; }

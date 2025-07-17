@@ -130,13 +130,13 @@
              <option value="">-- Select County --</option>
             </select>
             <span asp-validation-for="CountyID" class="text-danger"></span>
-        
         </div>
         <div class="col-md-6">
             <label asp-for="SubCountyID" class="form-label">Sub‑county</label>
-            <select asp-for="SubCountyID" class="form-select" asp-items="ViewBag.SubCounties"></select>
+            <select asp-for="SubCountyID" class="form-select" asp-items="ViewBag.SubCounties">
+             <option value="">-- Select Sub‑county --</option>
+            </select>
             <span asp-validation-for="SubCountyID" class="text-danger"></span>
-        
         </div>
         <div class="col-md-6">
             <label asp-for="Town" class="form-label"></label>

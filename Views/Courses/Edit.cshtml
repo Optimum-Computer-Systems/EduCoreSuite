@@ -1,4 +1,4 @@
-﻿@model EduCoreSuite.Models.ViewModels.CourseFormViewModel
+@model EduCoreSuite.Models.ViewModels.CourseFormViewModel
 
 @{
     ViewData["Title"] = "Edit Course";
@@ -33,6 +33,18 @@
                     <option value="">Select Programme</option>
                 </select>
                 <span asp-validation-for="Course.ProgrammeID" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mt-3">
+                <label class="control-label">Year Level</label>
+                <select id="yearLevel" name="yearLevel" class="form-control">
+                    <option value="1">Year 1</option>
+                    <option value="2">Year 2</option>
+                    <option value="3">Year 3</option>
+                    <option value="4">Year 4</option>
+                    <option value="5">Year 5</option>
+                    <option value="6">Year 6</option>
+                </select>
             </div>
 
             <div class="form-group mt-3">
@@ -102,6 +114,47 @@
                     });
                 }
             });
+            
+            // Add a level display after the Programme dropdown
+            var $programmeSelect = $('#Course_ProgrammeID');
+            var $levelDisplay = $('<div class="mt-2 text-info" id="programme-level-display"></div>');
+            $programmeSelect.after($levelDisplay);
+            
+            // Update level display when programme changes
+            $programmeSelect.on('change', function() {
+                var programmeId = $(this).val();
+                if (programmeId) {
+                    $.get('@Url.Action("GetProgrammeLevel", "Courses")', { programmeId: programmeId }, function(data) {
+                        $levelDisplay.text('Level: ' + data.level);
+                    });
+                } else {
+                    $levelDisplay.text('');
+                }
+            });
+            
+            // Initialize level display if a programme is already selected
+            if ($programmeSelect.val()) {
+                $programmeSelect.trigger('change');
+            }
+            
+            // Handle form submission to include year level in course name
+            $('form').on('submit', function(e) {
+                var courseName = $('#Course_CourseName').val();
+                var yearLevel = $('#yearLevel').val();
+                
+                // Remove any existing year level information
+                courseName = courseName.replace(/\s*-\s*Year\s+\d+$/, '');
+                
+                // Append the year level to the course name
+                $('#Course_CourseName').val(courseName + ' - Year ' + yearLevel);
+            });
+            
+            // Extract year level from course name on page load
+            var courseName = $('#Course_CourseName').val();
+            var yearLevelMatch = courseName.match(/Year\s+(\d+)$/);
+            if (yearLevelMatch) {
+                $('#yearLevel').val(yearLevelMatch[1]);
+            }
         });
     </script>
 }

@@ -160,7 +160,7 @@ namespace EduCoreSuite.Controllers
 
         // ------------------------- DROPDOWNS -------------------------
 
-        private void PopulateDropdowns(int? countyId = null)
+        private void PopulateDropdowns(int countyId = 0)
         {
             ViewBag.Courses = BuildSelectList(
                 _context.Courses, c => c.CourseName, "-- Select Course --");
@@ -183,7 +183,7 @@ namespace EduCoreSuite.Controllers
                 countyId);
 
             ViewBag.SubCounties = new SelectList(
-                countyId == null
+                countyId == 0
                     ? Enumerable.Empty<SubCounty>()
                     : _context.SubCounties
                               .Where(sc => sc.CountyID == countyId)

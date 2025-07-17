@@ -15,18 +15,71 @@ namespace EduCoreSuite.Controllers
         public CoursesController(ForgeDBContext context) => _context = context;
 
         // GET: Courses
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string departmentSearch = "", string courseSearch = "", int page = 1)
         {
-            var courses = await _context.Courses
+            // Set page size - number of courses per page
+            int pageSize = 5;
+            
+            // Start with all courses
+            var coursesQuery = _context.Courses
                 .Include(c => c.Department)
                 .Include(c => c.Programme)
                 .Include(c => c.Campus)
                 .Include(c => c.ExamBody)
                 .Include(c => c.StudyStatus)
                 .Include(c => c.StudyMode)
+                .AsQueryable();
+                
+            // Apply department search filter if provided
+            if (!string.IsNullOrEmpty(departmentSearch))
+            {
+                string searchTerm = departmentSearch.ToLower();
+                coursesQuery = coursesQuery.Where(c => c.Department != null && 
+                    c.Department.Name.ToLower().Contains(searchTerm));
+            }
+            
+            // Apply course name search filter if provided
+            if (!string.IsNullOrEmpty(courseSearch))
+            {
+                string searchTerm = courseSearch.ToLower();
+                coursesQuery = coursesQuery.Where(c => c.CourseName.ToLower().Contains(searchTerm));
+            }
+            
+            // Get total courses count for pagination
+            var totalCourses = await coursesQuery.CountAsync();
+            
+            // Calculate total pages
+            int totalPages = (int)Math.Ceiling(totalCourses / (double)pageSize);
+            
+            // Ensure page is within valid range
+            page = Math.Max(1, Math.Min(page, Math.Max(1, totalPages)));
+            
+            // Get paginated courses
+            var paginatedCourses = await coursesQuery
+                .OrderBy(c => c.Department.Name)
+                .ThenBy(c => c.CourseName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
-
-            return View(courses);
+            
+            // Group courses by department
+            var coursesByDepartment = paginatedCourses
+                .GroupBy(c => c.Department)
+                .OrderBy(g => g.Key.Name)
+                .ToDictionary(g => g.Key, g => g.ToList());
+            
+            // Create view model
+            var viewModel = new CourseIndexViewModel
+            {
+                CoursesByDepartment = coursesByDepartment,
+                DepartmentSearch = departmentSearch,
+                CourseSearch = courseSearch,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                PageSize = pageSize
+            };
+            
+            return View(viewModel);
         }
 
         // GET: Courses/Details/5
@@ -180,6 +233,17 @@ namespace EduCoreSuite.Controllers
             }
 
             return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A course with this name already exists." : "" });
+        }
+        
+        // AJAX endpoint to get programme level
+        [HttpGet]
+        public async Task<IActionResult> GetProgrammeLevel(int programmeId)
+        {
+            var programme = await _context.Programmes.FindAsync(programmeId);
+            if (programme == null)
+                return NotFound();
+                
+            return Json(new { level = programme.Level.ToString() });
         }
     }
 }

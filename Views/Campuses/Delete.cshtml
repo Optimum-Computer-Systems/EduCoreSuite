@@ -27,10 +27,10 @@
                 <dd class="col-sm-8">@Model.Name</dd>
 
                 <dt class="col-sm-4 fw-semibold">County</dt>
-                <dd class="col-sm-8">@Model.County</dd>
+                <dd class="col-sm-8">@(Model.County?.CountyName ?? "Not specified")</dd>
 
-                <dt class="col-sm-4 fw-semibold">Constituency</dt>
-                <dd class="col-sm-8">@Model.Constituency</dd>
+                <dt class="col-sm-4 fw-semibold">Sub-County</dt>
+                <dd class="col-sm-8">@(Model.SubCounty?.SubCountyName ?? "Not specified")</dd>
 
                 <dt class="col-sm-4 fw-semibold">Town</dt>
                 <dd class="col-sm-8">@Model.Town</dd>

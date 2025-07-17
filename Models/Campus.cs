@@ -17,13 +17,16 @@ namespace EduCoreSuite.Models
         public string Name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "County is required")]
-        [StringLength(50, ErrorMessage = "County name cannot exceed 50 characters")]
-        [RegularExpression(@"^[A-Za-z][A-Za-z\s\-]*$", ErrorMessage = "Please enter a valid Kenyan county name")]
-        public string County { get; set; } = string.Empty;
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid County.")]
+        public int CountyID { get; set; }
 
-        [StringLength(50, ErrorMessage = "Constituency name cannot exceed 50 characters")]
-        [RegularExpression(@"^[A-Za-z][A-Za-z\s\-]*$", ErrorMessage = "Please enter a valid constituency name")]
-        public string? Constituency { get; set; }
+        [Required(ErrorMessage = "Sub-county is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Sub-county.")]
+        public int SubCountyID { get; set; }
+        
+        // Navigation properties
+        public CountySubCounty? County { get; set; }
+        public SubCounty? SubCounty { get; set; }
 
         [Required(ErrorMessage = "Town is required")]
         [StringLength(50, ErrorMessage = "Town name cannot exceed 50 characters")]

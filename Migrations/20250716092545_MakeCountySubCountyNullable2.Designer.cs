@@ -4,6 +4,7 @@ using EduCoreSuite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduCoreSuite.Migrations
 {
     [DbContext(typeof(ForgeDBContext))]
-    partial class ForgeDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250716092545_MakeCountySubCountyNullable2")]
+    partial class MakeCountySubCountyNullable2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,8 +53,14 @@ namespace EduCoreSuite.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<int>("CountyID")
-                        .HasColumnType("int");
+                    b.Property<string>("Constituency")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("County")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -87,9 +96,6 @@ namespace EduCoreSuite.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("SubCountyID")
-                        .HasColumnType("int");
-
                     b.Property<string>("TVETRegistrationNumber")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -103,10 +109,6 @@ namespace EduCoreSuite.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CountyID");
-
-                    b.HasIndex("SubCountyID");
 
                     b.ToTable("Campuses", (string)null);
                 });
@@ -373,7 +375,7 @@ namespace EduCoreSuite.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CountyID")
+                    b.Property<int?>("CountyID")
                         .HasColumnType("int");
 
                     b.Property<string>("Course")
@@ -465,7 +467,7 @@ namespace EduCoreSuite.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubCountyID")
+                    b.Property<int?>("SubCountyID")
                         .HasColumnType("int");
 
                     b.Property<string>("Town")
@@ -628,25 +630,6 @@ namespace EduCoreSuite.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EduCoreSuite.Models.Campus", b =>
-                {
-                    b.HasOne("EduCoreSuite.Models.CountySubCounty", "County")
-                        .WithMany()
-                        .HasForeignKey("CountyID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EduCoreSuite.Models.SubCounty", "SubCounty")
-                        .WithMany()
-                        .HasForeignKey("SubCountyID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("County");
-
-                    b.Navigation("SubCounty");
-                });
-
             modelBuilder.Entity("EduCoreSuite.Models.Course", b =>
                 {
                     b.HasOne("EduCoreSuite.Models.Campus", "Campus")
@@ -724,15 +707,11 @@ namespace EduCoreSuite.Migrations
                 {
                     b.HasOne("EduCoreSuite.Models.CountySubCounty", "County")
                         .WithMany()
-                        .HasForeignKey("CountyID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CountyID");
 
                     b.HasOne("EduCoreSuite.Models.SubCounty", "SubCounty")
                         .WithMany()
-                        .HasForeignKey("SubCountyID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubCountyID");
 
                     b.Navigation("County");
 

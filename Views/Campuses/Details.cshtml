@@ -16,11 +16,11 @@
         <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
         <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.County)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.County)</dd>
+        <dt class="col-sm-3">County</dt>
+        <dd class="col-sm-9">@(Model.County?.CountyName ?? "Not specified")</dd>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Constituency)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Constituency)</dd>
+        <dt class="col-sm-3">Sub-County</dt>
+        <dd class="col-sm-9">@(Model.SubCounty?.SubCountyName ?? "Not specified")</dd>
 
         <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Town)</dt>
         <dd class="col-sm-9">@Html.DisplayFor(model => model.Town)</dd>
