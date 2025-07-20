@@ -4,6 +4,7 @@ using EduCoreSuite.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 
 namespace EduCoreSuite.Pages.Auth
 {
@@ -56,9 +57,14 @@ namespace EduCoreSuite.Pages.Auth
                 LoadRoles();
                 return Page();
             }
+            //Hashing the password
+            var passwordHasher = new PasswordHasher<User>();
+            User.Password = passwordHasher.HashPassword(User, User.Password);
+
             _db.Add(User);
             await _db.SaveChangesAsync();
-            return Page();
+            //return Page();
+            return RedirectToPage("/Auth/Approval"); //Redirect to a registration successful and approval page
         }
     }
 }
