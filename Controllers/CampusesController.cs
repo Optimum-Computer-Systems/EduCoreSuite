@@ -20,9 +20,56 @@ namespace EduCoreSuite.Controllers
         }
 
         // GET: Campuses
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, int? countyFilter, bool? statusFilter, bool? mainCampusFilter)
         {
-            return View(await _context.Campuses.ToListAsync());
+            var campusesQuery = _context.Campuses
+                .Include(c => c.County)
+                .Include(c => c.SubCounty)
+                .AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                campusesQuery = campusesQuery.Where(c => 
+                    c.Name.Contains(searchTerm) ||
+                    c.Code.Contains(searchTerm) ||
+                    c.Town.Contains(searchTerm) ||
+                    (c.County != null && c.County.CountyName.Contains(searchTerm)));
+            }
+
+            // Apply county filter
+            if (countyFilter.HasValue)
+            {
+                campusesQuery = campusesQuery.Where(c => c.CountyID == countyFilter.Value);
+            }
+
+            // Apply status filter
+            if (statusFilter.HasValue)
+            {
+                campusesQuery = campusesQuery.Where(c => c.IsActive == statusFilter.Value);
+            }
+
+            // Apply main campus filter
+            if (mainCampusFilter.HasValue)
+            {
+                campusesQuery = campusesQuery.Where(c => c.IsMainCampus == mainCampusFilter.Value);
+            }
+
+            var campuses = await campusesQuery.OrderBy(c => c.Name).ToListAsync();
+
+            // Populate filter dropdowns
+            ViewBag.Counties = new SelectList(
+                await _context.Counties.OrderBy(c => c.CountyName).ToListAsync(),
+                nameof(CountySubCounty.CountyID),
+                nameof(CountySubCounty.CountyName),
+                countyFilter);
+
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.CountyFilter = countyFilter;
+            ViewBag.StatusFilter = statusFilter;
+            ViewBag.MainCampusFilter = mainCampusFilter;
+
+            return View(campuses);
         }
 
         // GET: Campuses/Details/5
@@ -34,6 +81,8 @@ namespace EduCoreSuite.Controllers
             }
 
             var campus = await _context.Campuses
+                .Include(c => c.County)
+                .Include(c => c.SubCounty)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (campus == null)
             {
@@ -198,6 +247,8 @@ namespace EduCoreSuite.Controllers
             }
 
             var campus = await _context.Campuses
+                .Include(c => c.County)
+                .Include(c => c.SubCounty)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (campus == null)
             {

@@ -141,7 +141,7 @@
                 
                 if (countyId) {
                     // Fetch subcounties for selected county
-                    $.getJSON('@Url.Action("GetSubCounties", "Students")?countyId=' + countyId, function(data) {
+                    $.getJSON('@Url.Action("GetSubCounties", "Campuses")?countyId=' + countyId, function(data) {
                         $.each(data, function(i, item) {
                             subCountySelect.append($('<option></option>').val(item.subCountyID).text(item.subCountyName));
                         });
