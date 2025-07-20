@@ -25,7 +25,7 @@
         <dd class="col-sm-10">@Html.DisplayFor(model => model.Role)</dd>
     </dl>
 
-    <form asp-action="DeleteConfirmed" method="post">
+    <form asp-action="Delete" method="post">
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="StaffID" />
         <button type="submit" class="btn btn-danger">Delete</button>

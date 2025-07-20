@@ -1,103 +1,359 @@
-﻿@model dynamic
+﻿@model EduCoreSuite.Models.ViewModels.DashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="container-fluid">
-    <div class="row">
-         
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            <p class="text-muted mb-0">Welcome to EduCoreSuite Analytics</p>
+        </div>
+        <div class="text-muted">
+            <i class="fas fa-calendar-alt me-2"></i>
+            @DateTime.Now.ToString("MMMM dd, yyyy")
+        </div>
+    </div>
 
-        <!-- Main Dashboard Content -->
-        <div class="col-md-10 p-4">
-            <h2 class="mb-4">Dashboard</h2>
-
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="bg-white border rounded p-3 text-center">
-                        <h6>Total Students</h6>
-                        <h3>1,250</h3>
-                        <span class="text-success">+10%</span>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="bg-white border rounded p-3 text-center">
-                        <h6>Total Courses</h6>
-                        <h3>150</h3>
-                        <span class="text-success">+5%</span>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="bg-white border rounded p-3 text-center">
-                        <h6>Total Enrollments</h6>
-                        <h3>800</h3>
-                        <span class="text-success">+8%</span>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="bg-white border rounded p-3 text-center">
-                        <h6>Total Sessions</h6>
-                        <h3>25</h3>
-                        <span class="text-success">+2%</span>
+    <!-- Key Metrics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Students</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalStudents.ToString("N0")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="row">
-                <!-- Activity Feed -->
-                <div class="col-md-8">
-                    <h4>Recent Activity Feed</h4>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <strong>New Enrollment</strong><br />
-                            <small class="text-muted">2 hours ago</small><br />
-                            New Student, Ethan Carter, Enrolled in Introduction To Programming.
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Course Completion Report</strong><br />
-                            <small class="text-muted">4 hours ago</small><br />
-                            Completion Rate For Advanced Mathematics Increased By 5%
-                        </li>
-                        <li class="list-group-item">
-                            <strong>New Course Added</strong><br />
-                            <small class="text-muted">6 hours ago</small><br />
-                            Digital Marketing Fundamentals Added To Catalog
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Exam Completion</strong><br />
-                            <small class="text-muted">8 hours ago</small><br />
-                            Noah Walker Completed Final Exam For Operating Systems
-                        </li>
-                        <li class="list-group-item">
-                            <strong>System Maintenance</strong><br />
-                            <small class="text-muted">10 hours ago</small><br />
-                            Maintenance Scheduled Tomorrow, 10pm to 12am
-                        </li>
-                    </ul>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Courses</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalCourses.ToString("N0")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-book fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Most Enrolled Courses -->
-                <div class="col-md-4">
-                    <h4>Most Enrolled Courses</h4>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between">
-                            Introduction To Programming <span class="badge bg-secondary">120 Students</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            Data Science Essentials <span class="badge bg-secondary">105 Students</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            Advanced Mathematics <span class="badge bg-secondary">95 Students</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            Digital Marketing Fundamentals <span class="badge bg-secondary">85 Students</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            Business Analytics <span class="badge bg-secondary">75 Students</span>
-                        </li>
-                    </ul>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Active Campuses</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalCampuses.ToString("N0")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-university fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Total Staff</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalStaff.ToString("N0")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-tie fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <!-- Student Enrollment Trends -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Student Enrollment Trends</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow">
+                            <div class="dropdown-header">Actions:</div>
+                            <a class="dropdown-item" href="#">Export Data</a>
+                            <a class="dropdown-item" href="#">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="enrollmentTrendsChart" width="100%" height="40"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campus Distribution -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Campus Distribution</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="campusDistributionChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                        @foreach (var campus in Model.CampusDistribution.Take(3))
+                        {
+                            <span class="mr-2">
+                                <i class="fas fa-circle" style="color: @campus.Color"></i> @campus.CampusName
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Charts Row -->
+    <div class="row mb-4">
+        <!-- Students by Department -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Students by Department</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar">
+                        <canvas id="departmentChart" width="100%" height="50"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Activities</h6>
+                </div>
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    @foreach (var activity in Model.RecentActivities)
+                    {
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-light">
+                                    <i class="@activity.Icon @activity.IconColor"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="small text-gray-500">@activity.TimeAgo</div>
+                                <div class="font-weight-bold">@activity.Title</div>
+                                <div class="text-gray-600 small">@activity.Description</div>
+                            </div>
+                        </div>
+                        @if (activity != Model.RecentActivities.Last())
+                        {
+                            <hr class="my-3">
+                        }
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Chart.js Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Student Enrollment Trends Chart
+    const enrollmentCtx = document.getElementById('enrollmentTrendsChart').getContext('2d');
+    const enrollmentChart = new Chart(enrollmentCtx, {
+        type: 'line',
+        data: {
+            labels: [@Html.Raw(string.Join(",", Model.EnrollmentTrends.Select(e => $"'{e.Month}'")))],
+            datasets: [{
+                label: 'New Enrollments',
+                data: [@string.Join(",", Model.EnrollmentTrends.Select(e => e.StudentCount))],
+                borderColor: '#4e73df',
+                backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#e3e6f0'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: '#e3e6f0'
+                    }
+                }
+            }
+        }
+    });
+
+    // Campus Distribution Pie Chart
+    const campusCtx = document.getElementById('campusDistributionChart').getContext('2d');
+    const campusChart = new Chart(campusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [@Html.Raw(string.Join(",", Model.CampusDistribution.Select(c => $"'{c.CampusName}'")))],
+            datasets: [{
+                data: [@string.Join(",", Model.CampusDistribution.Select(c => c.StudentCount))],
+                backgroundColor: [@Html.Raw(string.Join(",", Model.CampusDistribution.Select(c => $"'{c.Color}'")))],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Students by Department Bar Chart
+    const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+    const departmentChart = new Chart(departmentCtx, {
+        type: 'bar',
+        data: {
+            labels: [@Html.Raw(string.Join(",", Model.StudentsByDepartment.Select(d => $"'{d.DepartmentName}'")))],
+            datasets: [{
+                label: 'Students',
+                data: [@string.Join(",", Model.StudentsByDepartment.Select(d => d.StudentCount))],
+                backgroundColor: [@Html.Raw(string.Join(",", Model.StudentsByDepartment.Select(d => $"'{d.Color}'")))],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#e3e6f0'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<style>
+.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.text-gray-600 {
+    color: #6c757d !important;
+}
+
+.text-gray-500 {
+    color: #858796 !important;
+}
+
+.text-gray-300 {
+    color: #dddfeb !important;
+}
+
+.icon-circle {
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-area {
+    position: relative;
+    height: 320px;
+}
+
+.chart-pie {
+    position: relative;
+    height: 245px;
+}
+
+.chart-bar {
+    position: relative;
+    height: 320px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.font-weight-bold {
+    font-weight: 700 !important;
+}
+
+.text-xs {
+    font-size: 0.7rem;
+}
+</style>
