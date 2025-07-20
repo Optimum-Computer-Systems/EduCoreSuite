@@ -32,7 +32,7 @@ passwordInput.addEventListener('input', function () {
 })
 
 function toggleRequirement(elementId, isValid) {
-    console.log(`Checking requirement for: ${elementId}, Valid: ${isValid}`);
+    //console.log(`Checking requirement for: ${elementId}, Valid: ${isValid}`);
 
     const element = document.getElementById(elementId);
     if (!element) {
@@ -60,6 +60,6 @@ function toggleRequirement(elementId, isValid) {
         ? 'bi bi-check-circle-fill me-1'
         : 'bi bi-x-circle-fill me-1';
 
-    console.log(`Icon classes after update: ${icon.className}`);
+//    console.log(`Icon classes after update: ${icon.className}`);
 }
 
