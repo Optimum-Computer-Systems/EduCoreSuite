@@ -1,22 +1,340 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    .login-container {
+        margin: 1rem;
+        max-width: 100%;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
+
+/* Login Page Styles */
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    /*    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;*/
+    /*align-items: center;*/
+    justify-content: center;
+    /*padding: 20px;*/
+}
+
+/* Main login container */
+/* Simple centering approach - add this to your existing CSS */
+.login-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 550px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 50px auto;
+    position: relative;
+}
+
+/* Add background to the page */
+/*body {
+    min-height: 100vh;
+}*/
+
+/* Header section */
+.login-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.login-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+    font-size: 16px;
+    color: #718096;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* Form styling */
+form {
+    margin-bottom: 32px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    outline: none;
+    color: #2d3748;
+}
+
+    .form-input::placeholder {
+        color: #a0aec0;
+        font-size: 15px;
+    }
+
+    .form-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .form-input:hover {
+        border-color: #cbd5e0;
+    }
+
+/* Remember me and forgot password section */
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .remember-me input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #667eea;
+        border-radius: 4px;
+    }
+
+    .remember-me label {
+        font-size: 14px;
+        color: #4a5568;
+        cursor: pointer;
+        user-select: none;
+    }
+
+.remember-forgot a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+    .remember-forgot a:hover {
+        color: #5a67d8;
+        text-decoration: underline;
+    }
+
+/* Sign In button */
+.login-button {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+    .login-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    }
+
+    .login-button:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+/* Create account section */
+.create-account {
+    text-align: center;
+    font-size: 14px;
+    color: #718096;
+    line-height: 1.5;
+}
+
+    .create-account a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+        .create-account a:hover {
+            color: #5a67d8;
+            text-decoration: underline;
+        }
+
+/* Validation errors */
+.validation-error {
+    display: block;
+    color: #e53e3e;
+    font-size: 12px;
+    margin-top: 6px;
+    font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 32px 24px;
+        margin: 16px;
+        border-radius: 16px;
+    }
+
+    .login-title {
+        font-size: 24px;
+    }
+
+    .login-subtitle {
+        font-size: 14px;
+    }
+
+    .form-input {
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+
+    .login-button {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    .remember-forgot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-container {
+        padding: 24px 20px;
+    }
+
+    .login-title {
+        font-size: 22px;
+    }
+}
+
+/* Enhanced focus states for accessibility */
+.form-input:focus,
+.login-button:focus,
+.remember-me input:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Loading state for button (optional) */
+.login-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Smooth animations */
+.login-container {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Input field animations */
+.form-input {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effects for better UX */
+.form-group:hover .form-input {
+    border-color: #cbd5e0;
+}
+
+.form-group:hover .form-label {
+    color: #2d3748;
+}
+
+/* Custom scrollbar for overflow content */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }

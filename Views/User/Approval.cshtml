@@ -1,0 +1,60 @@
+﻿@model EduCoreSuite.Models.ViewModels.User.ApprovalViewModel
+@{
+    ViewData["Title"] = "User Approval";
+}
+
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">User Approval</h2>
+
+    <div class="mb-6">
+        <input type="text" id="searchInput" placeholder="Search for user..."
+               class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-md" />
+    </div>
+
+    <div class="bg-white shadow overflow-hidden rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User Type</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @foreach (var user in Model.Users)
+                {
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">@user.CustomUserId</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">@user.FirstName @user.LastName</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">@user.Email</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            @(Model.Roles.ContainsKey(user.RoleId) ? Model.Roles[user.RoleId] : "Unknown")
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                <button class="text-blue-600 hover:text-blue-900">Approve</button>
+                                <button class="text-red-600 hover:text-red-900">Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchValue) ? '' : 'none';
+            });
+        });
+    </script>
+}
