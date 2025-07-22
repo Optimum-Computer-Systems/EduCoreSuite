@@ -23,6 +23,7 @@ namespace EduCoreSuite.Data
         public DbSet<StudyStatus> StudyStatuses { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Staff> Staff { get; set; }
+        public DbSet<SystemActivity> Activities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
@@ -32,6 +33,8 @@ namespace EduCoreSuite.Data
             mb.Entity<Student>().ToTable("Students");
             mb.Entity<Course>().ToTable("Courses");
             mb.Entity<ExamBody>().ToTable("ExamBodies");
+            mb.Entity<CountySubCounty>().ToTable("Counties");
+            mb.Entity<SubCounty>().ToTable("SubCounties");
             mb.Entity<Department>().ToTable("Departments");
             mb.Entity<Programme>().ToTable("Programmes");
             mb.Entity<Campus>().ToTable("Campuses");
@@ -39,6 +42,7 @@ namespace EduCoreSuite.Data
             mb.Entity<StudyStatus>().ToTable("StudyStatuses");
             mb.Entity<Faculty>().ToTable("Faculties");
             mb.Entity<Staff>().ToTable("Staff");
+            mb.Entity<SystemActivity>().ToTable("Activities");
 
             // Seed reference data
             mb.Entity<StudyMode>().HasData(
@@ -61,6 +65,26 @@ namespace EduCoreSuite.Data
                 .HasOne(c => c.Programme)
                 .WithMany()
                 .HasForeignKey(c => c.ProgrammeID)
+                .OnDelete(DeleteBehavior.Restrict);
+            mb.Entity<Campus>()
+                .HasOne(c => c.County)
+                .WithMany()
+                .HasForeignKey(c => c.CountyID)
+                .OnDelete(DeleteBehavior.Restrict); 
+            mb.Entity<Campus>()
+                .HasOne(c => c.SubCounty)
+                .WithMany()
+                .HasForeignKey(c => c.SubCountyID)
+                .OnDelete(DeleteBehavior.Restrict);
+            mb.Entity<Student>()
+                .HasOne(s => s.County)
+                .WithMany()
+                .HasForeignKey(s => s.CountyID)
+                .OnDelete(DeleteBehavior.Restrict);
+            mb.Entity<Student>()
+                .HasOne(s => s.SubCounty)
+                .WithMany()
+                .HasForeignKey(s => s.SubCountyID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

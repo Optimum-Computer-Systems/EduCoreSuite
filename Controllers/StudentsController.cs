@@ -1,5 +1,6 @@
 ﻿using EduCoreSuite.Data;
 using EduCoreSuite.Models;
+using EduCoreSuite.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +10,12 @@ namespace EduCoreSuite.Controllers
     public class StudentsController : Controller
     {
         private readonly ForgeDBContext _context;
+        private readonly ActivityService _activityService;
 
-        public StudentsController(ForgeDBContext context)
+        public StudentsController(ForgeDBContext context, ActivityService activityService)
         {
             _context = context;
+            _activityService = activityService;
         }
 
         // ------------------------- INDEX & DETAILS -------------------------
@@ -154,6 +157,13 @@ namespace EduCoreSuite.Controllers
 
             _context.Add(student);
             await _context.SaveChangesAsync();
+            
+            // Log the activity
+            await _activityService.LogStudentActivity(
+                "New Student Registration", 
+                $"{student.FullName} registered for {student.Program} program",
+                student.StudentID);
+                
             return RedirectToAction(nameof(Index));
         }
 
@@ -197,6 +207,12 @@ namespace EduCoreSuite.Controllers
             {
                 _context.Update(student);
                 await _context.SaveChangesAsync();
+                
+                // Log the activity
+                await _activityService.LogStudentActivity(
+                    "Student Updated", 
+                    $"{student.FullName}'s information was updated",
+                    student.StudentID);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -225,8 +241,17 @@ namespace EduCoreSuite.Controllers
             var student = await _context.Students.FindAsync(id);
             if (student != null)
             {
+                // Store student name before deletion for activity log
+                string studentName = student.FullName;
+                string program = student.Program;
+                
                 _context.Students.Remove(student);
                 await _context.SaveChangesAsync();
+                
+                // Log the activity
+                await _activityService.LogSystemActivity(
+                    "Student Removed", 
+                    $"{studentName} was removed from {program} program");
             }
             return RedirectToAction(nameof(Index));
         }

@@ -84,62 +84,39 @@
         </div>
     </div>
 
-    <!-- Charts Row -->
+    <!-- Charts Row - Kenyan School Priority Charts -->
     <div class="row mb-4">
-        <!-- Student Enrollment Trends -->
-        <div class="col-xl-8 col-lg-7">
+        <!-- Enrollment by Academic Year -->
+        <div class="col-xl-4 col-lg-6">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Student Enrollment Trends</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow">
-                            <div class="dropdown-header">Actions:</div>
-                            <a class="dropdown-item" href="#">Export Data</a>
-                            <a class="dropdown-item" href="#">View Details</a>
-                        </div>
+                    <div>
+                        <h6 class="m-0 font-weight-bold text-primary">Enrollment by Academic Year</h6>
+                        <small class="text-muted">Student distribution across year levels</small>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="enrollmentTrendsChart" width="100%" height="40"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Campus Distribution -->
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Campus Distribution</h6>
                 </div>
                 <div class="card-body">
                     <div class="chart-pie pt-4 pb-2">
-                        <canvas id="campusDistributionChart"></canvas>
+                        <canvas id="academicYearChart"></canvas>
                     </div>
                     <div class="mt-4 text-center small">
-                        @foreach (var campus in Model.CampusDistribution.Take(3))
+                        @foreach (var year in Model.EnrollmentByAcademicYear)
                         {
-                            <span class="mr-2">
-                                <i class="fas fa-circle" style="color: @campus.Color"></i> @campus.CampusName
+                            <span class="mr-2 mb-1 d-inline-block">
+                                <i class="fas fa-circle" style="color: @year.Color"></i> @year.YearLevel: @year.StudentCount (@year.Percentage%)
                             </span>
                         }
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Second Charts Row -->
-    <div class="row mb-4">
-        <!-- Students by Department -->
-        <div class="col-xl-8 col-lg-7">
+        <!-- Enrollment by Department -->
+        <div class="col-xl-4 col-lg-6">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Students by Department</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Enrollment by Department</h6>
+                    <small class="text-muted">Top departments by student count</small>
                 </div>
                 <div class="card-body">
                     <div class="chart-bar">
@@ -148,32 +125,69 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Enrollment by Program Type -->
+        <div class="col-xl-4 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div>
+                        <h6 class="m-0 font-weight-bold text-primary">Enrollment by Program Type</h6>
+                        <small class="text-muted">Certificate, Diploma, Degree, Masters</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="programTypeChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                        @foreach (var program in Model.EnrollmentByProgramType)
+                        {
+                            <span class="mr-2 mb-1 d-inline-block">
+                                <i class="fas fa-circle" style="color: @program.Color"></i> @program.ProgramType: @program.StudentCount (@program.Percentage%)
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- Recent Activities -->
-        <div class="col-xl-4 col-lg-5">
+    <!-- Recent Activities -->
+    <div class="row mb-4">
+        <div class="col-xl-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Recent Activities</h6>
                 </div>
                 <div class="card-body" style="max-height: 400px; overflow-y: auto;">
-                    @foreach (var activity in Model.RecentActivities)
+                    @if (Model.RecentActivities.Any())
                     {
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="mr-3">
-                                <div class="icon-circle bg-light">
-                                    <i class="@activity.Icon @activity.IconColor"></i>
+                        foreach (var activity in Model.RecentActivities)
+                        {
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-light">
+                                        <i class="@activity.Icon @activity.IconColor"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="small text-gray-500">@activity.TimeAgo</div>
+                                    <div class="font-weight-bold">@activity.Title</div>
+                                    <div class="text-gray-600 small">@activity.Description</div>
                                 </div>
                             </div>
-                            <div class="flex-grow-1">
-                                <div class="small text-gray-500">@activity.TimeAgo</div>
-                                <div class="font-weight-bold">@activity.Title</div>
-                                <div class="text-gray-600 small">@activity.Description</div>
-                            </div>
-                        </div>
-                        @if (activity != Model.RecentActivities.Last())
-                        {
-                            <hr class="my-3">
+                            @if (activity != Model.RecentActivities.Last())
+                            {
+                                <hr class="my-3">
+                            }
                         }
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-info-circle fa-2x mb-3"></i>
+                            <p>No recent activities to display</p>
+                        </div>
                     }
                 </div>
             </div>
@@ -185,55 +199,15 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // Student Enrollment Trends Chart
-    const enrollmentCtx = document.getElementById('enrollmentTrendsChart').getContext('2d');
-    const enrollmentChart = new Chart(enrollmentCtx, {
-        type: 'line',
-        data: {
-            labels: [@Html.Raw(string.Join(",", Model.EnrollmentTrends.Select(e => $"'{e.Month}'")))],
-            datasets: [{
-                label: 'New Enrollments',
-                data: [@string.Join(",", Model.EnrollmentTrends.Select(e => e.StudentCount))],
-                borderColor: '#4e73df',
-                backgroundColor: 'rgba(78, 115, 223, 0.1)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: '#e3e6f0'
-                    }
-                },
-                x: {
-                    grid: {
-                        color: '#e3e6f0'
-                    }
-                }
-            }
-        }
-    });
-
-    // Campus Distribution Pie Chart
-    const campusCtx = document.getElementById('campusDistributionChart').getContext('2d');
-    const campusChart = new Chart(campusCtx, {
+    // Enrollment by Academic Year Chart
+    const academicYearCtx = document.getElementById('academicYearChart').getContext('2d');
+    const academicYearChart = new Chart(academicYearCtx, {
         type: 'doughnut',
         data: {
-            labels: [@Html.Raw(string.Join(",", Model.CampusDistribution.Select(c => $"'{c.CampusName}'")))],
+            labels: [@Html.Raw(string.Join(",", Model.EnrollmentByAcademicYear.Select(y => $"'{y.YearLevel}'")))],
             datasets: [{
-                data: [@string.Join(",", Model.CampusDistribution.Select(c => c.StudentCount))],
-                backgroundColor: [@Html.Raw(string.Join(",", Model.CampusDistribution.Select(c => $"'{c.Color}'")))],
+                data: [@string.Join(",", Model.EnrollmentByAcademicYear.Select(y => y.StudentCount))],
+                backgroundColor: [@Html.Raw(string.Join(",", Model.EnrollmentByAcademicYear.Select(y => $"'{y.Color}'")))],
                 borderWidth: 2,
                 borderColor: '#ffffff'
             }]
@@ -244,12 +218,23 @@
             plugins: {
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const percentage = Model.EnrollmentByAcademicYear[context.dataIndex].Percentage;
+                            return `${label}: ${value} students (${percentage}%)`;
+                        }
+                    }
                 }
-            }
+            },
+            cutout: '60%'
         }
     });
 
-    // Students by Department Bar Chart
+    // Enrollment by Department Chart
     const departmentCtx = document.getElementById('departmentChart').getContext('2d');
     const departmentChart = new Chart(departmentCtx, {
         type: 'bar',
@@ -263,6 +248,7 @@
             }]
         },
         options: {
+            indexAxis: 'y', // Horizontal bar chart
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
@@ -271,13 +257,16 @@
                 }
             },
             scales: {
-                y: {
+                x: {
                     beginAtZero: true,
                     grid: {
                         color: '#e3e6f0'
+                    },
+                    ticks: {
+                        precision: 0 // Only show whole numbers
                     }
                 },
-                x: {
+                y: {
                     grid: {
                         display: false
                     }
@@ -285,6 +274,41 @@
             }
         }
     });
+    
+    // Enrollment by Program Type Chart
+    const programTypeCtx = document.getElementById('programTypeChart').getContext('2d');
+    const programTypeChart = new Chart(programTypeCtx, {
+        type: 'pie',
+        data: {
+            labels: [@Html.Raw(string.Join(",", Model.EnrollmentByProgramType.Select(p => $"'{p.ProgramType}'")))],
+            datasets: [{
+                data: [@string.Join(",", Model.EnrollmentByProgramType.Select(p => p.StudentCount))],
+                backgroundColor: [@Html.Raw(string.Join(",", Model.EnrollmentByProgramType.Select(p => $"'{p.Color}'")))],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const percentage = Model.EnrollmentByProgramType[context.dataIndex].Percentage;
+                            return `${label}: ${value} students (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
 </script>
 
 <style>

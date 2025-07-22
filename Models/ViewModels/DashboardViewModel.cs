@@ -1,4 +1,4 @@
-﻿namespace EduCoreSuite.Models.ViewModels
+namespace EduCoreSuite.Models.ViewModels
 {
     public class DashboardViewModel
     {
@@ -9,9 +9,9 @@
         public int TotalStaff { get; set; }
 
         // Chart Data
-        public List<MonthlyEnrollmentData> EnrollmentTrends { get; set; } = new();
+        public List<AcademicYearData> EnrollmentByAcademicYear { get; set; } = new();
         public List<DepartmentStudentData> StudentsByDepartment { get; set; } = new();
-        public List<CampusDistributionData> CampusDistribution { get; set; } = new();
+        public List<ProgramTypeData> EnrollmentByProgramType { get; set; } = new();
         
         // Activity Feed
         public List<ActivityItem> RecentActivities { get; set; } = new();
@@ -20,11 +20,12 @@
         public List<CourseStat> TopCourses { get; set; } = new();
     }
 
-    public class MonthlyEnrollmentData
+    public class AcademicYearData
     {
-        public string Month { get; set; } = string.Empty;
+        public string YearLevel { get; set; } = string.Empty;
         public int StudentCount { get; set; }
-        public int Year { get; set; }
+        public string Color { get; set; } = string.Empty;
+        public double Percentage { get; set; }
     }
 
     public class DepartmentStudentData
@@ -34,11 +35,12 @@
         public string Color { get; set; } = string.Empty;
     }
 
-    public class CampusDistributionData
+    public class ProgramTypeData
     {
-        public string CampusName { get; set; } = string.Empty;
+        public string ProgramType { get; set; } = string.Empty;
         public int StudentCount { get; set; }
         public string Color { get; set; } = string.Empty;
+        public double Percentage { get; set; }
     }
 
     public class ActivityItem

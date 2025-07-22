@@ -125,7 +125,7 @@ namespace EduCoreSuite.Migrations
 
                     b.HasKey("CountyID");
 
-                    b.ToTable("Counties");
+                    b.ToTable("Counties", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.Course", b =>
@@ -610,7 +610,61 @@ namespace EduCoreSuite.Migrations
 
                     b.HasIndex("CountyID");
 
-                    b.ToTable("SubCounties");
+                    b.ToTable("SubCounties", (string)null);
+                });
+
+            modelBuilder.Entity("EduCoreSuite.Models.SystemActivity", b =>
+                {
+                    b.Property<int>("ActivityID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActivityID"));
+
+                    b.Property<string>("ActivityType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CampusID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CourseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IconColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("StaffID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StudentID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ActivityID");
+
+                    b.ToTable("Activities", (string)null);
                 });
 
             modelBuilder.Entity("DepartmentStaff", b =>
@@ -633,13 +687,13 @@ namespace EduCoreSuite.Migrations
                     b.HasOne("EduCoreSuite.Models.CountySubCounty", "County")
                         .WithMany()
                         .HasForeignKey("CountyID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EduCoreSuite.Models.SubCounty", "SubCounty")
                         .WithMany()
                         .HasForeignKey("SubCountyID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("County");
@@ -725,13 +779,13 @@ namespace EduCoreSuite.Migrations
                     b.HasOne("EduCoreSuite.Models.CountySubCounty", "County")
                         .WithMany()
                         .HasForeignKey("CountyID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EduCoreSuite.Models.SubCounty", "SubCounty")
                         .WithMany()
                         .HasForeignKey("SubCountyID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("County");

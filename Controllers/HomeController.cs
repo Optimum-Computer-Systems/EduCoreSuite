@@ -28,41 +28,73 @@ namespace EduCoreSuite.Controllers
                 TotalCampuses = await _context.Campuses.CountAsync(c => c.IsActive),
                 TotalStaff = await _context.Staff.CountAsync(),
 
-                // Enrollment Trends (simulated monthly data)
-                EnrollmentTrends = GetEnrollmentTrends(),
+                // Enrollment by Academic Year
+                EnrollmentByAcademicYear = await GetEnrollmentByAcademicYear(),
 
                 // Students by Department
                 StudentsByDepartment = await GetStudentsByDepartment(),
 
-                // Campus Distribution
-                CampusDistribution = await GetCampusDistribution(),
+                // Enrollment by Program Type
+                EnrollmentByProgramType = await GetEnrollmentByProgramType(),
 
-                // Recent Activities
-                RecentActivities = GetRecentActivities()
+                // Recent Activities - now using real-time data
+                RecentActivities = await GetRecentActivities()
             };
 
             return View(vm);
         }
 
-        private List<MonthlyEnrollmentData> GetEnrollmentTrends()
-        {
-            // Simulated enrollment trends for the last 12 months
-            var currentDate = DateTime.Now;
-            var trends = new List<MonthlyEnrollmentData>();
+        // Removed GetEnrollmentTrends and related methods as they're no longer needed
 
-            for (int i = 11; i >= 0; i--)
-            {
-                var date = currentDate.AddMonths(-i);
-                var random = new Random(date.Month + date.Year);
-                trends.Add(new MonthlyEnrollmentData
+        private async Task<List<AcademicYearData>> GetEnrollmentByAcademicYear()
+        {
+            // Kenyan academic years: 1st Year, 2nd Year, 3rd Year, 4th Year
+            var colors = new[] { "#4e73df", "#1cc88a", "#36b9cc", "#f6c23e", "#e74a3b" };
+            var yearLevels = new[] { "1st Year", "2nd Year", "3rd Year", "4th Year", "Other" };
+            
+            var totalStudents = await _context.Students.CountAsync();
+            
+            // Group students by academic year
+            var yearStats = await _context.Students
+                .GroupBy(s => s.Year)
+                .Select(g => new 
                 {
-                    Month = date.ToString("MMM yyyy"),
-                    StudentCount = random.Next(15, 45), // Random enrollment between 15-45
-                    Year = date.Year
+                    YearLevel = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+                
+            var result = new List<AcademicYearData>();
+            
+            // Process each standard year level
+            foreach (var year in yearLevels)
+            {
+                var yearStat = yearStats.FirstOrDefault(y => y.YearLevel == year);
+                var count = yearStat?.Count ?? 0;
+                
+                result.Add(new AcademicYearData
+                {
+                    YearLevel = year,
+                    StudentCount = count,
+                    Color = colors[Array.IndexOf(yearLevels, year)],
+                    Percentage = totalStudents > 0 ? Math.Round((double)count / totalStudents * 100, 1) : 0
                 });
             }
-
-            return trends;
+            
+            // Add any non-standard years to "Other" category
+            var otherYears = yearStats.Where(y => !yearLevels.Contains(y.YearLevel)).ToList();
+            if (otherYears.Any())
+            {
+                var otherCount = otherYears.Sum(y => y.Count);
+                var otherEntry = result.FirstOrDefault(r => r.YearLevel == "Other");
+                if (otherEntry != null)
+                {
+                    otherEntry.StudentCount += otherCount;
+                    otherEntry.Percentage = totalStudents > 0 ? Math.Round((double)otherEntry.StudentCount / totalStudents * 100, 1) : 0;
+                }
+            }
+            
+            return result.OrderBy(y => y.YearLevel).ToList();
         }
 
         private async Task<List<DepartmentStudentData>> GetStudentsByDepartment()
@@ -77,7 +109,7 @@ namespace EduCoreSuite.Controllers
                     StudentCount = g.Count()
                 })
                 .OrderByDescending(d => d.StudentCount)
-                .Take(6)
+                .Take(8) // Show top 8 departments
                 .ToListAsync();
 
             // Assign colors
@@ -88,87 +120,84 @@ namespace EduCoreSuite.Controllers
 
             return departmentStats;
         }
-
-        private async Task<List<CampusDistributionData>> GetCampusDistribution()
+        
+        private async Task<List<ProgramTypeData>> GetEnrollmentByProgramType()
         {
-            var colors = new[] { "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF" };
+            // Program types in Kenyan education system
+            var programTypes = new[] { "Certificate", "Diploma", "Degree", "Masters" };
+            var colors = new[] { "#1cc88a", "#4e73df", "#f6c23e", "#e74a3b" };
             
-            // Get campus names and simulate student distribution
-            var campuses = await _context.Campuses
-                .Where(c => c.IsActive)
-                .Select(c => c.Name)
-                .ToListAsync();
-
-            var campusDistribution = new List<CampusDistributionData>();
-            var random = new Random();
-
-            for (int i = 0; i < campuses.Count; i++)
-            {
-                campusDistribution.Add(new CampusDistributionData
+            var totalStudents = await _context.Students.CountAsync();
+            
+            // Group students by program type
+            var programStats = await _context.Students
+                .GroupBy(s => s.Program)
+                .Select(g => new 
                 {
-                    CampusName = campuses[i],
-                    StudentCount = random.Next(50, 200), // Simulated student count
-                    Color = colors[i % colors.Length]
+                    ProgramType = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+                
+            var result = new List<ProgramTypeData>();
+            
+            // Process each program type
+            foreach (var program in programTypes)
+            {
+                var programStat = programStats.FirstOrDefault(p => p.ProgramType == program);
+                var count = programStat?.Count ?? 0;
+                
+                result.Add(new ProgramTypeData
+                {
+                    ProgramType = program,
+                    StudentCount = count,
+                    Color = colors[Array.IndexOf(programTypes, program)],
+                    Percentage = totalStudents > 0 ? Math.Round((double)count / totalStudents * 100, 1) : 0
                 });
             }
-
-            return campusDistribution.OrderByDescending(c => c.StudentCount).ToList();
+            
+            return result;
         }
 
-        private List<ActivityItem> GetRecentActivities()
+        // Campus distribution data is now handled differently in the view
+
+        private async Task<List<ActivityItem>> GetRecentActivities()
         {
-            return new List<ActivityItem>
+            // Get activities from the database using ActivityService
+            var activityService = new Services.ActivityService(_context);
+            var activities = await activityService.GetRecentActivities(10);
+            
+            
+            
+            // Convert to ActivityItem view model
+            return activities.Select(a => new ActivityItem
             {
-                new ActivityItem
-                {
-                    Title = "New Student Registration",
-                    TimeAgo = "2 minutes ago",
-                    Description = "John Doe registered for Computer Science program",
-                    Icon = "fas fa-user-plus",
-                    IconColor = "text-success"
-                },
-                new ActivityItem
-                {
-                    Title = "Course Added",
-                    TimeAgo = "1 hour ago",
-                    Description = "Advanced Database Systems added to catalog",
-                    Icon = "fas fa-book",
-                    IconColor = "text-primary"
-                },
-                new ActivityItem
-                {
-                    Title = "Campus Updated",
-                    TimeAgo = "3 hours ago",
-                    Description = "Main Campus information updated",
-                    Icon = "fas fa-university",
-                    IconColor = "text-info"
-                },
-                new ActivityItem
-                {
-                    Title = "Staff Assignment",
-                    TimeAgo = "5 hours ago",
-                    Description = "Dr. Smith assigned to Engineering Department",
-                    Icon = "fas fa-user-tie",
-                    IconColor = "text-warning"
-                },
-                new ActivityItem
-                {
-                    Title = "System Backup",
-                    TimeAgo = "8 hours ago",
-                    Description = "Daily system backup completed successfully",
-                    Icon = "fas fa-database",
-                    IconColor = "text-secondary"
-                },
-                new ActivityItem
-                {
-                    Title = "Report Generated",
-                    TimeAgo = "12 hours ago",
-                    Description = "Monthly enrollment report generated",
-                    Icon = "fas fa-chart-bar",
-                    IconColor = "text-primary"
-                }
-            };
+                Title = a.Title,
+                Description = a.Description,
+                TimeAgo = GetTimeAgo(a.Timestamp),
+                Icon = a.Icon,
+                IconColor = a.IconColor
+            }).ToList();
         }
+        
+        private string GetTimeAgo(DateTime dateTime)
+        {
+            var timeSpan = DateTime.Now - dateTime;
+            
+            if (timeSpan.TotalMinutes < 1)
+                return "just now";
+            if (timeSpan.TotalMinutes < 60)
+                return $"{(int)timeSpan.TotalMinutes} minute{(timeSpan.TotalMinutes == 1 ? "" : "s")} ago";
+            if (timeSpan.TotalHours < 24)
+                return $"{(int)timeSpan.TotalHours} hour{(timeSpan.TotalHours == 1 ? "" : "s")} ago";
+            if (timeSpan.TotalDays < 7)
+                return $"{(int)timeSpan.TotalDays} day{(timeSpan.TotalDays == 1 ? "" : "s")} ago";
+            if (timeSpan.TotalDays < 30)
+                return $"{(int)(timeSpan.TotalDays / 7)} week{((int)(timeSpan.TotalDays / 7) == 1 ? "" : "s")} ago";
+            
+            return dateTime.ToString("MMM dd, yyyy");
+        }
+        
 
         public IActionResult Privacy()
         {

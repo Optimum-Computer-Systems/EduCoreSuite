@@ -8,36 +8,33 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EduCoreSuite.Migrations
 {
     /// <inheritdoc />
-    public partial class AddNullableCountySubCountyFields : Migration
+    public partial class FixedCampusCascade : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Campuses",
+                name: "Activities",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ActivityID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    County = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Constituency = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Town = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PhysicalAddress = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WebsiteURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PostalAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    PrincipalName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    TVETRegistrationNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    KUCCPSCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    IsMainCampus = table.Column<bool>(type: "bit", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ActivityType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudentID = table.Column<int>(type: "int", nullable: true),
+                    CourseID = table.Column<int>(type: "int", nullable: true),
+                    CampusID = table.Column<int>(type: "int", nullable: true),
+                    StaffID = table.Column<int>(type: "int", nullable: true),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IconColor = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Campuses", x => x.Id);
+                    table.PrimaryKey("PK_Activities", x => x.ActivityID);
                 });
 
             migrationBuilder.CreateTable(
@@ -172,6 +169,45 @@ namespace EduCoreSuite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Campuses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CountyID = table.Column<int>(type: "int", nullable: false),
+                    SubCountyID = table.Column<int>(type: "int", nullable: false),
+                    Town = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PhysicalAddress = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WebsiteURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostalAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    PrincipalName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    TVETRegistrationNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    KUCCPSCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    IsMainCampus = table.Column<bool>(type: "bit", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Campuses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Campuses_Counties_CountyID",
+                        column: x => x.CountyID,
+                        principalTable: "Counties",
+                        principalColumn: "CountyID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Campuses_SubCounties_SubCountyID",
+                        column: x => x.SubCountyID,
+                        principalTable: "SubCounties",
+                        principalColumn: "SubCountyID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
@@ -192,8 +228,8 @@ namespace EduCoreSuite.Migrations
                     PrimaryPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AltPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CountyID = table.Column<int>(type: "int", nullable: true),
-                    SubCountyID = table.Column<int>(type: "int", nullable: true),
+                    CountyID = table.Column<int>(type: "int", nullable: false),
+                    SubCountyID = table.Column<int>(type: "int", nullable: false),
                     Town = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ward = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmergencyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -215,12 +251,14 @@ namespace EduCoreSuite.Migrations
                         name: "FK_Students_Counties_CountyID",
                         column: x => x.CountyID,
                         principalTable: "Counties",
-                        principalColumn: "CountyID");
+                        principalColumn: "CountyID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Students_SubCounties_SubCountyID",
                         column: x => x.SubCountyID,
                         principalTable: "SubCounties",
-                        principalColumn: "SubCountyID");
+                        principalColumn: "SubCountyID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -356,6 +394,16 @@ namespace EduCoreSuite.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Campuses_CountyID",
+                table: "Campuses",
+                column: "CountyID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Campuses_SubCountyID",
+                table: "Campuses",
+                column: "SubCountyID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Courses_CampusID",
                 table: "Courses",
                 column: "CampusID");
@@ -419,6 +467,9 @@ namespace EduCoreSuite.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Activities");
+
             migrationBuilder.DropTable(
                 name: "Courses");
 
