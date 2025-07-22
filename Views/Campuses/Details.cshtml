@@ -1,63 +1,341 @@
 ﻿@model EduCoreSuite.Models.Campus
 
 @{
-    ViewData["Title"] = "Campus Details";
+    ViewData["Title"] = $"{Model.Name} - Campus Details";
 }
 
-<h1>Campus Details</h1>
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none">Campus Management</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+                </ol>
+            </nav>
+            <div class="d-flex align-items-center">
+                <h1 class="h3 mb-0 me-3">@Model.Name</h1>
+                @if (Model.IsMainCampus)
+                {
+                    <span class="badge bg-primary me-2">
+                        <i class="fas fa-star me-1"></i>Main Campus
+                    </span>
+                }
+                @if (Model.IsActive)
+                {
+                    <span class="badge bg-success">
+                        <i class="fas fa-check-circle me-1"></i>Active
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">
+                        <i class="fas fa-pause-circle me-1"></i>Inactive
+                    </span>
+                }
+            </div>
+        </div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">
+                <i class="fas fa-edit me-1"></i>Edit Campus
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Campus List
+            </a>
+        </div>
+    </div>
 
-<div>
-    <h4>Campus</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Code)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Code)</dd>
+    <div class="row">
+        <!-- Basic Information Card -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Basic Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <strong class="text-muted">Campus Code:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <span class="badge bg-secondary fs-6">@Model.Code</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <strong class="text-muted">Campus Name:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Name
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <strong class="text-muted">Campus Type:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @if (Model.IsMainCampus)
+                            {
+                                <span class="text-primary"><i class="fas fa-star me-1"></i>Main Campus</span>
+                            }
+                            else
+                            {
+                                <span class="text-secondary"><i class="fas fa-building me-1"></i>Branch Campus</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong class="text-muted">Status:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @if (Model.IsActive)
+                            {
+                                <span class="text-success"><i class="fas fa-check-circle me-1"></i>Active</span>
+                            }
+                            else
+                            {
+                                <span class="text-secondary"><i class="fas fa-pause-circle me-1"></i>Inactive</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+        <!-- Location Information Card -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-map-marker-alt me-2"></i>Location Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <strong class="text-muted">County:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <i class="fas fa-map me-1 text-muted"></i>@(Model.County?.CountyName ?? "Not specified")
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <strong class="text-muted">Sub-County:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <i class="fas fa-map-pin me-1 text-muted"></i>@(Model.SubCounty?.SubCountyName ?? "Not specified")
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <strong class="text-muted">Town:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <i class="fas fa-city me-1 text-muted"></i>@Model.Town
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong class="text-muted">Physical Address:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <i class="fas fa-building me-1 text-muted"></i>@Model.PhysicalAddress
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.County)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.County)</dd>
+        <!-- Contact Information Card -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-address-book me-2"></i>Contact Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.PhoneNumber))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">Phone:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <a href="tel:@Model.PhoneNumber" class="text-decoration-none">
+                                    <i class="fas fa-phone me-1 text-success"></i>@Model.PhoneNumber
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Email))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">Email:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <a href="mailto:@Model.Email" class="text-decoration-none">
+                                    <i class="fas fa-envelope me-1 text-primary"></i>@Model.Email
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.WebsiteURL))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">Website:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <a href="@Model.WebsiteURL" target="_blank" class="text-decoration-none">
+                                    <i class="fas fa-globe me-1 text-info"></i>@Model.WebsiteURL
+                                    <i class="fas fa-external-link-alt ms-1 small"></i>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.PostalAddress))
+                    {
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">Postal Address:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <i class="fas fa-mail-bulk me-1 text-muted"></i>@Model.PostalAddress
+                            </div>
+                        </div>
+                    }
+                    @if (string.IsNullOrEmpty(Model.PhoneNumber) && string.IsNullOrEmpty(Model.Email) && 
+                         string.IsNullOrEmpty(Model.WebsiteURL) && string.IsNullOrEmpty(Model.PostalAddress))
+                    {
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-info-circle me-2"></i>No contact information available
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Constituency)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Constituency)</dd>
+        <!-- Administrative Information Card -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-tie me-2"></i>Administrative Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.PrincipalName))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">Principal:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <i class="fas fa-user-tie me-1 text-primary"></i>@Model.PrincipalName
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.TVETRegistrationNumber))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">TVET Reg. No:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-info">@Model.TVETRegistrationNumber</span>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.KUCCPSCode))
+                    {
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong class="text-muted">KUCCPS Code:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-success">@Model.KUCCPSCode</span>
+                            </div>
+                        </div>
+                    }
+                    @if (string.IsNullOrEmpty(Model.PrincipalName) && string.IsNullOrEmpty(Model.TVETRegistrationNumber) && 
+                         string.IsNullOrEmpty(Model.KUCCPSCode))
+                    {
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-info-circle me-2"></i>No administrative information available
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Town)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Town)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PhysicalAddress)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.PhysicalAddress)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.PhoneNumber)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.WebsiteURL)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.WebsiteURL)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PostalAddress)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.PostalAddress)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PrincipalName)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.PrincipalName)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TVETRegistrationNumber)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.TVETRegistrationNumber)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.KUCCPSCode)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.KUCCPSCode)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.IsMainCampus)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.IsMainCampus)</dd>
-
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.IsActive)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(model => model.IsActive)</dd>
-    </dl>
+    <!-- Action Buttons -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-edit me-2"></i>Edit Campus Information
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg me-3">
+                        <i class="fas fa-list me-2"></i>View All Campuses
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger btn-lg"
+                       onclick="return confirm('Are you sure you want to delete this campus?')">
+                        <i class="fas fa-trash me-2"></i>Delete Campus
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
-</div>
+<style>
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    border: none;
+}
+
+.badge {
+    font-size: 0.85em;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #6c757d;
+}
+
+.row.mb-3:last-child {
+    margin-bottom: 0 !important;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.card-body a {
+    transition: all 0.2s ease-in-out;
+}
+
+.card-body a:hover {
+    transform: translateX(2px);
+}
+</style>

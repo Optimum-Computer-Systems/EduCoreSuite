@@ -1,174 +1,342 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EduCoreSuite.Data;
+using EduCoreSuite.Models;
+using EduCoreSuite.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using EduCoreSuite.Data;
-using EduCoreSuite.Models;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using NuGet.Protocol.Plugins;
 
 namespace EduCoreSuite.Controllers
 {
     public class StudentsController : Controller
     {
         private readonly ForgeDBContext _context;
-        private object f;
+        private readonly ActivityService _activityService;
 
-        public StudentsController(ForgeDBContext context)
+        public StudentsController(ForgeDBContext context, ActivityService activityService)
         {
             _context = context;
+            _activityService = activityService;
         }
 
-        // GET: Students
-        public async Task<IActionResult> Index()
+        // ------------------------- INDEX & DETAILS -------------------------
+
+        public async Task<IActionResult> Index(string searchTerm, string departmentFilter, string courseFilter, string programmeFilter, string examBodyFilter, string yearFilter, int page = 1, int pageSize = 20)
         {
-            return View(await _context.Students.ToListAsync());
+            var studentsQuery = _context.Students.AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                studentsQuery = studentsQuery.Where(s => 
+                    s.FullName.Contains(searchTerm) ||
+                    s.AdmissionNumber.Contains(searchTerm) ||
+                    s.Email.Contains(searchTerm) ||
+                    s.IDNumber.Contains(searchTerm));
+            }
+
+            // Apply department filter
+            if (!string.IsNullOrWhiteSpace(departmentFilter))
+            {
+                studentsQuery = studentsQuery.Where(s => s.Department == departmentFilter);
+            }
+
+            // Apply course filter
+            if (!string.IsNullOrWhiteSpace(courseFilter))
+            {
+                studentsQuery = studentsQuery.Where(s => s.Course == courseFilter);
+            }
+
+            // Apply programme filter
+            if (!string.IsNullOrWhiteSpace(programmeFilter))
+            {
+                studentsQuery = studentsQuery.Where(s => s.Program == programmeFilter);
+            }
+
+            // Apply exam body filter
+            if (!string.IsNullOrWhiteSpace(examBodyFilter))
+            {
+                studentsQuery = studentsQuery.Where(s => s.ExamBody == examBodyFilter);
+            }
+
+            // Apply year filter
+            if (!string.IsNullOrWhiteSpace(yearFilter))
+            {
+                studentsQuery = studentsQuery.Where(s => s.Year == yearFilter);
+            }
+
+
+
+            // Get total count for pagination
+            var totalStudents = await studentsQuery.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalStudents / (double)pageSize);
+
+            // Apply pagination
+            var students = await studentsQuery
+                .OrderBy(s => s.FullName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // Populate filter dropdowns
+            ViewBag.Departments = new SelectList(
+                await _context.Students.Select(s => s.Department).Distinct().OrderBy(d => d).ToListAsync(),
+                departmentFilter);
+
+            ViewBag.Courses = new SelectList(
+                await _context.Students.Select(s => s.Course).Distinct().OrderBy(c => c).ToListAsync(),
+                courseFilter);
+
+            ViewBag.Programmes = new SelectList(
+                new[] { "Certificate", "Diploma", "Degree", "Masters" },
+                programmeFilter);
+
+            ViewBag.ExamBodies = new SelectList(
+                await _context.Students.Select(s => s.ExamBody).Distinct().OrderBy(e => e).ToListAsync(),
+                examBodyFilter);
+
+            ViewBag.Years = new SelectList(
+                new[] { "1st Year", "2nd Year", "3rd Year", "4th Year" },
+                yearFilter);
+
+
+
+            // Pagination and filter data
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.DepartmentFilter = departmentFilter;
+            ViewBag.CourseFilter = courseFilter;
+            ViewBag.ProgrammeFilter = programmeFilter;
+            ViewBag.ExamBodyFilter = examBodyFilter;
+            ViewBag.YearFilter = yearFilter;
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.TotalStudents = totalStudents;
+            ViewBag.PageSize = pageSize;
+
+            return View(students);
         }
 
-        // GET: Students/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
-            var student = await _context.Students.FirstOrDefaultAsync(m => m.StudentID == id);
-            if (student == null)
-                return NotFound();
-
-            return View(student);
+            var student = await _context.Students.AsNoTracking()
+                                                 .FirstOrDefaultAsync(s => s.StudentID == id);
+            return student == null ? NotFound() : View(student);
         }
 
-        // GET: Students/Create
+        // ------------------------- CREATE -------------------------
+
         public IActionResult Create()
         {
             PopulateDropdowns();
             return View();
         }
 
-        // POST: Students/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Student student)
         {
-            if (ModelState.IsValid)
+            // Duplicate check
+            if (await IsDuplicateAsync(student))
             {
-                _context.Add(student);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError(string.Empty,
+                    "A student with the same Admission Number, Email, or National ID already exists.");
             }
 
-            PopulateDropdowns();
-            return View(student);
+            // Validate SubCounty
+            if (!_context.SubCounties.Any(s => s.SubCountyID == student.SubCountyID && s.CountyID == student.CountyID))
+            {
+                ModelState.AddModelError("SubCountyID", "Invalid sub-county selection.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                PopulateDropdowns(student.CountyID);
+                return View(student);
+            }
+
+            _context.Add(student);
+            await _context.SaveChangesAsync();
+            
+            // Log the activity
+            await _activityService.LogStudentActivity(
+                "New Student Registration", 
+                $"{student.FullName} registered for {student.Program} program",
+                student.StudentID);
+                
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Students/Edit/5
+        // ------------------------- EDIT -------------------------
+
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var student = await _context.Students.FindAsync(id);
-            if (student == null)
-                return NotFound();
+            if (student == null) return NotFound();
 
-            PopulateDropdowns();
+            PopulateDropdowns(student.CountyID);
             return View(student);
         }
 
-        // POST: Students/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Student student)
         {
-            if (id != student.StudentID)
-                return NotFound();
+            if (id != student.StudentID) return NotFound();
 
-            if (ModelState.IsValid)
+            if (await IsDuplicateAsync(student, id))
             {
-                try
-                {
-                    _context.Update(student);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StudentExists(student.StudentID))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError(string.Empty,
+                    "Another student already uses this Admission Number, Email, or National ID.");
             }
 
-            PopulateDropdowns();
-            return View(student);
+            // Validate SubCounty
+            if (!_context.SubCounties.Any(s => s.SubCountyID == student.SubCountyID && s.CountyID == student.CountyID))
+            {
+                ModelState.AddModelError("SubCountyID", "Invalid sub-county selection.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                PopulateDropdowns(student.CountyID);
+                return View(student);
+            }
+
+            try
+            {
+                _context.Update(student);
+                await _context.SaveChangesAsync();
+                
+                // Log the activity
+                await _activityService.LogStudentActivity(
+                    "Student Updated", 
+                    $"{student.FullName}'s information was updated",
+                    student.StudentID);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await _context.Students.AnyAsync(e => e.StudentID == id))
+                    return NotFound();
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Students/Delete/5
+        // ------------------------- DELETE -------------------------
+
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
-            var student = await _context.Students.FirstOrDefaultAsync(m => m.StudentID == id);
-            if (student == null)
-                return NotFound();
-
-            return View(student);
+            var student = await _context.Students.AsNoTracking()
+                                                 .FirstOrDefaultAsync(s => s.StudentID == id);
+            return student == null ? NotFound() : View(student);
         }
 
-        // POST: Students/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var student = await _context.Students.FindAsync(id);
             if (student != null)
             {
+                // Store student name before deletion for activity log
+                string studentName = student.FullName;
+                string program = student.Program;
+                
                 _context.Students.Remove(student);
                 await _context.SaveChangesAsync();
+                
+                // Log the activity
+                await _activityService.LogSystemActivity(
+                    "Student Removed", 
+                    $"{studentName} was removed from {program} program");
             }
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StudentExists(int id)
+        // ------------------------- DUPLICATE CHECK -------------------------
+
+        private async Task<bool> IsDuplicateAsync(Student s, int excludeId = 0)
         {
-            return _context.Students.Any(e => e.StudentID == id);
+            return await _context.Students.AsNoTracking()
+                .AnyAsync(x =>
+                       x.StudentID != excludeId &&
+                      (x.AdmissionNumber == s.AdmissionNumber ||
+                       x.Email == s.Email ||
+                       x.IDNumber == s.IDNumber));
         }
 
-        private void PopulateDropdowns()
-        {
-            ViewBag.GenderList = new SelectList(new[] { "Male", "Female", "Other" });
-            ViewBag.Religions = new SelectList(new[] { "Christianity", "Islam", "Hinduism", "Atheist", "Other" });
-            ViewBag.Medicals = new SelectList(new[] { "Normal", "Chronic", "Disabled", "Other" });
-            ViewBag.MaritalStatusList = new SelectList(new[] { "Single", "Married", "Divorced", "Widowed" });
-            //ViewBag.Courses = new SelectList(_context.Courses.Select(c => c.CourseName));
-            //ViewBag.Departments = new SelectList(_context.Departments.ToList(), "DepartmentName", "DepartmentName");
-            //ViewBag.Faculties = new SelectList(_context.Faculties.ToList(), "FacultyName", "FacultyName");
-            //ViewBag.ExamBodies = new SelectList(_context.ExamBodies.Select(e => e.Name));
-            ViewBag.Courses = new SelectList(_context.Courses?.ToList() ?? new List<Course>(), "CourseName", "CourseName");
-            ViewBag.Departments = new SelectList(_context.Departments?.ToList() ?? new List<Department>(), "DepartmentName", "DepartmentName");
-            ViewBag.Faculties = new SelectList(_context.Faculties?.ToList() ?? new List<Faculty>(), "FacultyName", "FacultyName");
-            ViewBag.ExamBodies = new SelectList(_context.ExamBodies?.ToList() ?? new List<ExamBody>(), "BodyName", "BodyName");
-            ViewBag.Programs = new SelectList(new[] { "Certificate", "Diploma", "Degree", "Masters" });
-            ViewBag.Years = new SelectList(new[] { "1st Year", "2nd Year", "3rd Year", "4th Year" });
+        // ------------------------- DROPDOWNS -------------------------
 
-            ViewBag.Counties = new SelectList(CountySubCountyData.CountySubCountyDict.Keys);
+        private void PopulateDropdowns(int countyId = 0)
+        {
+            ViewBag.Courses = BuildSelectList(
+                _context.Courses, c => c.CourseName, "-- Select Course --");
+
+            ViewBag.Departments = BuildSelectList(
+                _context.Departments, d => d.Name, "-- Select Department --");
+
+            ViewBag.Faculties = BuildSelectList(
+                _context.Faculties, f => f.Name, "-- Select Faculty --");
+
+            ViewBag.ExamBodies = BuildSelectList(
+                _context.ExamBodies, e => e.Name, "-- Select Exam Body --");
+
+            ViewBag.Counties = new SelectList(
+                _context.Counties.AsNoTracking()
+                                 .OrderBy(c => c.CountyName)
+                                 .ToList(),
+                nameof(CountySubCounty.CountyID),
+                nameof(CountySubCounty.CountyName),
+                countyId);
+
             ViewBag.SubCounties = new SelectList(
-                CountySubCountyData.CountySubCountyDict.SelectMany(kvp => kvp.Value).Distinct().OrderBy(x => x).ToList()
-            );
+                countyId == 0
+                    ? Enumerable.Empty<SubCounty>()
+                    : _context.SubCounties
+                              .Where(sc => sc.CountyID == countyId)
+                              .OrderBy(sc => sc.SubCountyName)
+                              .ToList(),
+                nameof(SubCounty.SubCountyID),
+                nameof(SubCounty.SubCountyName));
         }
 
-        // Optional JSON method if needed in future
-        [HttpGet]
-        public JsonResult GetSubCounties(string county)
+        private static IEnumerable<SelectListItem> BuildSelectList<T>(
+            IQueryable<T> query,
+            Func<T, string> selector,
+            string placeholder) where T : class
         {
-            var subCounties = CountySubCountyData.CountySubCountyDict
-                .FirstOrDefault(c => c.Key.Equals(county, System.StringComparison.OrdinalIgnoreCase)).Value
-                ?? new List<string>();
+            var list = query.AsNoTracking()
+                            .Select(item => new SelectListItem
+                            {
+                                Value = selector(item),
+                                Text = selector(item)
+                            })
+                            .ToList();
 
-            return Json(subCounties);
+            list.Insert(0, new SelectListItem
+            {
+                Value = "",
+                Text = placeholder
+            });
+
+            return list;
+        }
+
+        // ------------------------- AJAX: SUBCOUNTIES -------------------------
+
+        [HttpGet]
+        public JsonResult GetSubCounties(int countyId)
+        {
+            var data = _context.SubCounties.AsNoTracking()
+                               .Where(s => s.CountyID == countyId)
+                               .OrderBy(s => s.SubCountyName)
+                               .Select(s => new { s.SubCountyID, s.SubCountyName })
+                               .ToList();
+
+            return Json(data);
         }
     }
 }

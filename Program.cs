@@ -15,6 +15,9 @@ builder.Services.AddDbContext<ForgeDBContext>(options =>
 // Add MVC services
 builder.Services.AddControllersWithViews();
 
+// Register application services
+builder.Services.AddScoped<EduCoreSuite.Services.ActivityService>();
+
 var app = builder.Build();
 
 // Configure request pipeline

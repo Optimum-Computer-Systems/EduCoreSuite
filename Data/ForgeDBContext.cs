@@ -14,25 +14,27 @@ namespace EduCoreSuite.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<ExamBody> ExamBodies { get; set; }
-
+        public DbSet<CountySubCounty> Counties { get; set; }
+        public DbSet<SubCounty> SubCounties { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Programme> Programmes { get; set; }
-
         public DbSet<Campus> Campuses { get; set; }
         public DbSet<StudyMode> StudyModes { get; set; }
         public DbSet<StudyStatus> StudyStatuses { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Staff> Staff { get; set; }
+        public DbSet<SystemActivity> Activities { get; set; }
 
-        // ---------- Fluent API / seed data ----------
         protected override void OnModelCreating(ModelBuilder mb)
         {
             base.OnModelCreating(mb);
 
-            // Table‑name mapping (optional but keeps DB tidy)
+            // Table‑name mapping
             mb.Entity<Student>().ToTable("Students");
             mb.Entity<Course>().ToTable("Courses");
             mb.Entity<ExamBody>().ToTable("ExamBodies");
+            mb.Entity<CountySubCounty>().ToTable("Counties");
+            mb.Entity<SubCounty>().ToTable("SubCounties");
             mb.Entity<Department>().ToTable("Departments");
             mb.Entity<Programme>().ToTable("Programmes");
             mb.Entity<Campus>().ToTable("Campuses");
@@ -40,17 +42,15 @@ namespace EduCoreSuite.Data
             mb.Entity<StudyStatus>().ToTable("StudyStatuses");
             mb.Entity<Faculty>().ToTable("Faculties");
             mb.Entity<Staff>().ToTable("Staff");
+            mb.Entity<SystemActivity>().ToTable("Activities");
 
-            // --- Seed reference data ---
-
-            // Study modes common in Kenyan universities
+            // Seed reference data
             mb.Entity<StudyMode>().HasData(
                 new StudyMode { Id = 1, Name = "Full‑Time", Description = "Daytime attendance on campus" },
                 new StudyMode { Id = 2, Name = "Part‑Time", Description = "Evening / weekend attendance" },
                 new StudyMode { Id = 3, Name = "Distance Learning", Description = "Remote / online learning" }
             );
 
-            // Typical progression statuses
             mb.Entity<StudyStatus>().HasData(
                 new StudyStatus { Id = 1, Name = "Active", Description = "Currently enrolled" },
                 new StudyStatus { Id = 2, Name = "Completed", Description = "Graduated successfully" },
@@ -59,6 +59,33 @@ namespace EduCoreSuite.Data
                 new StudyStatus { Id = 5, Name = "Suspended", Description = "Temporarily barred for discipline" },
                 new StudyStatus { Id = 6, Name = "Expelled", Description = "Permanently removed from programme" }
             );
+
+            // ⚠️ Fix for SQL Server multiple cascade paths issue
+            mb.Entity<Course>()
+                .HasOne(c => c.Programme)
+                .WithMany()
+                .HasForeignKey(c => c.ProgrammeID)
+                .OnDelete(DeleteBehavior.Restrict);
+            mb.Entity<Campus>()
+                .HasOne(c => c.County)
+                .WithMany()
+                .HasForeignKey(c => c.CountyID)
+                .OnDelete(DeleteBehavior.Restrict); 
+            mb.Entity<Campus>()
+                .HasOne(c => c.SubCounty)
+                .WithMany()
+                .HasForeignKey(c => c.SubCountyID)
+                .OnDelete(DeleteBehavior.Restrict);
+            mb.Entity<Student>()
+                .HasOne(s => s.County)
+                .WithMany()
+                .HasForeignKey(s => s.CountyID)
+                .OnDelete(DeleteBehavior.Restrict);
+            mb.Entity<Student>()
+                .HasOne(s => s.SubCounty)
+                .WithMany()
+                .HasForeignKey(s => s.SubCountyID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

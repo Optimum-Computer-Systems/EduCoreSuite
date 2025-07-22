@@ -31,15 +31,19 @@
             </div>
 
             <div class="form-group mt-3">
-                <label asp-for="County" class="form-label fw-semibold">County</label>
-                <input asp-for="County" class="form-control" placeholder="Enter county" />
-                <span asp-validation-for="County" class="text-danger"></span>
+                <label asp-for="CountyID" class="form-label fw-semibold">County</label>
+                <select asp-for="CountyID" class="form-select" asp-items="ViewBag.Counties">
+                    <option value="">-- Select County --</option>
+                </select>
+                <span asp-validation-for="CountyID" class="text-danger"></span>
             </div>
 
             <div class="form-group mt-3">
-                <label asp-for="Constituency" class="form-label fw-semibold">Constituency</label>
-                <input asp-for="Constituency" class="form-control" placeholder="(Optional)" />
-                <span asp-validation-for="Constituency" class="text-danger"></span>
+                <label asp-for="SubCountyID" class="form-label fw-semibold">Sub-County</label>
+                <select asp-for="SubCountyID" class="form-select" asp-items="ViewBag.SubCounties">
+                    <option value="">-- Select Sub-County --</option>
+                </select>
+                <span asp-validation-for="SubCountyID" class="text-danger"></span>
             </div>
 
             <div class="form-group mt-3">
@@ -123,4 +127,99 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script>
+        $(document).ready(function() {
+            // County and SubCounty cascading dropdown
+            $('#CountyID').change(function() {
+                var countyId = $(this).val();
+                var subCountySelect = $('#SubCountyID');
+                
+                // Clear current options
+                subCountySelect.empty();
+                subCountySelect.append('<option value="">-- Select Sub-County --</option>');
+                
+                if (countyId) {
+                    // Fetch subcounties for selected county
+                    $.getJSON('@Url.Action("GetSubCounties", "Campuses")?countyId=' + countyId, function(data) {
+                        $.each(data, function(i, item) {
+                            subCountySelect.append($('<option></option>').val(item.subCountyID).text(item.subCountyName));
+                        });
+                    });
+                }
+            });
+            
+            // Real-time validation for Campus Code
+            $('#Code').on('blur', function() {
+                var code = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Code"]');
+                
+                if (code) {
+                    $.get('@Url.Action("CheckDuplicateCode", "Campuses")', { code: code }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Code').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Code').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Campus Name
+            $('#Name').on('blur', function() {
+                var name = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Name"]');
+                
+                if (name) {
+                    $.get('@Url.Action("CheckDuplicateName", "Campuses")', { name: name }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Name').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Name').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Email
+            $('#Email').on('blur', function() {
+                var email = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Email"]');
+                
+                if (email) {
+                    $.get('@Url.Action("CheckDuplicateEmail", "Campuses")', { email: email }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Email').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Email').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Phone Number
+            $('#PhoneNumber').on('blur', function() {
+                var phone = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="PhoneNumber"]');
+                
+                if (phone) {
+                    $.get('@Url.Action("CheckDuplicatePhone", "Campuses")', { phone: phone }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#PhoneNumber').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#PhoneNumber').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }

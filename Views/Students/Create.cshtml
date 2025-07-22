@@ -20,7 +20,7 @@
     <div class="row g-3">
         <div class="col-md-6">
             <label asp-for="FullName" class="form-label"></label>
-            <input asp-for="FullName" class="form-control" placeholder="John Doe" />
+            <input asp-for="FullName" class="form-control" placeholder="Vincent Omondi" />
             <span asp-validation-for="FullName" class="text-danger"></span>
         </div>
         <div class="col-md-6">
@@ -79,7 +79,13 @@
         </div>
         <div class="col-md-6">
             <label asp-for="Medical" class="form-label"></label>
-            <input asp-for="Medical" class="form-control" />
+            <select asp-for="Medical" class="form-select">
+                <option value="">-- Select --</option>
+                <option>Normal</option>
+                <option>Chronic</option>
+                <option>Disabled</option>
+                <option>Other</option>
+            </select>
             <span asp-validation-for="Medical" class="text-danger"></span>
         </div>
         <div class="col-md-6">
@@ -119,14 +125,18 @@
             <span asp-validation-for="PostalCode" class="text-danger"></span>
         </div>
         <div class="col-md-6">
-            <label asp-for="County" class="form-label"></label>
-            <select asp-for="County" class="form-select" asp-items="ViewBag.Counties"></select>
-            <span asp-validation-for="County" class="text-danger"></span>
+            <label asp-for="CountyID" class="form-label">County</label>
+            <select asp-for="CountyID" class="form-select" asp-items="ViewBag.Counties">
+             <option value="">-- Select County --</option>
+            </select>
+            <span asp-validation-for="CountyID" class="text-danger"></span>
         </div>
         <div class="col-md-6">
-            <label asp-for="SubCounty" class="form-label"></label>
-            <select asp-for="SubCounty" class="form-select" asp-items="ViewBag.SubCounties"></select>
-            <span asp-validation-for="SubCounty" class="text-danger"></span>
+            <label asp-for="SubCountyID" class="form-label">Sub‑county</label>
+            <select asp-for="SubCountyID" class="form-select" asp-items="ViewBag.SubCounties">
+             <option value="">-- Select Sub‑county --</option>
+            </select>
+            <span asp-validation-for="SubCountyID" class="text-danger"></span>
         </div>
         <div class="col-md-6">
             <label asp-for="Town" class="form-label"></label>
@@ -233,5 +243,43 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        // --- grab the two dropdowns by their auto‑generated IDs ---
+        const countySel = document.getElementById('CountyID');
+        const subSel    = document.getElementById('SubCountyID');
+
+        if (countySel && subSel) {
+            console.log('County/Sub‑county handlers wired');   // ✅ sanity check
+
+            countySel.addEventListener('change', () => {
+                const id = countySel.value;
+
+                // reset Sub‑county list but keep a placeholder
+                subSel.innerHTML =
+                    '<option value="">-- Select Sub‑county --</option>';
+
+                if (!id) return;   // nothing chosen yet
+
+                fetch(`/Students/GetSubCounties?countyId=${id}`)
+                    .then(r => {
+                        if (!r.ok) throw new Error('HTTP ' + r.status);
+                        return r.json();
+                    })
+                    .then(list => {
+                        console.log('Sub‑counties fetched:', list); // ✅
+                        list.forEach(sc => {
+                            const opt = document.createElement('option');
+                            opt.value = sc.subCountyID ?? sc.SubCountyID ?? sc.id;
+                            opt.text  = sc.subCountyName ?? sc.SubCountyName ?? sc.text;
+                            subSel.appendChild(opt);
+                        });
+                    })
+                    .catch(err => console.error('Sub‑county load failed →', err));
+            });
+        } else {
+            console.error('Cannot find CountyID or SubCountyID controls in DOM');
+        }
+    </script>
 }
+
+    }

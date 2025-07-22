@@ -1,23 +1,19 @@
-﻿@model EduCoreSuite.Models.ViewModels.CourseFormViewModel
+@model EduCoreSuite.Models.ViewModels.CourseFormViewModel
 
 @{
     ViewData["Title"] = "Create Course";
 }
 
 <div class="container mt-4">
-    <!-- Back to Course List -->
     <div class="mb-3">
         <a asp-controller="Courses" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold">
             ← Back to Course List
         </a>
     </div>
 
-    <!-- Page Title -->
     <h2 class="fw-bold mb-4">Create Course</h2>
 
-    <!-- Create Course Form -->
     <form asp-action="Create" method="post" class="row g-4">
-        <!-- Left Column -->
         <div class="col-md-6">
             <div class="form-group">
                 <label asp-for="Course.CourseName" class="form-label fw-semibold">Course Name</label>
@@ -26,58 +22,68 @@
             </div>
 
             <div class="form-group mt-3">
-                <label asp-for="Course.Department" class="form-label fw-semibold">Department</label>
-                <select asp-for="Course.Department" class="form-select" asp-items="Model.Departments">
+                <label asp-for="Course.DepartmentID" class="form-label fw-semibold">Department</label>
+                <select asp-for="Course.DepartmentID" class="form-select" asp-items="Model.Departments">
                     <option value="">Select department</option>
                 </select>
-                <span asp-validation-for="Course.Department" class="text-danger"></span>
+                <span asp-validation-for="Course.DepartmentID" class="text-danger"></span>
             </div>
 
             <div class="form-group mt-3">
-                <label asp-for="Course.Programme" class="form-label fw-semibold">Programme</label>
-                <select asp-for="Course.Programme" class="form-select" asp-items="Model.Programmes">
+                <label asp-for="Course.ProgrammeID" class="form-label fw-semibold">Programme</label>
+                <select asp-for="Course.ProgrammeID" class="form-select" asp-items="Model.Programmes">
                     <option value="">Select programme</option>
                 </select>
-                <span asp-validation-for="Course.Programme" class="text-danger"></span>
+                <span asp-validation-for="Course.ProgrammeID" class="text-danger"></span>
             </div>
-
+            
             <div class="form-group mt-3">
-                <label asp-for="Course.StudyLevel" class="form-label fw-semibold">Year/Study Level</label>
-                <select asp-for="Course.StudyLevel" class="form-select" asp-items="Model.StudyLevels">
-                    <option value="">Select year/study level</option>
+                <label class="form-label fw-semibold">Year Level</label>
+                <select id="yearLevel" name="yearLevel" class="form-select">
+                    <option value="1">Year 1</option>
+                    <option value="2">Year 2</option>
+                    <option value="3">Year 3</option>
+                    <option value="4">Year 4</option>
+                    <option value="5">Year 5</option>
+                    <option value="6">Year 6</option>
                 </select>
-                <span asp-validation-for="Course.StudyLevel" class="text-danger"></span>
             </div>
         </div>
 
-        <!-- Right Column -->
         <div class="col-md-6">
             <div class="form-group">
-                <label asp-for="Course.ExamBody" class="form-label fw-semibold">Exam Body</label>
-                <select asp-for="Course.ExamBody" class="form-select" asp-items="Model.ExamBodies">
-                    <option value="">Select exam body</option>
-                </select>
-                <span asp-validation-for="Course.ExamBody" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mt-3">
-                <label asp-for="Course.StudyStatus" class="form-label fw-semibold">Study Status</label>
-                <select asp-for="Course.StudyStatus" class="form-select" asp-items="Model.StudyStatuses">
-                    <option value="">Select study status</option>
-                </select>
-                <span asp-validation-for="Course.StudyStatus" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mt-3">
-                <label asp-for="Course.Campus" class="form-label fw-semibold">Campus</label>
-                <select asp-for="Course.Campus" class="form-select" asp-items="Model.Campuses">
+                <label asp-for="Course.CampusID" class="form-label fw-semibold">Campus</label>
+                <select asp-for="Course.CampusID" class="form-select" asp-items="Model.Campuses">
                     <option value="">Select campus</option>
                 </select>
-                <span asp-validation-for="Course.Campus" class="text-danger"></span>
+                <span asp-validation-for="Course.CampusID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Course.ExamBodyID" class="form-label fw-semibold">Exam Body</label>
+                <select asp-for="Course.ExamBodyID" class="form-select" asp-items="Model.ExamBodies">
+                    <option value="">Select exam body</option>
+                </select>
+                <span asp-validation-for="Course.ExamBodyID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Course.StudyStatusID" class="form-label fw-semibold">Study Status</label>
+                <select asp-for="Course.StudyStatusID" class="form-select" asp-items="Model.StudyStatuses">
+                    <option value="">Select study status</option>
+                </select>
+                <span asp-validation-for="Course.StudyStatusID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Course.StudyModeID" class="form-label fw-semibold">Study Mode</label>
+                <select asp-for="Course.StudyModeID" class="form-select" asp-items="Model.StudyModes">
+                    <option value="">Select study mode</option>
+                </select>
+                <span asp-validation-for="Course.StudyModeID" class="text-danger"></span>
             </div>
         </div>
 
-        <!-- Submit Button -->
         <div class="col-12 text-center">
             <button type="submit" class="btn btn-primary fw-semibold px-5 py-2 mt-4 rounded-pill">
                 Create Course
@@ -85,3 +91,72 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+    <script>
+        $(document).ready(function() {
+            // Real-time validation for Course Name
+            $('#Course_CourseName').on('blur', function() {
+                var courseName = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Course.CourseName"]');
+                
+                if (courseName) {
+                    $.get('@Url.Action("CheckDuplicateCourseName", "Courses")', { courseName: courseName }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Course_CourseName').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Course_CourseName').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+            
+            // Add a level display after the Programme dropdown
+            var $programmeSelect = $('#Course_ProgrammeID');
+            var $levelDisplay = $('<div class="mt-2 text-info" id="programme-level-display"></div>');
+            $programmeSelect.after($levelDisplay);
+            
+            // Update level display when programme changes
+            $programmeSelect.on('change', function() {
+                var programmeId = $(this).val();
+                if (programmeId) {
+                    $.get('@Url.Action("GetProgrammeLevel", "Courses")', { programmeId: programmeId }, function(data) {
+                        $levelDisplay.text('Level: ' + data.level);
+                    });
+                } else {
+                    $levelDisplay.text('');
+                }
+            });
+            
+            // Initialize level display if a programme is already selected
+            if ($programmeSelect.val()) {
+                $programmeSelect.trigger('change');
+            }
+            
+            // Handle form submission to include year level in course name
+            $('form').on('submit', function(e) {
+                var courseName = $('#Course_CourseName').val();
+                var yearLevel = $('#yearLevel').val();
+                
+                // Remove any existing year level information
+                courseName = courseName.replace(/\s*-\s*Year\s+\d+$/, '');
+                
+                // Append the year level to the course name
+                $('#Course_CourseName').val(courseName + ' - Year ' + yearLevel);
+            });
+            
+            // Extract year level from course name on page load
+            var courseName = $('#Course_CourseName').val();
+            var yearLevelMatch = courseName.match(/Year\s+(\d+)$/);
+            if (yearLevelMatch) {
+                $('#yearLevel').val(yearLevelMatch[1]);
+            }
+        });
+    </script>
+}

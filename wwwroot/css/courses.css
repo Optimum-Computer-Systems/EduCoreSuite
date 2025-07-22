@@ -1,0 +1,174 @@
+/* Courses Page Specific Styles */
+
+/* Search Inputs */
+.search-container .form-control {
+    border-radius: 50px;
+    padding-left: 15px;
+    border: 1px solid #ced4da;
+}
+
+.search-container .btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Department Headers */
+.department-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.5rem;
+}
+
+.department-icon {
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+/* Course Tables */
+.course-table {
+    margin-bottom: 2rem;
+    border: 1px solid #dee2e6;
+}
+
+.course-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.course-table td,
+.course-table th {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+/* Department Table Container with Scrolling */
+.department-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 2rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+/* Sticky Header for Department Tables */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f8f9fa;
+}
+
+/* Department Table Body */
+.department-table-body {
+    max-height: 350px;
+}
+
+/* Pagination */
+.pagination-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    padding: 10px 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pagination-nav {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.pagination .page-link {
+    border-radius: 0;
+    margin: 0 3px;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.pagination .page-link:hover {
+    background-color: #e9ecef;
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-align: center;
+}
+
+/* Action Buttons */
+.course-actions {
+    display: flex;
+    gap: 5px;
+}
+
+/* Course List and Add Course Buttons */
+.action-button {
+    background-color: #e9ecef;
+    border-radius: 50px;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #dee2e6;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    text-align: center;
+    padding: 5px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .department-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .course-actions {
+        flex-direction: column;
+    }
+
+    .action-button {
+        margin-bottom: 10px;
+    }
+
+    .department-table-container {
+        max-height: 300px;
+    }
+}
