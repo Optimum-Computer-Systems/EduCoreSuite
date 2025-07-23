@@ -1,4 +1,4 @@
-﻿@model EduCoreSuite.Models.ViewModels.User.ApprovalViewModel
+﻿@model EduCoreSuite.Models.ViewModels.UserApproval.ApprovalViewModel
 @{
     ViewData["Title"] = "User Approval";
 }
@@ -30,7 +30,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">@user.FirstName @user.LastName</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">@user.Email</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            @(Model.Roles.ContainsKey(user.RoleId) ? Model.Roles[user.RoleId] : "Unknown")
+                            @(Model.Roles.ContainsKey(user.RoleID) ? Model.Roles[user.RoleID] : "Unknown")
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">

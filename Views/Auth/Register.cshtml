@@ -53,13 +53,13 @@
 
                     <!-- Role Selection (Hidden for now to match design) -->
                     <div class="col-md-6">
-                        <select asp-for="RoleId" class="form-select">
+                        <select asp-for="RoleID" class="form-select">
                             @foreach (var role in roles)
                             {
-                                <option value="@role.Id">@role.NameOfRole</option>
+                                <option value="@role.ID">@role.Name</option>
                             }
                         </select>
-                        <span asp-validation-for="RoleId" class="text-danger small"></span>
+                        <span asp-validation-for="RoleID" class="text-danger small"></span>
                     </div>
                 </div>
 

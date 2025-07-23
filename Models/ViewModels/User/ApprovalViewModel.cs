@@ -1,7 +1,7 @@
 ﻿using EduCoreSuite.Models;
 using System.Collections.Generic;
 
-namespace EduCoreSuite.Models.ViewModels.User
+namespace EduCoreSuite.Models.ViewModels.UserApproval
 {
     public class ApprovalViewModel
     {

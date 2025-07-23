@@ -22,6 +22,6 @@ namespace EduCoreSuite.Models.ViewModels.Auth
         public string? LastName { get; set; }
 
         [Required]
-        public long RoleId { get; set; }
+        public int RoleID { get; set; }
     }
 }

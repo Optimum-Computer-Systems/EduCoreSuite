@@ -38,7 +38,7 @@ public class AuthController : Controller
             return View(viewModel);
         }
          
-        if (await _db.Users.AnyAsync(u => u.Email == viewModel.Email || u.UserName == viewModel.UserName))
+        if (await _db.Users.AnyAsync(u => u.Email == viewModel.Email || u.Username == viewModel.UserName))
         {
             ModelState.AddModelError("Email", "User already exists");
             ViewBag.Roles = _db.Roles.ToList();
@@ -47,12 +47,12 @@ public class AuthController : Controller
 
         var user = new User
         {
-            UserName = viewModel.UserName,
+            Username = viewModel.UserName,
             Email = viewModel.Email,
             PasswordHash = HashPassword(viewModel.Password),
             FirstName = viewModel.FirstName,
             LastName = viewModel.LastName,
-            RoleId = viewModel.RoleId
+            RoleID = viewModel.RoleID
         };
 
         _db.Users.Add(user);
@@ -85,11 +85,11 @@ public class AuthController : Controller
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
+            new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim("CustomUserId", user.CustomUserId),
-            new Claim(ClaimTypes.Role, user.RoleId.ToString())
+            new Claim(ClaimTypes.Role, user.RoleID.ToString())
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

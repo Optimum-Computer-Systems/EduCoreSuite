@@ -1,6 +1,8 @@
 ﻿using EduCoreSuite.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using EducoreSuite.stmpservices;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +29,23 @@ builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+
+builder.Services.Configure<SmtpSettings>(
+    builder.Configuration.GetSection("SmtpSettings"));
+
+
 var app = builder.Build();
 
+// ✅ Configure HTTP request pipeline
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
@@ -39,6 +56,10 @@ app.MapControllerRoute(
     pattern: "{controller=Auth}/{action=Login}/{id?}");
 
 app.MapFallbackToController("Login", "Auth");
+
+// ✅ Map Razor Pages and API Controllers
+app.MapRazorPages();
+app.MapControllers(); // <-- Add this line to expose your API endpoints
 
 app.Run();
 

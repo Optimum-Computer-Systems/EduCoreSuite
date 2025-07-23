@@ -1,75 +1,45 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using System.Data;
+using System.Text.Json.Serialization;
+
 namespace EduCoreSuite.Models
 {
     public class User
     {
-        public long Id { get; set; }
+    
 
-        [Required, StringLength(50)]
-        public string UserName { get; set; } = string.Empty;
-
-        [Required, EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
+        [Required]//This belongs to the username 
+        public String Username { get; set; }
 
         [Required]
-        public string PasswordHash { get; set; } = string.Empty;
 
-        public long RoleId { get; set; }
+        public String FirstName { get; set; }
+        public String LastName { get; set; }
 
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        [Required, EmailAddress]//Email must be required and valid
+        public String Email { get; set; }
+        [Required]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,32}$",
+            ErrorMessage = "Password must be between 8 and 32 characters long, contain at least one uppercase letter, one lowercase letter, and one digit.")]
+        public String Password { get; set; }
+
+        public int RoleID { get; set; }
+        [ForeignKey("RoleID")]
+        [JsonIgnore]
+        public Role? Role { get; set; }
+
+        public string? PasswordHash { get; set; }
+
+        public string? ResetOTP { get; set; }
+        public DateTime? OTPGeneratedAt { get; set; }
 
         [NotMapped]
-        public string CustomUserId => Id.ToString("D3");
-    }
-
-    public class Role
-    {
-        public long Id { get; set; }
-
-        [Required, StringLength(50)]
-        public string NameOfRole { get; set; } = string.Empty;
-    }
-
-    public class Permission
-    {
-        public long Id { get; set; }
-
-        [Required, StringLength(100)]
-        public string NameOfPermission { get; set; } = string.Empty;
-    }
-
-    public class RolePermission
-    {
-        public long Id { get; set; }
-
-        [Required]
-        public long RoleID { get; set; }
-
-        [Required]
-        public long PermissionID { get; set; }
-    }
-
-    public class Course
-    {
-        public long Id { get; set; }
-
-        [StringLength(100)]
-        public string? CourseName { get; set; }
-
-        [StringLength(20)]
-        public string? CourseCode { get; set; }
-
-        public long? InstructorID { get; set; }
-    }
-
-    public class Registration
-    {
-        public long Id { get; set; }
-
-        public long StudentID { get; set; }
-        public long CourseID { get; set; }
+        public string CustomUserId => ID.ToString("D3");
     }
 }
+
