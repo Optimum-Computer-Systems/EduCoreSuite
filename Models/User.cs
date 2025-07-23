@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 using System.Data;
 using System.Text.Json.Serialization;
 
@@ -7,6 +8,8 @@ namespace EduCoreSuite.Models
 {
     public class User
     {
+    
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
@@ -34,6 +37,9 @@ namespace EduCoreSuite.Models
 
         public string? ResetOTP { get; set; }
         public DateTime? OTPGeneratedAt { get; set; }
+
+        [NotMapped]
+        public string CustomUserId => ID.ToString("D3");
     }
 }
 

@@ -1,11 +1,13 @@
+using EduCoreSuite.Data;
+using EduCoreSuite.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using System.Linq;
 using System;
-using EduCoreSuite.Data;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 public class ChangePasswordModel : PageModel
 {
@@ -98,8 +100,9 @@ public class ChangePasswordModel : PageModel
         }
 
         // Update password
-        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(Input.NewPassword);
-        user.ResetOTP = null;
+        var passwordHasher = new PasswordHasher<User>();
+        user.Password = passwordHasher.HashPassword(user, user.Password);
+        user.PasswordHash = passwordHasher.HashPassword(user, user.Password); user.ResetOTP = null;
         user.OTPGeneratedAt = null;
 
         await _db.SaveChangesAsync();
