@@ -25,6 +25,13 @@ namespace EduCoreSuite.Data
                .WithMany(r => r.Users)
                .HasForeignKey(u => u.RoleID);
 
+            // Seed Roles: Admin and Student
+            modelBuilder.Entity<Role>().HasData(
+                new Role { ID = 1, Name = "Student", Description = "Student with limited system access" },
+                new Role { ID = 2, Name = "Admin", Description = "Administrator with unlimited access" },
+                new Role { ID = 3, Name = "Lecturer", Description = "Lecturer with limited system access" },
+                new Role { ID = 4, Name = "Staff", Description = "Staff user with limited access" }
+            );
         }
     }
 }

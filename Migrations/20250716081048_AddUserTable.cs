@@ -2,10 +2,12 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace EduCoreSuite.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTables : Migration
+    public partial class AddUserTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,6 +64,17 @@ namespace EduCoreSuite.Migrations
                         principalTable: "Roles",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "ID", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Student with limited system access", "Student" },
+                    { 2, "Administrator with unlimited access", "Admin" },
+                    { 3, "Lecturer with limited system access", "Lecturer" },
+                    { 4, "Staff user with limited access", "Staff" }
                 });
 
             migrationBuilder.CreateIndex(
