@@ -1,38 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EduCoreSuite.Models
 {
     public class Institution
     {
-
-        [Key] 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int InstitutionID { get; set; }
 
         [Required]
-        [StringLength(255)] 
+        [StringLength(200)]
         public string InstitutionName { get; set; }
 
-        [StringLength(255)]
-        [EmailAddress] 
+        [EmailAddress]
         public string Email { get; set; }
 
-        [StringLength(50)]
+        [Phone]
         public string ContactNumber { get; set; }
 
-        [Required]
-        // Foreign Key property for SubCounty
         public int CountyID { get; set; }
+        public County County { get; set; }
 
-        [Required]
-        public bool Accredited { get; set; } = false; 
-
-        [Required]
-        [DataType(DataType.DateTime)] 
-        public DateTime CreatedAt { get; set; } = DateTime.Now; 
-        [ForeignKey("CountyID")] 
-        public  int Id { get; set; }
-        public County County { get;  set; }
+        public int SubCountyID { get; set; }
+        public SubCounty SubCounty { get; set; }
     }
 }

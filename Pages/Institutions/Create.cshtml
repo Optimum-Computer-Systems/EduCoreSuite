@@ -1,0 +1,44 @@
+﻿@page
+@model EduCoreSuite.Pages.Institutions.CreateModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>Add New Institution</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Institution.InstitutionName" class="form-label"></label>
+        <input asp-for="Institution.InstitutionName" class="form-control" />
+        <span asp-validation-for="Institution.InstitutionName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Institution.Email" class="form-label"></label>
+        <input asp-for="Institution.Email" class="form-control" />
+        <span asp-validation-for="Institution.Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Institution.ContactNumber" class="form-label"></label>
+        <input asp-for="Institution.ContactNumber" class="form-control" />
+        <span asp-validation-for="Institution.ContactNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Institution.CountyID" class="form-label"></label>
+        <select asp-for="Institution.CountyID" asp-items="Model.Counties" class="form-select"></select>
+        <span asp-validation-for="Institution.CountyID" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Institution.SubCountyID" class="form-label"></label>
+        <select asp-for="Institution.SubCountyID" asp-items="Model.SubCounties" class="form-select"></select>
+        <span asp-validation-for="Institution.SubCountyID" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,17 @@
+﻿@page "{id:int}"
+@model EduCoreSuite.Pages.Admin.Counties.EditModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container mt-4">
+    <h2>Edit County</h2>
+    <form method="post">
+        <input type="hidden" asp-for="County.CountyID" />
+        <div class="mb-3">
+            <label asp-for="County.CountyName" class="form-label"></label>
+            <input asp-for="County.CountyName" class="form-control" />
+            <span asp-validation-for="County.CountyName" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
