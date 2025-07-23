@@ -1,45 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EduCoreSuite.Data;
+using EduCoreSuite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using EduCoreSuite.Data;
-using EduCoreSuite.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EduCoreSuite.Controllers
 {
     public class InstitutionsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
-        public InstitutionsController(ApplicationDbContext context)
+        public InstitutionsController(ApplicationDbContext db)
         {
-            _context = context;
+            _db = db;
         }
 
         // GET: Institutions
         public async Task<IActionResult> Index()
         {
-            string institutionName = "Nairobi Institute of Technology";
-            return View( institutionName);
+            var institutions = await _db.Institutions
+                .Include(i => i.County)
+                .Include(i => i.SubCounty)
+                .ToListAsync();
+            return View(institutions);
         }
 
         // GET: Institutions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var institution = await _context.Institutions
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (institution == null)
-            {
-                return NotFound();
-            }
+            var institution = await _db.Institutions
+                .Include(i => i.County)
+                .Include(i => i.SubCounty)
+                .FirstOrDefaultAsync(m => m.InstitutionID == id);
+            if (institution == null) return NotFound();
 
             return View(institution);
         }
@@ -47,90 +44,78 @@ namespace EduCoreSuite.Controllers
         // GET: Institutions/Create
         public IActionResult Create()
         {
+            ViewData["CountyID"] = new SelectList(_db.Counties, "CountyID", "CountyName");
+            ViewData["SubCountyID"] = new SelectList(_db.SubCounties, "SubCountyID", "SubCountyName");
             return View();
         }
 
         // POST: Institutions/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Institution institution)
+        public async Task<IActionResult> Create([Bind("InstitutionID,InstitutionName,Email,ContactNumber,CountyID,SubCountyID")] Institution institution)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(institution);
-                await _context.SaveChangesAsync();
+                _db.Add(institution);
+                await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CountyID"] = new SelectList(_db.Counties, "CountyID", "CountyName", institution.CountyID);
+            ViewData["SubCountyID"] = new SelectList(_db.SubCounties, "SubCountyID", "SubCountyName", institution.SubCountyID);
             return View(institution);
         }
 
         // GET: Institutions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var institution = await _context.Institutions.FindAsync(id);
-            if (institution == null)
-            {
-                return NotFound();
-            }
+            var institution = await _db.Institutions.FindAsync(id);
+            if (institution == null) return NotFound();
+
+            ViewData["CountyID"] = new SelectList(_db.Counties, "CountyID", "CountyName", institution.CountyID);
+            ViewData["SubCountyID"] = new SelectList(_db.SubCounties, "SubCountyID", "SubCountyName", institution.SubCountyID);
             return View(institution);
         }
 
         // POST: Institutions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Institution institution)
+        public async Task<IActionResult> Edit(int id, [Bind("InstitutionID,InstitutionName,Email,ContactNumber,CountyID,SubCountyID")] Institution institution)
         {
-            if (id != institution.Id)
-            {
-                return NotFound();
-            }
+            if (id != institution.InstitutionID) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(institution);
-                    await _context.SaveChangesAsync();
+                    _db.Update(institution);
+                    await _db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!InstitutionExists(institution.Id))
-                    {
+                    if (!InstitutionExists(institution.InstitutionID))
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CountyID"] = new SelectList(_db.Counties, "CountyID", "CountyName", institution.CountyID);
+            ViewData["SubCountyID"] = new SelectList(_db.SubCounties, "SubCountyID", "SubCountyName", institution.SubCountyID);
             return View(institution);
         }
 
         // GET: Institutions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var institution = await _context.Institutions
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (institution == null)
-            {
-                return NotFound();
-            }
+            var institution = await _db.Institutions
+                .Include(i => i.County)
+                .Include(i => i.SubCounty)
+                .FirstOrDefaultAsync(m => m.InstitutionID == id);
+            if (institution == null) return NotFound();
 
             return View(institution);
         }
@@ -140,19 +125,15 @@ namespace EduCoreSuite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var institution = await _context.Institutions.FindAsync(id);
-            if (institution != null)
-            {
-                _context.Institutions.Remove(institution);
-            }
-
-            await _context.SaveChangesAsync();
+            var institution = await _db.Institutions.FindAsync(id);
+            _db.Institutions.Remove(institution);
+            await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool InstitutionExists(int id)
         {
-            return _context.Institutions.Any(e => e.Id == id);
+            return _db.Institutions.Any(e => e.InstitutionID == id);
         }
     }
 }

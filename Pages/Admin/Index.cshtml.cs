@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace EduCoreSuite.Pages
+namespace EduCoreSuite.Pages.Admin
 {
-    public class InstitutionsModel : PageModel
+    public class IndexModel : PageModel
     {
         public void OnGet()
         {

@@ -1,0 +1,56 @@
+﻿@page
+@model EduCoreSuite.Pages.Institutions.IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container mt-4">
+    <h2>Institutions</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <a asp-page="./Create" class="btn btn-success mb-3">➕ ADD INSTITUTION</a>
+
+    <table class="table table-bordered">
+        <thead class="table-green">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>County</th>
+                <th>SubCounty</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Institutions != null && Model.Institutions.Any())
+            {
+                foreach (var institution in Model.Institutions)
+                {
+                    <tr>
+                        <td>@institution.InstitutionName</td>
+                        <td>@institution.Email</td>
+                        <td>@institution.ContactNumber</td>
+                        <td>@institution.County?.CountyName</td>
+                        <td>@institution.SubCounty?.SubCountyName</td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@institution.InstitutionID" class="btn btn-sm btn-primary">Edit</a>
+                            <a asp-page="./Details" asp-route-id="@institution.InstitutionID" class="btn btn-sm btn-info">View</a>
+                            <form method="post" asp-page-handler="Delete" asp-route-id="@institution.InstitutionID" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this institution?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="6" class="text-center">No institutions found.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

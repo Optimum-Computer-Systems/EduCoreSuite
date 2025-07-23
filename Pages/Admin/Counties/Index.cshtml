@@ -1,0 +1,72 @@
+﻿@page
+@model EduCoreSuite.Pages.Admin.Counties.IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container mt-4">
+    <h2>Counties & SubCounties</h2>
+
+    <!-- 🔍 Search Bar -->
+    <form method="get" class="row g-3 mb-3">
+        <div class="col-auto">
+            <input type="text" name="SearchString" value="@Model.SearchString" placeholder="Search Counties" class="form-control" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-primary">Search</button>
+        </div>
+    </form>
+
+    <!-- ➕ Add County Button -->
+    <a asp-page="./Create" class="btn btn-success mb-3">
+        <i class="bi bi-plus"></i> Add New County
+    </a>
+
+    <!-- 📃 Counties Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>County Name</th>
+                <th>SubCounties</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var county in Model.Counties)
+            {
+                <tr>
+                    <td>@county.CountyName</td>
+                    <td>
+                        <ul>
+                            @foreach (var sub in county.SubCounties)
+                            {
+                                <li>@sub.SubCountyName</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@county.CountyID" class="btn btn-sm btn-primary">
+                            Edit
+                        </a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@county.CountyID" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Are you sure you want to delete @county.CountyName?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- 🔄 Pagination -->
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                <a class="page-link" asp-route-pageIndex="@(Model.PageIndex - 1)">Previous</a>
+            </li>
+            <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-route-pageIndex="@(Model.PageIndex + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
