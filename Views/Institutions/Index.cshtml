@@ -1,29 +1,56 @@
 ﻿@model IEnumerable<EduCoreSuite.Models.Institution>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Institutions";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Institutions</h1>
+    <a asp-action="Create" class="btn btn-primary">Create New Institution</a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.InstitutionID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.InstitutionID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.InstitutionID">Delete</a>
-            </td>
-        </tr>
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Institution Name</th>
+                    <th>Email</th>
+                    <th>Contact Number</th>
+                    <th>County</th>
+                    <th>Sub County</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.InstitutionName</td>
+                        <td>@item.Email</td>
+                        <td>@item.ContactNumber</td>
+                        <td>@(item.County?.CountyName ?? "N/A")</td>
+                        <td>@(item.SubCounty?.SubCountyName ?? "N/A")</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-route-id="@item.InstitutionID" class="btn btn-outline-info btn-sm">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.InstitutionID" class="btn btn-outline-primary btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.InstitutionID" class="btn btn-outline-danger btn-sm">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
-    </tbody>
-</table>
+else
+{
+    <div class="alert alert-info">
+        <h4>No institutions found</h4>
+        <p>There are currently no institutions in the system.</p>
+        <a asp-action="Create" class="btn btn-primary">Create the first institution</a>
+    </div>
+}
+
+<p class="text-muted">Total institutions: @ViewBag.InstitutionCount</p>

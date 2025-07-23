@@ -1,0 +1,173 @@
+﻿@page
+@model EduCoreSuite.Pages.InstitutionModel
+@{
+    ViewData["Title"] = "Manage Institutions";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<form method="post">
+    <input type="hidden" asp-for="Institution.InstitutionID" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label asp-for="Institution.InstitutionName" class="form-label">Institution Name</label>
+                <input asp-for="Institution.InstitutionName" class="form-control" />
+                <span asp-validation-for="Institution.InstitutionName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Institution.Email" class="form-label">Email</label>
+                <input asp-for="Institution.Email" class="form-control" type="email" />
+                <span asp-validation-for="Institution.Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Institution.ContactNumber" class="form-label">Contact Number</label>
+                <input asp-for="Institution.ContactNumber" class="form-control" />
+                <span asp-validation-for="Institution.ContactNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label asp-for="Institution.CountyID" class="form-label">County</label>
+                <select asp-for="Institution.CountyID"
+                        class="form-select"
+                        id="countySelect"
+                        asp-items="Model.Counties">
+                    <option value="">-- Select County --</option>
+                </select>
+                <span asp-validation-for="Institution.CountyID" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Institution.SubCountyID" class="form-label">Sub County</label>
+                <select asp-for="Institution.SubCountyID"
+                        class="form-select"
+                        id="subCountySelect"
+                        disabled>
+                    <option value="">-- First Select County --</option>
+                </select>
+                <span asp-validation-for="Institution.SubCountyID" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">
+            @(Model.Institution.InstitutionID == 0 ? "Create Institution" : "Update Institution")
+        </button>
+        @if (Model.Institution.InstitutionID != 0)
+        {
+            <a href="/Institution" class="btn btn-secondary">Cancel Edit</a>
+        }
+    </div>
+</form>
+
+<hr />
+
+<h3>Existing Institutions</h3>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Institution Name</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>County</th>
+                <th>Sub County</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var inst in Model.Institutions)
+            {
+                <tr>
+                    <td>@inst.InstitutionID</td>
+                    <td>@inst.InstitutionName</td>
+                    <td>@(inst.Email ?? "N/A")</td>
+                    <td>@(inst.ContactNumber ?? "N/A")</td>
+                    <td>@(inst.County?.CountyName ?? "Not Set")</td>
+                    <td>@(inst.SubCounty?.SubCountyName ?? "Not Set")</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <form method="post" asp-page-handler="Edit" class="d-inline">
+                                <input type="hidden" name="id" value="@inst.InstitutionID" />
+                                <button class="btn btn-sm btn-outline-primary" type="submit">Edit</button>
+                            </form>
+                            <form method="post" asp-page-handler="Delete" class="d-inline"
+                                  onsubmit="return confirm('Are you sure you want to delete @inst.InstitutionName?')">
+                                <input type="hidden" name="id" value="@inst.InstitutionID" />
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        // Handle County/SubCounty dependency
+        document.getElementById('countySelect').addEventListener('change', function() {
+            const countyId = this.value;
+            const subCountySelect = document.getElementById('subCountySelect');
+
+            // Clear and disable subcounty dropdown
+            subCountySelect.innerHTML = '<option value="">-- Loading... --</option>';
+            subCountySelect.disabled = true;
+
+            if (countyId) {
+                // Fetch subcounties for the selected county
+                fetch(`/Institution?handler=SubCounties&countyId=${countyId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        subCountySelect.innerHTML = '<option value="">-- Select Sub County --</option>';
+                        data.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.value;
+                            option.text = item.text;
+                            subCountySelect.appendChild(option);
+                        });
+                        subCountySelect.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error('Error loading sub counties:', error);
+                        subCountySelect.innerHTML = '<option value="">-- Error Loading --</option>';
+                    });
+            } else {
+                subCountySelect.innerHTML = '<option value="">-- First Select County --</option>';
+                subCountySelect.disabled = true;
+            }
+        });
+
+        // Trigger change event if county is already selected (for edit mode)
+        window.addEventListener('DOMContentLoaded', function() {
+            const countySelect = document.getElementById('countySelect');
+            if (countySelect.value) {
+                countySelect.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
+}

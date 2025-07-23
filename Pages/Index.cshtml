@@ -1,10 +1,28 @@
 ﻿@page
-@model IndexModel
+@model EduCoreSuite.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to EduCoreSuite</h1>
+    <p>Educational Core Management System</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h3>Institutions</h3>
+        <p>Manage educational institutions</p>
+        <p><a class="btn btn-primary" asp-page="/Institution">View Institutions &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h3>Counties</h3>
+        <p>Manage counties</p>
+        <p><a class="btn btn-primary" asp-page="/Counties/Index">View Counties &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h3>Sub Counties</h3>
+        <p>Manage sub counties</p>
+        <p><a class="btn btn-primary" asp-page="/SubCounties/Index">View Sub Counties &raquo;</a></p>
+    </div>
 </div>

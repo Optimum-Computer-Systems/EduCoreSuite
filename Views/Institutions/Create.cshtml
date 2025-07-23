@@ -1,28 +1,52 @@
 ﻿@model EduCoreSuite.Models.Institution
-
 @{
     ViewData["Title"] = "Create";
 }
-
-<h1>Create</h1>
-
-<h4>Institution</h4>
+<h1>Create Institution</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="InstitutionName" class="control-label"></label>
+                <input asp-for="InstitutionName" class="form-control" />
+                <span asp-validation-for="InstitutionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactNumber" class="control-label"></label>
+                <input asp-for="ContactNumber" class="form-control" />
+                <span asp-validation-for="ContactNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CountyID" class="control-label"></label>
+                <select asp-for="CountyID" class="form-control" asp-items="@(ViewData["CountyID"] as SelectList)">
+                    <option value="">-- Select County --</option>
+                </select>
+                <span asp-validation-for="CountyID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubCountyID" class="control-label"></label>
+                <select asp-for="SubCountyID" class="form-control" asp-items="@(ViewData["SubCountyID"] as SelectList)">
+                    <option value="">-- Select SubCounty --</option>
+                </select>
+                <span asp-validation-for="SubCountyID" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

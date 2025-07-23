@@ -1,20 +1,19 @@
 using EduCoreSuite.Data;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-// ?? Add services to the container
-builder.Services.AddRazorPages();
+// Register services
+builder.Services.AddRazorPages(); // Enables Razor Pages
+builder.Services.AddControllersWithViews(); // Enables MVC controllers and views
 
-// ? Register ApplicationDbContext with SQL Server connection
-
+// Register ApplicationDbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// ?? Configure the HTTP request pipeline
+// Configure middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -26,8 +25,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization(); // If you use authentication, add `app.UseAuthentication()` before this
+app.UseAuthorization(); // Add UseAuthentication() here if needed
 
+// Map Razor Pages first (so /Pages routes work)
 app.MapRazorPages();
+
+// Map MVC routes
+//app.MapControllerRoute(
+    //name: "default",
+    //pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
