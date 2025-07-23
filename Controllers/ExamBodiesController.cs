@@ -20,9 +20,32 @@ namespace EduCoreSuite.Controllers
         }
 
         // GET: ExamBodies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string countryFilter)
         {
-            return View(await _context.ExamBodies.ToListAsync());
+            var examBodiesQuery = _context.ExamBodies.AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                examBodiesQuery = examBodiesQuery.Where(eb => 
+                    eb.Name.Contains(searchTerm) ||
+                    (eb.Description != null && eb.Description.Contains(searchTerm)) ||
+                    (eb.Country != null && eb.Country.Contains(searchTerm)));
+            }
+
+            // Apply country filter
+            if (!string.IsNullOrWhiteSpace(countryFilter))
+            {
+                examBodiesQuery = examBodiesQuery.Where(eb => eb.Country == countryFilter);
+            }
+
+            var examBodies = await examBodiesQuery.OrderBy(eb => eb.Name).ToListAsync();
+            
+            // Pass filters to view
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.CountryFilter = countryFilter;
+            
+            return View(examBodies);
         }
 
         // GET: ExamBodies/Details/5
@@ -181,5 +204,7 @@ namespace EduCoreSuite.Controllers
 
             return Json(new { isValid = !isDuplicate, message = isDuplicate ? "An exam body with this name already exists." : "" });
         }
+
+
     }
 }

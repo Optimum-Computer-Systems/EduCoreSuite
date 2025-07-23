@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using EduCoreSuite.Data;
+using OfficeOpenXml;
+
+// Configure EPPlus license context
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,7 @@ builder.Services.AddControllersWithViews();
 
 // Register application services
 builder.Services.AddScoped<EduCoreSuite.Services.ActivityService>();
+builder.Services.AddScoped<EduCoreSuite.Services.ExportService>();
 
 var app = builder.Build();
 

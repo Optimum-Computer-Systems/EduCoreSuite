@@ -20,9 +20,24 @@ namespace EduCoreSuite.Controllers
         }
 
         // GET: StudyModes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm)
         {
-            return View(await _context.StudyModes.ToListAsync());
+            var studyModesQuery = _context.StudyModes.AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                studyModesQuery = studyModesQuery.Where(sm => 
+                    sm.Name.Contains(searchTerm) ||
+                    (sm.Description != null && sm.Description.Contains(searchTerm)));
+            }
+
+            var studyModes = await studyModesQuery.OrderBy(sm => sm.Name).ToListAsync();
+            
+            // Pass search term to view
+            ViewBag.SearchTerm = searchTerm;
+            
+            return View(studyModes);
         }
 
         // GET: StudyModes/Details/5

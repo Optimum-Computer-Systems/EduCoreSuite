@@ -4,84 +4,237 @@
     ViewData["Title"] = "Create Programme";
 }
 
-<h1>Create Programme</h1>
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Create New Programme</h1>
+            <p class="text-muted mb-0">Add a new academic programme to your department</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Programmes
+        </a>
+    </div>
 
-<hr />
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-graduation-cap me-2"></i>Programme Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" id="programmeForm">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row">
+                            <!-- Basic Information -->
+                            <div class="col-lg-6">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>Basic Information
+                                </h6>
+                                
+                                <div class="form-group mb-4">
+                                    <label asp-for="Name" class="form-label fw-bold">
+                                        <i class="fas fa-tag me-1"></i>Programme Name
+                                    </label>
+                                    <input asp-for="Name" class="form-control form-control-lg" 
+                                           placeholder="e.g., Bachelor of Computer Science, Diploma in Business" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Enter the full official programme name
+                                    </div>
+                                </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                                <div class="form-group mb-4">
+                                    <label asp-for="Code" class="form-label fw-bold">
+                                        <i class="fas fa-code me-1"></i>Programme Code
+                                    </label>
+                                    <input asp-for="Code" class="form-control form-control-lg" 
+                                           placeholder="e.g., BCS, DBA, MIT" style="text-transform: uppercase;" />
+                                    <span asp-validation-for="Code" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Short code for identification (2-5 characters)
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="Level" class="form-label fw-bold">
+                                        <i class="fas fa-layer-group me-1"></i>Academic Level
+                                    </label>
+                                    <select asp-for="Level" class="form-select form-select-lg">
+                                        @foreach (var level in Enum.GetValues(typeof(EduCoreSuite.Models.AcademicLevel)))
+                                        {
+                                            <option value="@((int)level)">@level</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Level" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Select the appropriate academic level
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="DepartmentID" class="form-label fw-bold">
+                                        <i class="fas fa-sitemap me-1"></i>Department
+                                    </label>
+                                    <select asp-for="DepartmentID" class="form-select form-select-lg" asp-items="ViewBag.DepartmentID">
+                                        <option value="">-- Select Department --</option>
+                                    </select>
+                                    <span asp-validation-for="DepartmentID" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Choose the department this programme belongs to
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Programme Structure -->
+                            <div class="col-lg-6">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-cogs me-2"></i>Programme Structure
+                                </h6>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group mb-4">
+                                            <label asp-for="DurationYears" class="form-label fw-bold">
+                                                <i class="fas fa-clock me-1"></i>Duration (Years)
+                                            </label>
+                                            <input asp-for="DurationYears" type="number" min="1" max="10" 
+                                                   class="form-control form-control-lg" placeholder="e.g., 3" />
+                                            <span asp-validation-for="DurationYears" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group mb-4">
+                                            <label asp-for="SemestersPerYear" class="form-label fw-bold">
+                                                <i class="fas fa-calendar me-1"></i>Semesters/Year
+                                            </label>
+                                            <input asp-for="SemestersPerYear" type="number" min="1" max="4" 
+                                                   class="form-control form-control-lg" placeholder="e.g., 2" />
+                                            <span asp-validation-for="SemestersPerYear" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h6 class="text-muted mb-3 mt-4">
+                                    <i class="fas fa-certificate me-2"></i>Accreditation Information
+                                </h6>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="AccreditedBy" class="form-label fw-bold">
+                                        <i class="fas fa-award me-1"></i>Accredited By
+                                        <span class="text-muted fw-normal">(Optional)</span>
+                                    </label>
+                                    <input asp-for="AccreditedBy" class="form-control" 
+                                           placeholder="e.g., Commission for University Education, KNEC" />
+                                    <span asp-validation-for="AccreditedBy" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Name of the accrediting body
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="AccreditationDate" class="form-label fw-bold">
+                                        <i class="fas fa-calendar-check me-1"></i>Accreditation Date
+                                        <span class="text-muted fw-normal">(Optional)</span>
+                                    </label>
+                                    <input asp-for="AccreditationDate" type="date" class="form-control" />
+                                    <span asp-validation-for="AccreditationDate" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Date when accreditation was granted
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <div class="form-check form-switch">
+                                        <input asp-for="IsActive" class="form-check-input" role="switch" id="isActiveSwitch" />
+                                        <label class="form-check-label fw-bold" for="isActiveSwitch">
+                                            <i class="fas fa-toggle-on me-1"></i>Programme Status
+                                        </label>
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Active programmes can accept new students
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <i class="fas fa-save me-2"></i>Create Programme
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="Level" class="control-label"></label>
-                <select asp-for="Level" class="form-control">
-                    @foreach (var level in Enum.GetValues(typeof(EduCoreSuite.Models.AcademicLevel)))
-                    {
-                        <option value="@((int)level)">@level</option>
-                    }
-                </select>
-                <span asp-validation-for="Level" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="AccreditedBy" class="control-label"></label>
-                <input asp-for="AccreditedBy" class="form-control" />
-                <span asp-validation-for="AccreditedBy" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="AccreditationDate" class="control-label"></label>
-                <input asp-for="AccreditationDate" type="date" class="form-control" />
-                <span asp-validation-for="AccreditationDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="DurationYears" class="control-label"></label>
-                <input asp-for="DurationYears" type="number" class="form-control" />
-                <span asp-validation-for="DurationYears" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="SemestersPerYear" class="control-label"></label>
-                <input asp-for="SemestersPerYear" type="number" class="form-control" />
-                <span asp-validation-for="SemestersPerYear" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3 form-check">
-                <input asp-for="IsActive" class="form-check-input" />
-                <label asp-for="IsActive" class="form-check-label"></label>
-            </div>
-
-            <div class="form-group mb-4">
-                <label asp-for="DepartmentID" class="control-label"></label>
-                <select asp-for="DepartmentID" class="form-control" asp-items="ViewBag.DepartmentID">
-                    <option value="">-- Select Department --</option>
-                </select>
-                <span asp-validation-for="DepartmentID" class="text-danger"></span>
-            </div>
-
-            <div class="form-group text-end">
-                <button type="submit" class="btn btn-primary px-4">Create</button>
-                <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
+<style>
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #bac8f3;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.form-label {
+    color: #5a5c69;
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.is-invalid {
+    border-color: #e74a3b;
+}
+
+.is-valid {
+    border-color: #1cc88a;
+}
+
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.form-check-input:checked {
+    background-color: #1cc88a;
+    border-color: #1cc88a;
+}
+</style>
 
 @section Scripts {
     @{

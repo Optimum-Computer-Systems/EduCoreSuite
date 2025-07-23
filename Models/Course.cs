@@ -14,6 +14,12 @@ namespace EduCoreSuite.Models
         [Display(Name = "Course Name")]
         public string CourseName { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Course code is required")]
+        [StringLength(20, ErrorMessage = "Course code cannot exceed 20 characters")]
+        [RegularExpression(@"^[A-Z][A-Z0-9]*$", ErrorMessage = "Please enter a valid course code (e.g., CS101, BUS200)")]
+        [Display(Name = "Course Code")]
+        public string CourseCode { get; set; } = string.Empty;
+
         // Foreign Keys & Navigation Properties
         [Display(Name = "Department")]
         public int DepartmentID { get; set; }
@@ -38,6 +44,14 @@ namespace EduCoreSuite.Models
         [Display(Name = "Study Mode")]
         public int StudyModeID { get; set; }
         public StudyMode? StudyMode { get; set; }
+
+        [Display(Name = "Duration (Months)")]
+        [Range(1, 120, ErrorMessage = "Duration must be between 1 and 120 months")]
+        public int Duration { get; set; } = 12;
+
+        [Display(Name = "Credits")]
+        [Range(1, 200, ErrorMessage = "Credits must be between 1 and 200")]
+        public int Credits { get; set; } = 3;
 
         public Course() { }
     }

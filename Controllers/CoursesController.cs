@@ -12,7 +12,11 @@ namespace EduCoreSuite.Controllers
     public class CoursesController : Controller
     {
         private readonly ForgeDBContext _context;
-        public CoursesController(ForgeDBContext context) => _context = context;
+        
+        public CoursesController(ForgeDBContext context)
+        {
+            _context = context;
+        }
 
         // GET: Courses
         public async Task<IActionResult> Index(string departmentSearch = "", string courseSearch = "", int page = 1)
@@ -245,5 +249,7 @@ namespace EduCoreSuite.Controllers
                 
             return Json(new { level = programme.Level.ToString() });
         }
+
+
     }
 }

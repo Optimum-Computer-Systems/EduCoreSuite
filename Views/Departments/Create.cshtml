@@ -4,60 +4,197 @@
     ViewData["Title"] = "Create Department";
 }
 
-<h1>@ViewData["Title"]</h1>
-<hr />
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Create New Department</h1>
+            <p class="text-muted mb-0">Add a new academic department to organize programmes and staff</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Departments
+        </a>
+    </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            @Html.AntiForgeryToken()
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-sitemap me-2"></i>Department Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" id="departmentForm">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="row">
+                            <!-- Basic Information -->
+                            <div class="col-lg-6">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>Basic Information
+                                </h6>
+                                
+                                <div class="form-group mb-4">
+                                    <label asp-for="Name" class="form-label fw-bold">
+                                        <i class="fas fa-tag me-1"></i>Department Name
+                                    </label>
+                                    <input asp-for="Name" class="form-control form-control-lg" 
+                                           placeholder="e.g., Computer Science, Business Administration" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Enter a professional department name
+                                    </div>
+                                </div>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" placeholder="e.g. Computer Science" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                                <div class="form-group mb-4">
+                                    <label asp-for="Code" class="form-label fw-bold">
+                                        <i class="fas fa-code me-1"></i>Department Code
+                                    </label>
+                                    <input asp-for="Code" class="form-control form-control-lg" 
+                                           placeholder="e.g., CS, BUS, IT" style="text-transform: uppercase;" />
+                                    <span asp-validation-for="Code" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Short code for identification (2-5 characters)
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="Description" class="form-label fw-bold">
+                                        <i class="fas fa-align-left me-1"></i>Description
+                                        <span class="text-muted fw-normal">(Optional)</span>
+                                    </label>
+                                    <textarea asp-for="Description" class="form-control" rows="4"
+                                              placeholder="Provide a brief description of the department's focus areas and objectives..."></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Optional description to help identify the department's academic focus
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Organizational Information -->
+                            <div class="col-lg-6">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-university me-2"></i>Organizational Structure
+                                </h6>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="FacultyID" class="form-label fw-bold">
+                                        <i class="fas fa-building me-1"></i>Parent Faculty
+                                    </label>
+                                    <select asp-for="FacultyID" class="form-select form-select-lg" asp-items="ViewBag.FacultyID">
+                                        <option value="">-- Select Parent Faculty --</option>
+                                    </select>
+                                    <span asp-validation-for="FacultyID" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Choose the faculty this department belongs to
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-users me-1"></i>Department Heads
+                                        <span class="text-muted fw-normal">(Optional)</span>
+                                    </label>
+                                    <select name="selectedStaff" class="form-select" asp-items="ViewBag.StaffList" multiple size="5">
+                                    </select>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Hold Ctrl/Cmd to select multiple staff members as department heads
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <div class="form-check form-switch">
+                                        <input asp-for="IsActive" class="form-check-input" role="switch" id="isActiveSwitch" />
+                                        <label class="form-check-label fw-bold" for="isActiveSwitch">
+                                            <i class="fas fa-toggle-on me-1"></i>Department Status
+                                        </label>
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Active departments can accept new programmes and students
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <i class="fas fa-save me-2"></i>Create Department
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" placeholder="e.g. CS" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Optional description"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="FacultyID" class="control-label">Faculty</label>
-                <select asp-for="FacultyID" class="form-control" asp-items="ViewBag.FacultyID">
-                    <option value="">-- Select Faculty --</option>
-                </select>
-                <span asp-validation-for="FacultyID" class="text-danger"></span>
-            </div>
-
-            <div class="form-group form-check">
-                <input asp-for="IsActive" class="form-check-input" />
-                <label asp-for="IsActive" class="form-check-label">Active</label>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">Department Heads</label>
-                <select name="selectedStaff" class="form-control" asp-items="ViewBag.StaffList" multiple size="5"></select>
-                <small class="form-text text-muted">Assign one or more heads</small>
-            </div>
-
-            <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary">Create</button>
-                <a asp-action="Index" class="btn btn-secondary ml-2">Cancel</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<style>
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #bac8f3;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.form-label {
+    color: #5a5c69;
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.is-invalid {
+    border-color: #e74a3b;
+}
+
+.is-valid {
+    border-color: #1cc88a;
+}
+
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.form-check-input:checked {
+    background-color: #1cc88a;
+    border-color: #1cc88a;
+}
+
+.form-select[multiple] {
+    min-height: 120px;
+}
+</style>
 
 @section Scripts {
     @{
