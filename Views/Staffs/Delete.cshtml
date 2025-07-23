@@ -4,31 +4,233 @@
     ViewData["Title"] = "Delete Staff";
 }
 
-<h1>Delete Staff</h1>
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Delete Staff Member</h1>
+            <p class="text-muted mb-0">Confirm deletion of this staff member and all associated data</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </a>
+    </div>
 
-<h3>Are you sure you want to delete this staff record?</h3>
+    <!-- Warning Alert -->
+    <div class="alert alert-danger" role="alert">
+        <h5 class="alert-heading">
+            <i class="fas fa-exclamation-triangle me-2"></i>Warning: Permanent Deletion
+        </h5>
+        <p class="mb-0">
+            Are you sure you want to delete this staff member? This action cannot be undone and will affect:
+        </p>
+        <ul class="mt-2 mb-0">
+            <li><strong>@(Model.DepartmentsLed?.Count ?? 0)</strong> department leadership assignment@(Model.DepartmentsLed?.Count == 1 ? "" : "s")</li>
+            <li>All associated academic records and relationships</li>
+            <li>Historical data and reports</li>
+            <li>Contact information and profile data</li>
+        </ul>
+    </div>
 
-<div>
-    <h4>Staff Details</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.FullName)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.FullName)</dd>
+    <!-- Staff Information Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user me-2"></i>Staff Member to be Deleted
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="info-section mb-4">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Full Name:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="text-danger fw-bold fs-5">@Model.FullName</span>
+                                        @if (!string.IsNullOrEmpty(Model.Title))
+                                        {
+                                            <span class="badge bg-info ms-2">@Model.Title</span>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Staff Number:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (!string.IsNullOrEmpty(Model.StaffNumber))
+                                        {
+                                            <span class="badge bg-secondary fs-6">@Model.StaffNumber</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">No staff number assigned</span>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Role/Position:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="badge bg-primary fs-6">@Model.Role</span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Contact Information:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="text-muted fst-italic">Contact details not configured for staff members</span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Current Status:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (!Model.IsDeleted)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Title)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Title)</dd>
+                            <!-- Impact Summary -->
+                            <div class="alert alert-warning" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-chart-bar me-2"></i>Deletion Impact Summary
+                                </h6>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="fw-bold text-danger fs-4">@(Model.DepartmentsLed?.Count ?? 0)</div>
+                                        <small>Department leadership role@(Model.DepartmentsLed?.Count == 1 ? "" : "s") will be removed</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-danger fs-4">
+                                            <i class="fas fa-user-times"></i>
+                                        </div>
+                                        <small>Staff profile will be deleted</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-danger fs-4">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <small>Permanent deletion</small>
+                                    </div>
+                                </div>
+                            </div>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.StaffNumber)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.StaffNumber)</dd>
-
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Role)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Role)</dd>
-    </dl>
-
-    <form asp-action="Delete" method="post">
-        @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="StaffID" />
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </form>
+                            <!-- Affected Departments -->
+                            @if (Model.DepartmentsLed?.Any() == true)
+                            {
+                                <div class="mt-4">
+                                    <h6 class="text-muted mb-3">
+                                        <i class="fas fa-sitemap me-2"></i>Department leadership roles that will be removed:
+                                    </h6>
+                                    <div class="row">
+                                        @foreach (var department in Model.DepartmentsLed)
+                                        {
+                                            <div class="col-md-6 mb-2">
+                                                <div class="card border-warning">
+                                                    <div class="card-body py-2">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="text-warning mb-0">@department.Name</h6>
+                                                                <small class="text-muted">Code: @department.Code</small>
+                                                                @if (department.Faculty != null)
+                                                                {
+                                                                    <div class="small text-muted">Faculty: @department.Faculty.Name</div>
+                                                                }
+                                                            </div>
+                                                            <span class="badge bg-warning text-dark">
+                                                                Department Head
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <form asp-action="Delete" method="post" class="d-flex justify-content-between align-items-center">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="StaffID" />
+                        
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        
+                        <button type="submit" class="btn btn-danger btn-lg" 
+                                onclick="return confirm('This will permanently delete the staff member and remove all department leadership assignments. Are you absolutely sure?')">
+                            <i class="fas fa-trash me-2"></i>Yes, Delete Staff Member
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.info-section hr {
+    border-color: #e3e6f0;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.border-warning {
+    border-color: #ffc107 !important;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+</style>

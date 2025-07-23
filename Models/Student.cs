@@ -28,6 +28,10 @@ namespace EduCoreSuite.Models
         // ----------- Contact Info -----------
         [Required, RegularExpression(@"^(\+?\d{10,13})$")] public string PrimaryPhone { get; set; } = string.Empty;
         [Required, RegularExpression(@"^(\+?\d{10,13})$")] public string AltPhone { get; set; } = string.Empty;
+        
+        // Additional property for compatibility with reports
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber => PrimaryPhone; // Computed property for reports
         [Required, RegularExpression(@"^\d{5}$")] public string PostalCode { get; set; } = string.Empty;
 
         // Foreign keys
@@ -63,5 +67,10 @@ namespace EduCoreSuite.Models
 
         [Required, RegularExpression(@"^(1st Year|2nd Year|3rd Year|4th Year)$")]
         public string Year { get; set; } = string.Empty;
+        
+        // Additional properties for tracking
+        [Display(Name = "Admission Date")]
+        [DataType(DataType.Date)]
+        public DateTime? AdmissionDate { get; set; } = DateTime.Now;
     }
 }

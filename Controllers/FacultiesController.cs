@@ -10,11 +10,32 @@ namespace EduCoreSuite.Controllers
     public class FacultiesController : Controller
     {
         private readonly ForgeDBContext _context;
-        public FacultiesController(ForgeDBContext context) => _context = context;
+        
+        public FacultiesController(ForgeDBContext context)
+        {
+            _context = context;
+        }
 
         // GET: Faculties
-        public async Task<IActionResult> Index()
-            => View(await _context.Faculties.ToListAsync());
+        public async Task<IActionResult> Index(string searchTerm)
+        {
+            var facultiesQuery = _context.Faculties.AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                facultiesQuery = facultiesQuery.Where(f => 
+                    f.Name.Contains(searchTerm) ||
+                    (f.Description != null && f.Description.Contains(searchTerm)));
+            }
+
+            var faculties = await facultiesQuery.OrderBy(f => f.Name).ToListAsync();
+            
+            // Pass search term to view
+            ViewBag.SearchTerm = searchTerm;
+            
+            return View(faculties);
+        }
 
         // GET: Faculties/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -132,5 +153,7 @@ namespace EduCoreSuite.Controllers
 
             return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A faculty with this name already exists." : "" });
         }
+
+
     }
 }

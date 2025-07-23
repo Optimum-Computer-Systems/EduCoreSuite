@@ -4,57 +4,221 @@
     ViewData["Title"] = "Create Staff";
 }
 
-<h1>Create Staff</h1>
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Add New Staff Member</h1>
+            <p class="text-muted mb-0">Create a new staff member profile with role and contact information</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Staff
+        </a>
+    </div>
 
-<h4>Staff</h4>
-<hr />
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-plus me-2"></i>Staff Member Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" id="staffForm">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post">
-            @Html.AntiForgeryToken()
+                        <div class="row">
+                            <!-- Personal Information -->
+                            <div class="col-lg-6">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-user me-2"></i>Personal Information
+                                </h6>
+                                
+                                <div class="form-group mb-4">
+                                    <label asp-for="FullName" class="form-label fw-bold">
+                                        <i class="fas fa-id-card me-1"></i>Full Name
+                                    </label>
+                                    <input asp-for="FullName" class="form-control form-control-lg" 
+                                           placeholder="e.g., Dr. John Smith, Prof. Mary Johnson" />
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Enter the complete name including titles if applicable
+                                    </div>
+                                </div>
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group mb-4">
+                                    <label asp-for="Title" class="form-label fw-bold">
+                                        <i class="fas fa-graduation-cap me-1"></i>Academic Title
+                                        <span class="text-muted fw-normal">(Optional)</span>
+                                    </label>
+                                    <input asp-for="Title" class="form-control" 
+                                           placeholder="e.g., Dr., Prof., Mr., Ms." />
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Academic or professional title
+                                    </div>
+                                </div>
 
-            <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
+                                <div class="form-group mb-4">
+                                    <label asp-for="StaffNumber" class="form-label fw-bold">
+                                        <i class="fas fa-hashtag me-1"></i>Staff Number
+                                        <span class="text-muted fw-normal">(Optional)</span>
+                                    </label>
+                                    <input asp-for="StaffNumber" class="form-control" 
+                                           placeholder="e.g., EMP001, STAFF/2024/001" />
+                                    <span asp-validation-for="StaffNumber" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Unique institutional staff identifier
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="Role" class="form-label fw-bold">
+                                        <i class="fas fa-briefcase me-1"></i>Role/Position
+                                    </label>
+                                    <select asp-for="Role" class="form-select form-select-lg">
+                                        <option value="">-- Select Role --</option>
+                                        <option value="Professor">Professor</option>
+                                        <option value="Associate Professor">Associate Professor</option>
+                                        <option value="Assistant Professor">Assistant Professor</option>
+                                        <option value="Senior Lecturer">Senior Lecturer</option>
+                                        <option value="Lecturer">Lecturer</option>
+                                        <option value="Assistant Lecturer">Assistant Lecturer</option>
+                                        <option value="Teaching Assistant">Teaching Assistant</option>
+                                        <option value="Department Head">Department Head</option>
+                                        <option value="Dean">Dean</option>
+                                        <option value="Administrator">Administrator</option>
+                                        <option value="Support Staff">Support Staff</option>
+                                        <option value="Research Assistant">Research Assistant</option>
+                                        <option value="Lab Technician">Lab Technician</option>
+                                        <option value="Librarian">Librarian</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <span asp-validation-for="Role" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Select the primary role or position
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact & System Information -->
+                            <div class="col-lg-6">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-address-book me-2"></i>Contact Information
+                                </h6>
+
+
+
+                                <h6 class="text-muted mb-3 mt-4">
+                                    <i class="fas fa-sitemap me-2"></i>Department Assignment
+                                </h6>
+
+                                <div class="form-group mb-4">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-building me-1"></i>Department Leadership
+                                        <span class="text-muted fw-normal">(Optional)</span>
+                                    </label>
+                                    <select name="selectedDepartments" class="form-select" multiple size="5">
+                                        @foreach (var dept in ViewBag.Departments as SelectList ?? new SelectList(new List<object>()))
+                                        {
+                                            <option value="@dept.Value">@dept.Text</option>
+                                        }
+                                    </select>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Hold Ctrl/Cmd to select multiple departments this staff member will lead
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-warning" role="alert">
+                                    <h6 class="alert-heading">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>Note about Staff Status
+                                    </h6>
+                                    <p class="mb-0 small">
+                                        New staff members are created as <strong>Active</strong> by default. 
+                                        You can change their status later through the edit function if needed.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <i class="fas fa-save me-2"></i>Create Staff Member
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="StaffNumber" class="control-label"></label>
-                <input asp-for="StaffNumber" class="form-control" />
-                <span asp-validation-for="StaffNumber" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                <input asp-for="Role" class="form-control" />
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-
-       
-
-            <!-- Optional: Soft-delete flag -->
-            <div class="form-group form-check">
-                <input asp-for="IsDeleted" class="form-check-input" />
-                <label asp-for="IsDeleted" class="form-check-label"></label>
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Create</button>
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<style>
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #bac8f3;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.form-label {
+    color: #5a5c69;
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.is-invalid {
+    border-color: #e74a3b;
+}
+
+.is-valid {
+    border-color: #1cc88a;
+}
+
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.form-select[multiple] {
+    min-height: 120px;
+}
+</style>
 
 @section Scripts {
     @{

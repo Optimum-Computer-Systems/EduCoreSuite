@@ -23,7 +23,11 @@ namespace EduCoreSuite.Data
         public DbSet<StudyStatus> StudyStatuses { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Staff> Staff { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<SystemActivity> Activities { get; set; }
+        
+        // Alias for backward compatibility
+        public DbSet<SystemActivity> SystemActivities => Activities;
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
@@ -42,6 +46,7 @@ namespace EduCoreSuite.Data
             mb.Entity<StudyStatus>().ToTable("StudyStatuses");
             mb.Entity<Faculty>().ToTable("Faculties");
             mb.Entity<Staff>().ToTable("Staff");
+            mb.Entity<Enrollment>().ToTable("Enrollments");
             mb.Entity<SystemActivity>().ToTable("Activities");
 
             // Seed reference data

@@ -20,13 +20,61 @@ namespace EduCoreSuite.Controllers
         }
 
         // GET: Departments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string facultyFilter, bool? statusFilter, int page = 1, int pageSize = 20)
         {
-            var departments = await _context.Departments
+            var departmentsQuery = _context.Departments
                 .Include(d => d.Faculty)
                 .Include(d => d.DepartmentHeads)
                 .Where(d => !d.IsDeleted)
+                .AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                departmentsQuery = departmentsQuery.Where(d => 
+                    d.Name.Contains(searchTerm) ||
+                    d.Code.Contains(searchTerm) ||
+                    (d.Description != null && d.Description.Contains(searchTerm)) ||
+                    d.Faculty.Name.Contains(searchTerm));
+            }
+
+            // Apply faculty filter
+            if (!string.IsNullOrWhiteSpace(facultyFilter))
+            {
+                departmentsQuery = departmentsQuery.Where(d => d.Faculty.Name == facultyFilter);
+            }
+
+            // Apply status filter
+            if (statusFilter.HasValue)
+            {
+                departmentsQuery = departmentsQuery.Where(d => d.IsActive == statusFilter.Value);
+            }
+
+            // Get total count for pagination
+            var totalDepartments = await departmentsQuery.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalDepartments / (double)pageSize);
+
+            // Apply pagination
+            var departments = await departmentsQuery
+                .OrderBy(d => d.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            // Populate filter dropdowns
+            ViewBag.Faculties = new SelectList(
+                await _context.Faculties.Select(f => f.Name).Distinct().OrderBy(f => f).ToListAsync(),
+                facultyFilter);
+
+            // Pagination and filter data
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.FacultyFilter = facultyFilter;
+            ViewBag.StatusFilter = statusFilter;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.TotalDepartments = totalDepartments;
+            ViewBag.PageSize = pageSize;
+
             return View(departments);
         }
 
@@ -190,6 +238,8 @@ namespace EduCoreSuite.Controllers
             ViewData["FacultyID"] = new SelectList(_context.Faculties, "FacultyID", "Name", facultyId);
             ViewData["StaffList"] = new MultiSelectList(_context.Staff, "StaffID", "FullName", staffIds);
         }
+
+        
 
         // AJAX endpoints for real-time duplicate checking
         [HttpGet]

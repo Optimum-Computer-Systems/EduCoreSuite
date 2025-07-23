@@ -1,58 +1,257 @@
 ﻿@model EduCoreSuite.Models.Department
 
 @{
-    ViewData["Title"] = "Create Department";
+    ViewData["Title"] = "Delete Department";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Delete Department</h1>
+            <p class="text-muted mb-0">Confirm deletion of this department and all associated data</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </a>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Code"></label>
-        <input asp-for="Code" class="form-control" />
-        <span asp-validation-for="Code" class="text-danger"></span>
+    <!-- Warning Alert -->
+    <div class="alert alert-danger" role="alert">
+        <h5 class="alert-heading">
+            <i class="fas fa-exclamation-triangle me-2"></i>Warning: Permanent Deletion
+        </h5>
+        <p class="mb-0">
+            Are you sure you want to delete this department? This action cannot be undone and will affect:
+        </p>
+        <ul class="mt-2 mb-0">
+            <li><strong>@(Model.Programmes?.Count ?? 0)</strong> associated programme@(Model.Programmes?.Count == 1 ? "" : "s")</li>
+            <li><strong>@(Model.DepartmentHeads?.Count ?? 0)</strong> department head assignment@(Model.DepartmentHeads?.Count == 1 ? "" : "s")</li>
+            <li>All related academic records and relationships</li>
+        </ul>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
+    <!-- Department Information Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-sitemap me-2"></i>Department to be Deleted
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="info-section mb-4">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Department Name:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="text-danger fw-bold fs-5">@Model.Name</span>
+                                        <span class="badge bg-secondary ms-2">@Model.Code</span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Parent Faculty:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (Model.Faculty != null)
+                                        {
+                                            <span class="text-info fw-bold">@Model.Faculty.Name</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">No faculty assigned</span>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Description:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (!string.IsNullOrEmpty(Model.Description))
+                                        {
+                                            <span>@Model.Description</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">No description provided</span>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Status:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (Model.IsActive)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Impact Summary -->
+                            <div class="alert alert-warning" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-chart-bar me-2"></i>Deletion Impact Summary
+                                </h6>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="fw-bold text-danger fs-4">@(Model.Programmes?.Count ?? 0)</div>
+                                        <small>Programme@(Model.Programmes?.Count == 1 ? "" : "s") will be deleted</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-danger fs-4">@(Model.DepartmentHeads?.Count ?? 0)</div>
+                                        <small>Staff assignment@(Model.DepartmentHeads?.Count == 1 ? "" : "s") will be removed</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-danger fs-4">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <small>Permanent deletion</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Affected Programmes -->
+                            @if (Model.Programmes?.Any() == true)
+                            {
+                                <div class="mt-4">
+                                    <h6 class="text-muted mb-3">
+                                        <i class="fas fa-graduation-cap me-2"></i>Programmes that will be deleted:
+                                    </h6>
+                                    <div class="row">
+                                        @foreach (var programme in Model.Programmes)
+                                        {
+                                            <div class="col-md-6 mb-2">
+                                                <div class="card border-danger">
+                                                    <div class="card-body py-2">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="text-danger mb-0">@programme.Name</h6>
+                                                                <small class="text-muted">Code: @programme.Code</small>
+                                                            </div>
+                                                            <span class="badge bg-danger">
+                                                                @programme.Level
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- Affected Staff -->
+                            @if (Model.DepartmentHeads?.Any() == true)
+                            {
+                                <div class="mt-4">
+                                    <h6 class="text-muted mb-3">
+                                        <i class="fas fa-users me-2"></i>Staff assignments that will be removed:
+                                    </h6>
+                                    <div class="row">
+                                        @foreach (var head in Model.DepartmentHeads)
+                                        {
+                                            <div class="col-md-6 mb-2">
+                                                <div class="card border-warning">
+                                                    <div class="card-body py-2">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <h6 class="text-warning mb-0">@head.FullName</h6>
+                                                                <small class="text-muted">@head.Role</small>
+                                                            </div>
+                                                            <span class="badge bg-warning text-dark">
+                                                                Department Head
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <form asp-action="Delete" class="d-flex justify-content-between align-items-center">
+                        <input type="hidden" asp-for="DepartmentID" />
+                        
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        
+                        <button type="submit" class="btn btn-danger btn-lg" 
+                                onclick="return confirm('This will permanently delete the department and all associated programmes and staff assignments. Are you absolutely sure?')">
+                            <i class="fas fa-trash me-2"></i>Yes, Delete Department
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="FacultyID"></label>
-        <select asp-for="FacultyID" class="form-control" asp-items="ViewBag.FacultyID">
-            <option value="">-- Select Faculty --</option>
-        </select>
-        <span asp-validation-for="FacultyID" class="text-danger"></span>
-    </div>
-
-    <div class="form-group form-check">
-        <input asp-for="IsActive" class="form-check-input" />
-        <label asp-for="IsActive" class="form-check-label">Active?</label>
-    </div>
-
-    <div class="form-group">
-        <label>Department Heads</label>
-        <select name="selectedStaff" class="form-control" asp-items="ViewBag.StaffList" multiple size="5"></select>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-action="Index" class="btn btn-secondary ml-2">Cancel</a>
-</form>
-
- 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+<style>
+.text-gray-800 {
+    color: #5a5c69 !important;
 }
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.info-section hr {
+    border-color: #e3e6f0;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.border-danger {
+    border-color: #dc3545 !important;
+}
+
+.border-warning {
+    border-color: #ffc107 !important;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+</style>

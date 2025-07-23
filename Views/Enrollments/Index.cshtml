@@ -1,0 +1,256 @@
+@model IEnumerable<EduCoreSuite.Models.Enrollment>
+
+@{
+    ViewData["Title"] = "Student Enrollments";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-user-graduate me-2"></i>Student Enrollments
+        </h1>
+        <div>
+            <a asp-action="Create" class="btn btn-primary btn-sm shadow-sm">
+                <i class="fas fa-plus me-1"></i>New Enrollment
+            </a>
+            <a asp-action="BulkEnroll" class="btn btn-success btn-sm shadow-sm">
+                <i class="fas fa-users me-1"></i>Bulk Enroll
+            </a>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" 
+                               class="form-control" placeholder="Search by student, course..." />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <select name="statusFilter" class="form-select">
+                        <option value="">All Statuses</option>
+                        @foreach (var status in ViewBag.StatusOptions as SelectList)
+                        {
+                            <option value="@status.Value" selected="@status.Selected">@status.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="courseFilter" class="form-select">
+                        <option value="">All Courses</option>
+                        @foreach (var course in ViewBag.Courses as SelectList)
+                        {
+                            <option value="@course.Value" selected="@course.Selected">@course.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="studentFilter" class="form-select">
+                        <option value="">All Students</option>
+                        @foreach (var student in ViewBag.Students as SelectList)
+                        {
+                            <option value="@student.Value" selected="@student.Selected">@student.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Results and Clear Filters -->
+            @if (!string.IsNullOrEmpty(ViewBag.SearchTerm as string) || 
+                 !string.IsNullOrEmpty(ViewBag.StatusFilter as string) || 
+                 !string.IsNullOrEmpty(ViewBag.CourseFilter as string) ||
+                 !string.IsNullOrEmpty(ViewBag.StudentFilter as string))
+            {
+                <div class="mt-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-info">@ViewBag.TotalEnrollments results found</span>
+                    </div>
+                    <a href="@Url.Action("Index")" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i>Clear All Filters
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Enrollments Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Enrollment Records</h6>
+            <div>
+                <!-- Export functionality removed -->
+            </div>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Course</th>
+                                <th>Department</th>
+                                <th>Enrollment Date</th>
+                                <th>Status</th>
+                                <th>Grade</th>
+                                <th>Score</th>
+                                <th>Academic Year</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var enrollment in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm me-2">
+                                                <div class="avatar-initial bg-primary rounded-circle">
+                                                    @enrollment.Student?.FullName?.Substring(0, 1).ToUpper()
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="fw-semibold">@enrollment.Student?.FullName</div>
+                                                <small class="text-muted">@enrollment.Student?.AdmissionNumber</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <div class="fw-semibold">@enrollment.Course?.CourseName</div>
+                                            <small class="text-muted">@enrollment.Course?.CourseCode</small>
+                                        </div>
+                                    </td>
+                                    <td>@enrollment.Course?.Department?.Name</td>
+                                    <td>@enrollment.EnrollmentDate.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <span class="badge bg-@(enrollment.Status == "Active" ? "success" : 
+                                                               enrollment.Status == "Completed" ? "primary" : 
+                                                               enrollment.Status == "Withdrawn" ? "warning" : "danger")">
+                                            @enrollment.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(enrollment.Grade))
+                                        {
+                                            <span class="badge bg-@(enrollment.Grade == "A" ? "success" : 
+                                                                   enrollment.Grade == "B" ? "primary" : 
+                                                                   enrollment.Grade == "C" ? "info" : 
+                                                                   enrollment.Grade == "D" ? "warning" : "danger")">
+                                                @enrollment.Grade
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (enrollment.Score.HasValue)
+                                        {
+                                            <span>@enrollment.Score.Value.ToString("F1")%</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>@enrollment.AcademicYear</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@enrollment.EnrollmentID" 
+                                               class="btn btn-sm btn-outline-info" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@enrollment.EnrollmentID" 
+                                               class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@enrollment.EnrollmentID" 
+                                               class="btn btn-sm btn-outline-danger" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if (ViewBag.TotalPages > 1)
+                {
+                    <nav aria-label="Enrollments pagination">
+                        <ul class="pagination justify-content-center">
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { 
+                                        searchTerm = ViewBag.SearchTerm, 
+                                        statusFilter = ViewBag.StatusFilter,
+                                        courseFilter = ViewBag.CourseFilter,
+                                        studentFilter = ViewBag.StudentFilter,
+                                        page = i 
+                                    })">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-user-graduate fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">No enrollments found</h4>
+                    <p class="text-muted">
+                        @if (!string.IsNullOrEmpty(ViewBag.SearchTerm as string) || 
+                             !string.IsNullOrEmpty(ViewBag.StatusFilter as string))
+                        {
+                            <span>No enrollments match your search criteria. Try </span>
+                            <a href="@Url.Action("Index")" class="text-decoration-none">clearing your search</a>
+                            <span> or adjusting your keywords.</span>
+                        }
+                        else
+                        {
+                            <span>Start by enrolling students in courses.</span>
+                        }
+                    </p>
+                    @if (string.IsNullOrEmpty(ViewBag.SearchTerm as string))
+                    {
+                        <a asp-action="Create" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i>Create First Enrollment
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar {
+    width: 2rem;
+    height: 2rem;
+}
+
+.avatar-initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+}
+</style>

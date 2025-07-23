@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EduCoreSuite.Data;
 using EduCoreSuite.Models;
@@ -17,9 +18,60 @@ namespace EduCoreSuite.Controllers
         }
 
         // GET: Staffs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string roleFilter, bool? statusFilter, string departmentFilter)
         {
-            return View(await _context.Staff.ToListAsync());
+            var staffQuery = _context.Staff
+                .Include(s => s.DepartmentsLed)
+                .AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                staffQuery = staffQuery.Where(s => 
+                    s.FullName.Contains(searchTerm) ||
+                    (s.StaffNumber != null && s.StaffNumber.Contains(searchTerm)) ||
+                    s.Role.Contains(searchTerm) ||
+                    (s.Title != null && s.Title.Contains(searchTerm)));
+            }
+
+            // Apply role filter
+            if (!string.IsNullOrWhiteSpace(roleFilter))
+            {
+                staffQuery = staffQuery.Where(s => s.Role == roleFilter);
+            }
+
+            // Apply status filter (note: IsDeleted = true means inactive)
+            if (statusFilter.HasValue)
+            {
+                staffQuery = staffQuery.Where(s => s.IsDeleted == statusFilter.Value);
+            }
+
+            // Apply department filter
+            if (!string.IsNullOrWhiteSpace(departmentFilter))
+            {
+                staffQuery = staffQuery.Where(s => s.DepartmentsLed.Any(d => d.Name == departmentFilter));
+            }
+
+            var staff = await staffQuery.OrderBy(s => s.FullName).ToListAsync();
+
+            // Populate filter dropdowns
+            ViewBag.Departments = new SelectList(
+                await _context.Departments
+                    .Where(d => !d.IsDeleted)
+                    .Select(d => d.Name)
+                    .Distinct()
+                    .OrderBy(d => d)
+                    .ToListAsync(),
+                departmentFilter);
+
+            // Pass filter values back to view
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.RoleFilter = roleFilter;
+            ViewBag.StatusFilter = statusFilter;
+            ViewBag.DepartmentFilter = departmentFilter;
+            ViewBag.DepartmentFilter = departmentFilter;
+
+            return View(staff);
         }
 
         // GET: Staffs/Details/5
@@ -187,5 +239,7 @@ namespace EduCoreSuite.Controllers
 
             return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A staff member with this staff number already exists." : "" });
         }
+
+
     }
 }

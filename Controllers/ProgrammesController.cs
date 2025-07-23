@@ -18,12 +18,60 @@ namespace EduCoreSuite.Controllers
         }
 
         // GET: Programmes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, string departmentFilter, string levelFilter, bool? statusFilter)
         {
-            var programmes = await _context.Programmes
+            var programmesQuery = _context.Programmes
                 .Include(p => p.Department)
-                .OrderBy(p => p.Name)
-                .ToListAsync();
+                .ThenInclude(d => d.Faculty)
+                .AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                programmesQuery = programmesQuery.Where(p => 
+                    p.Name.Contains(searchTerm) ||
+                    p.Code.Contains(searchTerm) ||
+                    (p.AccreditedBy != null && p.AccreditedBy.Contains(searchTerm)));
+            }
+
+            // Apply department filter
+            if (!string.IsNullOrWhiteSpace(departmentFilter))
+            {
+                programmesQuery = programmesQuery.Where(p => p.Department.Name == departmentFilter);
+            }
+
+            // Apply level filter
+            if (!string.IsNullOrWhiteSpace(levelFilter))
+            {
+                if (Enum.TryParse<AcademicLevel>(levelFilter, out var level))
+                {
+                    programmesQuery = programmesQuery.Where(p => p.Level == level);
+                }
+            }
+
+            // Apply status filter
+            if (statusFilter.HasValue)
+            {
+                programmesQuery = programmesQuery.Where(p => p.IsActive == statusFilter.Value);
+            }
+
+            var programmes = await programmesQuery.OrderBy(p => p.Name).ToListAsync();
+
+            // Populate filter dropdowns
+            ViewBag.Departments = new SelectList(
+                await _context.Departments
+                    .Where(d => !d.IsDeleted)
+                    .Select(d => d.Name)
+                    .Distinct()
+                    .OrderBy(d => d)
+                    .ToListAsync(),
+                departmentFilter);
+
+            // Pass filter values back to view
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.DepartmentFilter = departmentFilter;
+            ViewBag.LevelFilter = levelFilter;
+            ViewBag.StatusFilter = statusFilter;
 
             return View(programmes);
         }
@@ -205,5 +253,7 @@ namespace EduCoreSuite.Controllers
 
             return Json(new { isValid = !isDuplicate, message = isDuplicate ? "A programme with this code already exists." : "" });
         }
+
+
     }
 }

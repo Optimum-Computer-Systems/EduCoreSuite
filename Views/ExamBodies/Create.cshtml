@@ -1,41 +1,88 @@
 ﻿@model EduCoreSuite.Models.ExamBody
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Exam Body";
+    ViewData["PageHeader"] = "Create New Exam Body";
+    ViewData["Breadcrumb"] = "Exam Bodies / Create";
 }
 
-<h1>Create</h1>
-
-<h4>ExamBody</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<div class="content-wrapper">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <div class="page-title">
+                <h1><i class="fas fa-certificate text-primary me-2"></i>Create New Exam Body</h1>
+                <p class="text-muted">Add a new examination body to the system</p>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+            <div class="page-actions">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to List
+                </a>
             </div>
-            <div class="form-group">
-                <label asp-for="Country" class="control-label"></label>
-                <input asp-for="Country" class="form-control" />
-                <span asp-validation-for="Country" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-plus-circle me-2"></i>Exam Body Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create" class="needs-validation" novalidate>
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label asp-for="Name" class="form-label required">Exam Body Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-certificate"></i></span>
+                                        <input asp-for="Name" class="form-control" placeholder="Enter exam body name" />
+                                    </div>
+                                    <span asp-validation-for="Name" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label asp-for="Description" class="form-label">Description</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter description (optional)"></textarea>
+                                    </div>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <label asp-for="Country" class="form-label">Country</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                        <input asp-for="Country" class="form-control" placeholder="Enter country (optional)" />
+                                    </div>
+                                    <span asp-validation-for="Country" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-save me-2"></i>Create Exam Body
+                                </button>
+                                <a asp-action="Index" class="btn btn-outline-secondary btn-lg ms-2">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
