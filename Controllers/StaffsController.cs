@@ -69,6 +69,7 @@ namespace EduCoreSuite.Controllers
             ViewBag.RoleFilter = roleFilter;
             ViewBag.StatusFilter = statusFilter;
             ViewBag.DepartmentFilter = departmentFilter;
+            ViewBag.DepartmentFilter = departmentFilter;
 
             return View(staff);
         }
