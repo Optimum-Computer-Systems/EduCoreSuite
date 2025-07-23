@@ -1,5 +1,7 @@
-﻿using EduCoreSuite.Data;
+﻿using EducoreSuite.stmpservices;
+using EduCoreSuite.Data;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,12 @@ builder.Services.AddRazorPages();
 // ✅ Register your DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+
+builder.Services.Configure<SmtpSettings>(
+    builder.Configuration.GetSection("SmtpSettings"));
+
 
 var app = builder.Build();
 

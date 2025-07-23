@@ -29,5 +29,11 @@ namespace EduCoreSuite.Models
         [ForeignKey("RoleID")]
         [JsonIgnore]
         public Role? Role { get; set; }
+
+        public string? PasswordHash { get; set; }
+
+        public string? ResetOTP { get; set; }
+        public DateTime? OTPGeneratedAt { get; set; }
     }
 }
+

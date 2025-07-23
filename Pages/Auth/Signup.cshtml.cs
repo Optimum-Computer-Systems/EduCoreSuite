@@ -60,6 +60,7 @@ namespace EduCoreSuite.Pages.Auth
             //Hashing the password
             var passwordHasher = new PasswordHasher<User>();
             User.Password = passwordHasher.HashPassword(User, User.Password);
+            User.PasswordHash = passwordHasher.HashPassword(User, User.Password);
 
             _db.Add(User);
             await _db.SaveChangesAsync();
