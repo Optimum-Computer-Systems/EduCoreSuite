@@ -32,22 +32,34 @@ passwordInput.addEventListener('input', function () {
 })
 
 function toggleRequirement(elementId, isValid) {
-    const element = document.getElementById(elementId);
-    const icon = document.querySelector('i');
+    //console.log(`Checking requirement for: ${elementId}, Valid: ${isValid}`);
 
+    const element = document.getElementById(elementId);
+    if (!element) {
+        console.error(`Element with ID ${elementId} not found.`);
+        return;
+    }
+
+    const icon = element.querySelector('i');
+    if (!icon) {
+        console.error(`Icon element inside ${elementId} not found.`);
+        return;
+    }
+
+    // Change text color
     if (isValid) {
         element.classList.remove('text-danger');
         element.classList.add('text-success');
-
-        icon.classList.remove('bi-x-circle-fill');
-        icon.classList.add('bi-check-circle-fill')
-    }
-    else {
+    } else {
         element.classList.remove('text-success');
         element.classList.add('text-danger');
-        
-        icon.classList.remove('bi-check-circle-fill')
-        icon.classList.add('bi-x-circle-fill');        
     }
+
+    // Directly assign icon classes
+    icon.className = isValid
+        ? 'bi bi-check-circle-fill me-1'
+        : 'bi bi-x-circle-fill me-1';
+
+//    console.log(`Icon classes after update: ${icon.className}`);
 }
 
