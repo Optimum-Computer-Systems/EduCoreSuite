@@ -1,22 +1,73 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
+
+.card {
+    border-radius: 16px;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, #8e2de2, #4a00e0);
+    border: none;
+}
+
+.btn-outline-primary {
+    border-color: #8e2de2;
+    color: #8e2de2;
+    width: stretch;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #4F46E5;
+        color: #fffff !important;
+    }
+
+/* OTP input + verify button look like your Figma design */
+
+.custom-otp-group {
+    border: 1px solid #ced4da;
+    border-radius: 0.6rem;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+    .custom-otp-group .otp-input {
+        border: none;
+        box-shadow: none;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.95rem;
+    }
+
+    .custom-otp-group .verify-btn {
+        border: none;
+        border-left: 1px solid #ced4da;
+        border-radius: 0;
+        padding: 0.6rem 1rem;
+        font-weight: 500;
+        background-color: transparent;
+        color: #005b4a;
+        transition: background-color 0.2s ease;
+    }
+
+        .custom-otp-group .verify-btn:hover {
+            background-color: #e8f5f2;
+        }
