@@ -20,6 +20,8 @@ togglePasswordIcon.addEventListener('click', function () {
     this.classList.toggle('bi-eye-slash');
 })
 
+
+
 //Password Requirements List
 passwordInput.addEventListener('input', function () {
     const value = passwordInput.value;
@@ -62,4 +64,23 @@ function toggleRequirement(elementId, isValid) {
 
 //    console.log(`Icon classes after update: ${icon.className}`);
 }
+//Toggle for confirm password
+const confirmPasswordInput = document.getElementById('confirmPassword');
+const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmPasswordIcon');
+
+toggleConfirmPasswordIcon.addEventListener('click', function () {
+    let type = confirmPasswordInput.getAttribute('type');
+
+    if (type === 'password') {
+        type = 'text';
+    }
+    else {
+        type = 'password';
+    }
+
+    confirmPasswordInput.setAttribute('type', type);
+    //toggle icon
+    this.classList.toggle('bi-eye');
+    this.classList.toggle('bi-eye-slash');
+})
 
