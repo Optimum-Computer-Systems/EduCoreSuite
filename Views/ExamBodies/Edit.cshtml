@@ -1,0 +1,118 @@
+﻿@model EduCoreSuite.Models.ExamBody
+
+@{
+    ViewData["Title"] = "Edit Exam Body";
+    ViewData["PageHeader"] = "Edit Exam Body";
+    ViewData["Breadcrumb"] = "Exam Bodies / Edit";
+}
+
+<div class="content-wrapper">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <div class="page-title">
+                <h1><i class="fas fa-edit text-warning me-2"></i>Edit Exam Body</h1>
+                <p class="text-muted">Update exam body information</p>
+            </div>
+            <div class="page-actions">
+                <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-info me-2">
+                    <i class="fas fa-eye me-1"></i>View Details
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-edit me-2"></i>Update Exam Body Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" class="needs-validation" novalidate>
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                            <input type="hidden" asp-for="Id" />
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label asp-for="Name" class="form-label required">Exam Body Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-certificate"></i></span>
+                                        <input asp-for="Name" class="form-control" placeholder="Enter exam body name" />
+                                    </div>
+                                    <span asp-validation-for="Name" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label asp-for="Description" class="form-label">Description</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter description (optional)"></textarea>
+                                    </div>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <label asp-for="Country" class="form-label">Country</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                        <input asp-for="Country" class="form-control" placeholder="Enter country (optional)" />
+                                    </div>
+                                    <span asp-validation-for="Country" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-warning btn-lg text-dark">
+                                    <i class="fas fa-save me-2"></i>Update Exam Body
+                                </button>
+                                <a asp-action="Index" class="btn btn-outline-secondary btn-lg ms-2">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            var currentExamBodyId = @Model.Id;
+
+            // Real-time validation for ExamBody Name
+            $('#Name').on('blur', function() {
+                var name = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Name"]');
+                
+                if (name) {
+                    $.get('@Url.Action("CheckDuplicateName", "ExamBodies")', { name: name, excludeId: currentExamBodyId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Name').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Name').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

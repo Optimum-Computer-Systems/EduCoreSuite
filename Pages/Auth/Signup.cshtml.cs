@@ -10,7 +10,7 @@ namespace EduCoreSuite.Pages.Auth
     {
         public readonly ApplicationDbContext _db;
         [BindProperty]
-        public User User { get; set; }
+        public new User User { get; set; }
         public SignupModel(ApplicationDbContext db)
         {
             _db = db;        

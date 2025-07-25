@@ -1,0 +1,233 @@
+﻿@model EduCoreSuite.Models.Campus
+
+@{
+    ViewData["Title"] = $"Edit {Model.Name}";
+}
+
+<div class="container mt-4">
+    <!-- Back to Campus List -->
+    <div class="mb-3">
+        <a asp-controller="Campuses" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold">
+            ← Back to Campus List
+        </a>
+    </div>
+
+    <!-- Page Title -->
+    <h2 class="fw-bold mb-4">Edit Campus: @Model.Name</h2>
+
+    <form asp-action="Edit" method="post" class="row g-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <!-- Left Column -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Code" class="form-label fw-semibold">Code</label>
+                <input asp-for="Code" class="form-control" placeholder="e.g. MAIN01" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Name" class="form-label fw-semibold">Campus Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter campus name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="CountyID" class="form-label fw-semibold">County</label>
+                <select asp-for="CountyID" class="form-select" asp-items="ViewBag.Counties">
+                    <option value="">-- Select County --</option>
+                </select>
+                <span asp-validation-for="CountyID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="SubCountyID" class="form-label fw-semibold">Sub-County</label>
+                <select asp-for="SubCountyID" class="form-select" asp-items="ViewBag.SubCounties">
+                    <option value="">-- Select Sub-County --</option>
+                </select>
+                <span asp-validation-for="SubCountyID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Town" class="form-label fw-semibold">Town</label>
+                <input asp-for="Town" class="form-control" placeholder="Enter town" />
+                <span asp-validation-for="Town" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="PhysicalAddress" class="form-label fw-semibold">Physical Address</label>
+                <input asp-for="PhysicalAddress" class="form-control" placeholder="Enter physical address" />
+                <span asp-validation-for="PhysicalAddress" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="WebsiteURL" class="form-label fw-semibold">Website URL</label>
+                <input asp-for="WebsiteURL" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="WebsiteURL" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="PostalAddress" class="form-label fw-semibold">Postal Address</label>
+                <input asp-for="PostalAddress" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="PostalAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="PrincipalName" class="form-label fw-semibold">Principal Name</label>
+                <input asp-for="PrincipalName" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="PrincipalName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="TVETRegistrationNumber" class="form-label fw-semibold">TVET Reg. Number</label>
+                <input asp-for="TVETRegistrationNumber" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="TVETRegistrationNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="KUCCPSCode" class="form-label fw-semibold">KUCCPS Code</label>
+                <input asp-for="KUCCPSCode" class="form-control" placeholder="(Optional)" />
+                <span asp-validation-for="KUCCPSCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-check mt-3">
+                <input asp-for="IsMainCampus" class="form-check-input" />
+                <label asp-for="IsMainCampus" class="form-check-label fw-semibold">Main Campus</label>
+            </div>
+
+            <div class="form-check mt-2">
+                <input asp-for="IsActive" class="form-check-input" />
+                <label asp-for="IsActive" class="form-check-label fw-semibold">Active</label>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-success fw-semibold px-5 py-2 mt-4 rounded-pill">
+                <i class="fas fa-save me-2"></i>Save Changes
+            </button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info fw-semibold px-5 py-2 mt-4 rounded-pill ms-3">
+                <i class="fas fa-eye me-2"></i>View Details
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+    <script>
+        $(document).ready(function() {
+            var currentCampusId = @Model.Id;
+            
+            // County and SubCounty cascading dropdown
+            $('#CountyID').change(function() {
+                var countyId = $(this).val();
+                var subCountySelect = $('#SubCountyID');
+                
+                // Clear current options
+                subCountySelect.empty();
+                subCountySelect.append('<option value="">-- Select Sub-County --</option>');
+                
+                if (countyId) {
+                    // Fetch subcounties for selected county
+                    $.getJSON('@Url.Action("GetSubCounties", "Campuses")?countyId=' + countyId, function(data) {
+                        $.each(data, function(i, item) {
+                            subCountySelect.append($('<option></option>').val(item.subCountyID).text(item.subCountyName));
+                        });
+                    });
+                }
+            });
+
+            // Real-time validation for Campus Code
+            $('#Code').on('blur', function() {
+                var code = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Code"]');
+                
+                if (code) {
+                    $.get('@Url.Action("CheckDuplicateCode", "Campuses")', { code: code, excludeId: currentCampusId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Code').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Code').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Campus Name
+            $('#Name').on('blur', function() {
+                var name = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Name"]');
+                
+                if (name) {
+                    $.get('@Url.Action("CheckDuplicateName", "Campuses")', { name: name, excludeId: currentCampusId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Name').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Name').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Email
+            $('#Email').on('blur', function() {
+                var email = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Email"]');
+                
+                if (email) {
+                    $.get('@Url.Action("CheckDuplicateEmail", "Campuses")', { email: email, excludeId: currentCampusId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Email').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Email').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Real-time validation for Phone Number
+            $('#PhoneNumber').on('blur', function() {
+                var phone = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="PhoneNumber"]');
+                
+                if (phone) {
+                    $.get('@Url.Action("CheckDuplicatePhone", "Campuses")', { phone: phone, excludeId: currentCampusId }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#PhoneNumber').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#PhoneNumber').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

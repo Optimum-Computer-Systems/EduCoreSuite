@@ -1,0 +1,369 @@
+@model EduCoreSuite.Models.Programme
+
+@{
+    ViewData["Title"] = "Programme Details";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Programme Details</h1>
+            <p class="text-muted mb-0">View comprehensive information about this academic programme</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.ProgrammeID" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Edit Programme
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Programme Information Card -->
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-graduation-cap me-2"></i>@Model.Name
+                        <span class="badge bg-light text-dark ms-2">@Model.Code</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="info-section mb-4">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>Programme Information
+                                </h6>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Programme Name:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="text-primary fw-bold">@Model.Name</span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Programme Code:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="badge bg-secondary fs-6">@Model.Code</span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Academic Level:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="badge @(Model.Level == AcademicLevel.Certificate ? "bg-info" : 
+                                                            Model.Level == AcademicLevel.Diploma ? "bg-success" : 
+                                                            Model.Level == AcademicLevel.Undergraduate ? "bg-primary" : 
+                                                            Model.Level == AcademicLevel.Postgraduate ? "bg-warning" : 
+                                                            Model.Level == AcademicLevel.Masters ? "bg-danger" : "bg-dark") fs-6">
+                                            <i class="fas fa-layer-group me-1"></i>@Model.Level
+                                        </span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Department:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (Model.Department != null)
+                                        {
+                                            <span class="text-info fw-bold">
+                                                <i class="fas fa-sitemap me-1"></i>@Model.Department.Name
+                                            </span>
+                                            <small class="text-muted ms-2">(@Model.Department.Code)</small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">No department assigned</span>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Faculty:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (Model.Department?.Faculty != null)
+                                        {
+                                            <span class="text-success fw-bold">
+                                                <i class="fas fa-university me-1"></i>@Model.Department.Faculty.Name
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">No faculty assigned</span>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Status:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (Model.IsActive)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Active
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-pause-circle me-1"></i>Inactive
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Programme Structure Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-cogs me-2"></i>Programme Structure
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-item mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-circle bg-primary text-white me-3">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Duration</div>
+                                        <div class="fw-bold">@Model.DurationYears Year@(Model.DurationYears == 1 ? "" : "s")</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-circle bg-success text-white me-3">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Semesters per Year</div>
+                                        <div class="fw-bold">@Model.SemestersPerYear</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-info" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-calculator me-2"></i>Programme Duration Calculation
+                                </h6>
+                                <p class="mb-0">
+                                    Total Programme Duration: <strong>@(Model.DurationYears * Model.SemestersPerYear) Semesters</strong>
+                                    over <strong>@Model.DurationYears Year@(Model.DurationYears == 1 ? "" : "s")</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accreditation Card -->
+            <div class="card shadow">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-certificate me-2"></i>Accreditation Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.AccreditedBy) || Model.AccreditationDate.HasValue)
+                    {
+                        <div class="row">
+                            @if (!string.IsNullOrEmpty(Model.AccreditedBy))
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="info-item">
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-circle bg-warning text-white me-3">
+                                                <i class="fas fa-award"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-muted small">Accredited By</div>
+                                                <div class="fw-bold">@Model.AccreditedBy</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.AccreditationDate.HasValue)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="info-item">
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-circle bg-success text-white me-3">
+                                                <i class="fas fa-calendar-check"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-muted small">Accreditation Date</div>
+                                                <div class="fw-bold">@Model.AccreditationDate.Value.ToString("MMMM dd, yyyy")</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-certificate fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No accreditation information available</h6>
+                            <p class="text-muted small">This programme doesn't have accreditation details recorded yet.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Sidebar -->
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-success text-white">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Quick Statistics
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="stat-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-primary text-white me-3">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Academic Level</div>
+                                    <div class="fw-bold">@Model.Level</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-info text-white me-3">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Total Duration</div>
+                                    <div class="fw-bold">@(Model.DurationYears * Model.SemestersPerYear) Semesters</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-success text-white me-3">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Status</div>
+                                    <div class="fw-bold @(Model.IsActive ? "text-success" : "text-secondary")">
+                                        @(Model.IsActive ? "Active" : "Inactive")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Card -->
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cogs me-2"></i>Quick Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.ProgrammeID" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit me-2"></i>Edit Programme
+                        </a>
+                        <a asp-controller="Courses" asp-action="Create" asp-route-programmeId="@Model.ProgrammeID" 
+                           class="btn btn-success btn-sm">
+                            <i class="fas fa-plus me-2"></i>Add Course
+                        </a>
+                        <a asp-controller="Students" asp-action="Index" asp-route-programmeFilter="@Model.ProgrammeID" 
+                           class="btn btn-info btn-sm">
+                            <i class="fas fa-users me-2"></i>View Students
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.ProgrammeID" 
+                           class="btn btn-outline-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to delete this programme?')">
+                            <i class="fas fa-trash me-2"></i>Delete Programme
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.stat-item {
+    padding: 0.5rem 0;
+}
+
+.info-section hr {
+    border-color: #e3e6f0;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+</style>

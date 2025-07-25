@@ -1,0 +1,174 @@
+@model EduCoreSuite.Models.StudyMode
+
+@{
+    ViewData["Title"] = "Create Study Mode";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Create New Study Mode</h1>
+            <p class="text-muted mb-0">Add a new study mode option for student enrollment</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Study Modes
+        </a>
+    </div>
+
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-clock me-2"></i>Study Mode Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" id="studyModeForm">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-4">
+                                    <label asp-for="Name" class="form-label fw-bold">
+                                        <i class="fas fa-tag me-1"></i>Study Mode Name
+                                    </label>
+                                    <input asp-for="Name" class="form-control form-control-lg" 
+                                           placeholder="e.g., Full-Time, Part-Time, Distance Learning" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Enter a clear, descriptive name for this study mode
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="Description" class="form-label fw-bold">
+                                        <i class="fas fa-align-left me-1"></i>Description
+                                    </label>
+                                    <textarea asp-for="Description" class="form-control" rows="4"
+                                              placeholder="Provide a detailed description of this study mode, including schedule, requirements, and benefits..."></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Describe the characteristics and requirements of this study mode
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Examples Section -->
+                        <div class="alert alert-info" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-lightbulb me-2"></i>Common Study Mode Examples
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Full-Time</strong>
+                                    <p class="small mb-0">Daytime attendance on campus with regular class schedules</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Part-Time</strong>
+                                    <p class="small mb-0">Evening or weekend classes for working students</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Distance Learning</strong>
+                                    <p class="small mb-0">Remote or online learning with flexible schedules</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <i class="fas fa-save me-2"></i>Create Study Mode
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #bac8f3;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.form-label {
+    color: #5a5c69;
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.is-invalid {
+    border-color: #e74a3b;
+}
+
+.is-valid {
+    border-color: #1cc88a;
+}
+
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Real-time validation for StudyMode Name
+            $('#Name').on('blur', function() {
+                var name = $(this).val();
+                var $errorSpan = $('span[data-valmsg-for="Name"]');
+                
+                if (name) {
+                    $.get('@Url.Action("CheckDuplicateName", "StudyModes")', { name: name }, function(data) {
+                        if (!data.isValid) {
+                            $errorSpan.text(data.message).addClass('text-danger');
+                            $('#Name').addClass('is-invalid');
+                        } else {
+                            $errorSpan.text('').removeClass('text-danger');
+                            $('#Name').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
