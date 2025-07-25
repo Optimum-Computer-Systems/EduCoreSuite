@@ -41,12 +41,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const body = document.body;
 
+<<<<<<< HEAD
     // Toggle Sidebar Function
     function toggleSidebar() {
         body.classList.toggle('sidebar-open');
         if (sidebar) sidebar.classList.toggle('show');
         if (sidebarOverlay) sidebarOverlay.classList.toggle('show');
     }
+=======
+
+
+//Password Requirements List
+passwordInput.addEventListener('input', function () {
+    const value = passwordInput.value;
+>>>>>>> ea8972be401311be95900074cb2f0a15473e634b
 
     // Close Sidebar Function
     function closeSidebar() {
@@ -167,6 +175,25 @@ function toggleRequirement(elementId, isValid) {
 
 //    console.log(`Icon classes after update: ${icon.className}`);
 }
+//Toggle for confirm password
+const confirmPasswordInput = document.getElementById('confirmPassword');
+const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmPasswordIcon');
+
+toggleConfirmPasswordIcon.addEventListener('click', function () {
+    let type = confirmPasswordInput.getAttribute('type');
+
+    if (type === 'password') {
+        type = 'text';
+    }
+    else {
+        type = 'password';
+    }
+
+    confirmPasswordInput.setAttribute('type', type);
+    //toggle icon
+    this.classList.toggle('bi-eye');
+    this.classList.toggle('bi-eye-slash');
+})
 
 // CSS Animation for loading spinner
 const style = document.createElement('style');

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace EduCoreSuite.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,7 +19,7 @@ namespace EduCoreSuite.Controllers
             _logger = logger;
             _context = context;
         }
-        [Authorize]
+       
         public async Task<IActionResult> Index()
         {
             var vm = new DashboardViewModel
@@ -46,7 +47,7 @@ namespace EduCoreSuite.Controllers
         }
 
         // Removed GetEnrollmentTrends and related methods as they're no longer needed
-
+    
         private async Task<List<AcademicYearData>> GetEnrollmentByAcademicYear()
         {
             // Kenyan academic years: 1st Year, 2nd Year, 3rd Year, 4th Year

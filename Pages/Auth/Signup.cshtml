@@ -69,13 +69,16 @@
             </div>
 
             <div >
-                <button type="submit" class="btn btn-primary w-100">Submit</button>
+                <button type="submit" class="btn btn-primary w-100 mb-3">Submit</button>
             </div>
 
-            <p class="text-center mt-3">
-                Already have an account?
-                <a asp-page="/Auth/Login">Sign In</a>
-            </p>
+            <div class="text-center small">
+                <p>Already Have An Account?</p>
+                <a asp-page="/Login" class="btn btn-outline-primary rounded-3 px-4"
+                   style="border-image: linear-gradient(to right, #8e2de2, #4a00e0) 1;">
+                    Back to login
+                </a>
+            </div>
         </form>
         <partial name="_ValidationScriptsPartial" /> <!--Enables client-side validation on forms-->
     </div>

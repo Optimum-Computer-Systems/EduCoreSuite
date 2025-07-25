@@ -104,9 +104,11 @@ public class AuthController : Controller
     }
 
     [HttpGet("Logout")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
-        await HttpContext.SignOutAsync();
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        HttpContext.Response.Cookies.Delete(".AspNetCore.Cookies");
         return RedirectToAction("Login");
     }
 

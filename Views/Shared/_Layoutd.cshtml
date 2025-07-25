@@ -27,15 +27,31 @@
             <div class="container-fluid px-3">
                 <div class="d-flex align-items-center justify-content-between py-2">
                     <!-- Left: Logo + University Name + Sidebar Toggle -->
-                    <div class="d-flex align-items-center gap-3">
-                        <button class="btn btn-link p-0 sidebar-toggle d-lg-none" type="button">
-                            <i class="bi bi-list fs-4 text-dark"></i>
-                        </button>
-                        <a class="text-decoration-none d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
-                            <img src="~/Resources/Logo.svg" alt="Logo" width="28" height="28" style="filter: brightness(0) saturate(100%);" />
-                            <h4 class="mb-0 fw-bold text-primary d-none d-md-block">Optimum University</h4>
-                        </a>
+                    <div class="d-flex justify-content-between align-items-center w-100 px-3 py-2">
+
+                        <!-- Left Side (Logo + Sidebar toggle) -->
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-link p-0 sidebar-toggle d-lg-none" type="button">
+                                <i class="bi bi-list fs-4 text-dark"></i>
+                            </button>
+                            <a class="text-decoration-none d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                                <img src="~/Resources/Logo.svg" alt="Logo" width="28" height="28" style="filter: brightness(0) saturate(100%);" />
+                                <h4 class="mb-0 fw-bold text-primary d-none d-md-block">Optimum University</h4>
+                            </a>
+                        </div>
+
+                        <!-- Right Side (Profile) -->
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="fw-semibold d-none d-md-inline text-dark">Hello, @User.Identity.Name</span>
+                            <img src="~/Resources/avatar.png" alt="Profile" class="rounded-circle" width="36" height="36" style="object-fit: cover;" />
+                            <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                            </form>
+                        </div>
+
                     </div>
+
 
                     <!-- Right: Empty space for balance -->
                     <div class="d-flex align-items-center gap-3">
