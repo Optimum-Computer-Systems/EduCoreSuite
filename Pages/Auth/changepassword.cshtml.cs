@@ -101,8 +101,7 @@ public class ChangePasswordModel : PageModel
 
         // Update password
         var passwordHasher = new PasswordHasher<User>();
-        user.Password = passwordHasher.HashPassword(user, user.Password);
-        user.PasswordHash = passwordHasher.HashPassword(user, user.Password); user.ResetOTP = null;
+        user.PasswordHash = passwordHasher.HashPassword(user, user.PasswordHash); user.ResetOTP = null;
         user.OTPGeneratedAt = null;
 
         await _db.SaveChangesAsync();

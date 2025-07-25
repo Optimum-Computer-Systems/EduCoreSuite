@@ -1,0 +1,426 @@
+@model dynamic
+
+@{
+    ViewData["Title"] = "Reports & Analytics";
+    ViewData["PageHeader"] = "Reports & Analytics";
+    ViewData["Breadcrumb"] = "Reports";
+}
+
+<div class="content-wrapper">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <div class="page-title">
+                <h1><i class="fas fa-chart-line text-primary me-2"></i>Reports & Analytics</h1>
+                <p class="text-muted">Comprehensive reporting and data analytics dashboard</p>
+            </div>
+            <div class="page-actions">
+                <div class="dropdown">
+                    <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-download me-1"></i>Export Data
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" asp-action="ExportStudentsToExcel">
+                            <i class="fas fa-user-graduate me-2"></i>Students Report (Excel)
+                        </a></li>
+                        <li><a class="dropdown-item" asp-action="ExportStudentsToCsv">
+                            <i class="fas fa-file-csv me-2"></i>Students Report (CSV)
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- System Overview Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card stats-card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stats-icon">
+                                <i class="fas fa-user-graduate fa-2x"></i>
+                            </div>
+                            <div class="stats-content">
+                                <div class="stats-number">@Model.TotalStudents</div>
+                                <div class="stats-label">Total Students</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card stats-card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stats-icon">
+                                <i class="fas fa-user-tie fa-2x"></i>
+                            </div>
+                            <div class="stats-content">
+                                <div class="stats-number">@Model.TotalStaff</div>
+                                <div class="stats-label">Total Staff</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card stats-card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stats-icon">
+                                <i class="fas fa-book fa-2x"></i>
+                            </div>
+                            <div class="stats-content">
+                                <div class="stats-number">@Model.TotalCourses</div>
+                                <div class="stats-label">Total Courses</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card stats-card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stats-icon">
+                                <i class="fas fa-building fa-2x"></i>
+                            </div>
+                            <div class="stats-content">
+                                <div class="stats-number">@Model.TotalCampuses</div>
+                                <div class="stats-label">Total Campuses</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card stats-card bg-secondary text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stats-icon">
+                                <i class="fas fa-university fa-2x"></i>
+                            </div>
+                            <div class="stats-content">
+                                <div class="stats-number">@Model.TotalFaculties</div>
+                                <div class="stats-label">Total Faculties</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card stats-card bg-dark text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="stats-icon">
+                                <i class="fas fa-sitemap fa-2x"></i>
+                            </div>
+                            <div class="stats-content">
+                                <div class="stats-number">@Model.TotalDepartments</div>
+                                <div class="stats-label">Total Departments</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts and Analytics -->
+        <div class="row">
+            <!-- Students by Department Chart -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>Students by Department
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="departmentChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students by Programme Chart -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-bar me-2"></i>Students by Programme
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="programmeChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Students by Year Chart -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-line me-2"></i>Students by Year Level
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="yearChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-clock me-2"></i>Recent System Activities
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list">
+                            @if (Model.RecentActivities != null && Model.RecentActivities.Count > 0)
+                            {
+                                @foreach (var activity in Model.RecentActivities)
+                                {
+                                    <div class="activity-item">
+                                        <div class="activity-icon">
+                                            <i class="@activity.Icon" style="color: @activity.IconColor"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-title">@activity.Title</div>
+                                            <div class="activity-description">@activity.Description</div>
+                                            <div class="activity-time">@activity.Timestamp.ToString("MMM dd, yyyy HH:mm")</div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="text-center py-3">
+                                    <i class="fas fa-info-circle fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted">No recent activities to display</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-bolt me-2"></i>Quick Report Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-md-4 mb-3">
+                                <a asp-action="ExportStudentsToExcel" class="btn btn-outline-primary w-100 py-3">
+                                    <i class="fas fa-user-graduate fa-2x d-block mb-2"></i>
+                                    <strong>Export Students (Excel)</strong>
+                                    <small class="d-block text-muted">Download complete student list in Excel format</small>
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a asp-action="ExportStudentsToCsv" class="btn btn-outline-success w-100 py-3">
+                                    <i class="fas fa-file-csv fa-2x d-block mb-2"></i>
+                                    <strong>Export Students (CSV)</strong>
+                                    <small class="d-block text-muted">Download complete student list in CSV format</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Department Chart
+        const departmentData = @Html.Raw(Json.Serialize(Model.StudentsByDepartment));
+        const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+        new Chart(departmentCtx, {
+            type: 'pie',
+            data: {
+                labels: departmentData.map(d => d.department || 'Unassigned'),
+                datasets: [{
+                    data: departmentData.map(d => d.count),
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                        '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Programme Chart
+        const programmeData = @Html.Raw(Json.Serialize(Model.StudentsByProgramme));
+        const programmeCtx = document.getElementById('programmeChart').getContext('2d');
+        new Chart(programmeCtx, {
+            type: 'bar',
+            data: {
+                labels: programmeData.map(p => p.programme || 'Unassigned'),
+                datasets: [{
+                    label: 'Number of Students',
+                    data: programmeData.map(p => p.count),
+                    backgroundColor: '#36A2EB',
+                    borderColor: '#2E8BC0',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Year Chart
+        const yearData = @Html.Raw(Json.Serialize(Model.StudentsByYear));
+        const yearCtx = document.getElementById('yearChart').getContext('2d');
+        new Chart(yearCtx, {
+            type: 'line',
+            data: {
+                labels: yearData.map(y => `Year ${y.year}`),
+                datasets: [{
+                    label: 'Number of Students',
+                    data: yearData.map(y => y.count),
+                    borderColor: '#4BC0C0',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+<style>
+.stats-card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+}
+
+.stats-icon {
+    margin-right: 15px;
+    opacity: 0.8;
+}
+
+.stats-number {
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.stats-label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.activity-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.activity-description {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 2px;
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: #adb5bd;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 600;
+}
+
+canvas {
+    max-height: 300px;
+}
+</style>

@@ -1,0 +1,226 @@
+@model EduCoreSuite.Models.StudyMode
+
+@{
+    ViewData["Title"] = "Delete Study Mode";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Delete Study Mode</h1>
+            <p class="text-muted mb-0">Confirm deletion of this study mode and all associated data</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </a>
+    </div>
+
+    <!-- Warning Alert -->
+    <div class="alert alert-danger" role="alert">
+        <h5 class="alert-heading">
+            <i class="fas fa-exclamation-triangle me-2"></i>Warning: Permanent Deletion
+        </h5>
+        <p class="mb-0">
+            Are you sure you want to delete this study mode? This action cannot be undone and will affect:
+        </p>
+        <ul class="mt-2 mb-0">
+            <li>All students currently enrolled using this study mode</li>
+            <li>All courses configured for this study mode</li>
+            <li>All academic records and relationships</li>
+            <li>Historical data and reports</li>
+        </ul>
+    </div>
+
+    <!-- Study Mode Information Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-clock me-2"></i>Study Mode to be Deleted
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="info-section mb-4">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Study Mode Name:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="text-danger fw-bold fs-5">@Model.Name</span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Study Mode ID:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="badge bg-secondary fs-6">@Model.Id</span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Description:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (!string.IsNullOrEmpty(Model.Description))
+                                        {
+                                            <div class="description-content">
+                                                @Model.Description
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">No description provided</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Impact Summary -->
+                            <div class="alert alert-warning" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-chart-bar me-2"></i>Deletion Impact Summary
+                                </h6>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="fw-bold text-danger fs-4">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <small>All enrolled students will be affected</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-danger fs-4">
+                                            <i class="fas fa-book"></i>
+                                        </div>
+                                        <small>All associated courses will be affected</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-danger fs-4">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <small>Permanent deletion</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Study Mode Characteristics -->
+                            <div class="mt-4">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>Study Mode Characteristics:
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <div class="card border-warning">
+                                            <div class="card-body py-2">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="text-warning mb-0">@Model.Name</h6>
+                                                        <small class="text-muted">Study Mode Type</small>
+                                                    </div>
+                                                    <span class="badge bg-warning text-dark">
+                                                        ID: @Model.Id
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="card border-info">
+                                            <div class="card-body py-2">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="text-info mb-0">Available</h6>
+                                                        <small class="text-muted">Current Status</small>
+                                                    </div>
+                                                    <span class="badge bg-info">
+                                                        Active
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <form asp-action="Delete" class="d-flex justify-content-between align-items-center">
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        
+                        <button type="submit" class="btn btn-danger btn-lg" 
+                                onclick="return confirm('This will permanently delete the study mode and affect all students and courses using this mode. Are you absolutely sure?')">
+                            <i class="fas fa-trash me-2"></i>Yes, Delete Study Mode
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.info-section hr {
+    border-color: #e3e6f0;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.border-warning {
+    border-color: #ffc107 !important;
+}
+
+.border-info {
+    border-color: #17a2b8 !important;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.description-content {
+    background-color: #f8f9fc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid #dc3545;
+}
+</style>

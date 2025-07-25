@@ -1,0 +1,225 @@
+@model EduCoreSuite.Models.ViewModels.CourseIndexViewModel
+
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<div class="container-fluid">
+    <!-- Header Section with Search -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="bg-secondary bg-opacity-25 rounded-pill p-3 text-center">
+                <h4 class="mb-0 fw-bold">Course List</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <a asp-controller="Courses" asp-action="Create" class="bg-secondary bg-opacity-25 rounded-pill p-3 text-center text-decoration-none d-block">
+                <h4 class="mb-0 fw-bold text-dark">Add A Course</h4>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <form asp-action="Index" method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="departmentSearch" value="@Model.DepartmentSearch" class="form-control rounded-pill" placeholder="Search Department" />
+                    <button type="submit" class="btn btn-outline-secondary rounded-circle ms-2">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Course Search -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <!-- Empty space for alignment -->
+        </div>
+        <div class="col-md-4">
+            <form asp-action="Index" method="get">
+                <input type="hidden" name="departmentSearch" value="@Model.DepartmentSearch" />
+                <div class="input-group">
+                    <input type="text" name="courseSearch" value="@Model.CourseSearch" class="form-control rounded-pill" placeholder="Search Course" />
+                    <button type="submit" class="btn btn-outline-secondary rounded-circle ms-2">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Courses by Department -->
+    @foreach (var department in Model.CoursesByDepartment.Keys)
+    {
+        <div class="department-section mb-4">
+            <!-- Department Header -->
+            <div class="d-flex align-items-center mb-2">
+                <div class="bg-light rounded-circle p-2 me-2">
+                    <i class="bi bi-building fs-4"></i>
+                </div>
+                <h4 class="mb-0 fw-bold border-bottom border-dark pb-1">Department: @department.Name</h4>
+            </div>
+
+            <!-- Department Courses Table with Scrolling -->
+            <div class="table-responsive department-table-container">
+                <table class="table table-bordered">
+                    <thead class="table-light sticky-header">
+                        <tr>
+                            <th style="width: 40px;"></th>
+                            <th>Course Name</th>
+                            <th>Programme</th>
+                            <th>Level</th>
+                            <th>Exam Body</th>
+                            <th>Study Status</th>
+                            <th>Campus</th>
+                        </tr>
+                    </thead>
+                    <tbody class="department-table-body">
+                        @foreach (var course in Model.CoursesByDepartment[department])
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="course-@course.CourseID">
+                                        <label class="form-check-label" for="course-@course.CourseID"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@course.CourseID" class="text-decoration-none">@course.CourseName</a>
+                                </td>
+                                <td>@course.Programme?.Name</td>
+                                <td>
+                                    @{
+                                        var academicLevel = course.Programme?.Level.ToString() ?? "N/A";
+                                        var yearLevel = "";
+                                        
+                                        // Try to extract year level from course name
+                                        if (!string.IsNullOrEmpty(course.CourseName))
+                                        {
+                                            // Look for patterns like "Year 1", "Level 2", etc.
+                                            if (course.CourseName.Contains("Year"))
+                                            {
+                                                var yearMatch = System.Text.RegularExpressions.Regex.Match(course.CourseName, @"Year\s+(\d+)");
+                                                if (yearMatch.Success)
+                                                {
+                                                    yearLevel = $"Year {yearMatch.Groups[1].Value}";
+                                                }
+                                            }
+                                        }
+                                    }
+                                    <div>@academicLevel</div>
+                                    @if (!string.IsNullOrEmpty(yearLevel))
+                                    {
+                                        <small class="text-muted">@yearLevel</small>
+                                    }
+                                </td>
+                                <td>@course.ExamBody?.Name</td>
+                                <td>@course.StudyStatus?.Name</td>
+                                <td>@course.Campus?.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (Model.CoursesByDepartment[department].Count > Model.CoursesPerDepartment)
+                {
+                    <div class="text-center mt-2">
+                        <small class="text-muted">Scroll to see more courses</small>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Pagination - Fixed at bottom -->
+    <div class="pagination-container">
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="Page navigation" class="pagination-nav">
+                <ul class="pagination">
+                    <!-- Previous Page -->
+                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" 
+                           asp-route-departmentSearch="@Model.DepartmentSearch" 
+                           asp-route-courseSearch="@Model.CourseSearch" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- First Page -->
+                    @if (Model.CurrentPage > 3)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-route-page="1"
+                               asp-route-departmentSearch="@Model.DepartmentSearch"
+                               asp-route-courseSearch="@Model.CourseSearch">1</a>
+                        </li>
+                        @if (Model.CurrentPage > 4)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                    }
+
+                    <!-- Page Numbers around current page -->
+                    @{
+                        int startPage = Math.Max(1, Model.CurrentPage - 2);
+                        int endPage = Math.Min(Model.TotalPages, Model.CurrentPage + 2);
+                    }
+
+                    @for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-page="@i" 
+                               asp-route-departmentSearch="@Model.DepartmentSearch" 
+                               asp-route-courseSearch="@Model.CourseSearch">@i</a>
+                        </li>
+                    }
+
+                    <!-- Last Page -->
+                    @if (Model.CurrentPage < Model.TotalPages - 2)
+                    {
+                        @if (Model.CurrentPage < Model.TotalPages - 3)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-route-page="@Model.TotalPages"
+                               asp-route-departmentSearch="@Model.DepartmentSearch"
+                               asp-route-courseSearch="@Model.CourseSearch">@Model.TotalPages</a>
+                        </li>
+                    }
+
+                    <!-- Next Page -->
+                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" 
+                           asp-route-departmentSearch="@Model.DepartmentSearch" 
+                           asp-route-courseSearch="@Model.CourseSearch" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
+        <div class="pagination-info">
+            Showing @(((Model.CurrentPage - 1) * Model.PageSize) + 1) to @Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalPages * Model.PageSize) of @(Model.TotalPages * Model.PageSize) courses
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add any JavaScript functionality here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example: Add click handler for checkboxes
+            const checkboxes = document.querySelectorAll('.form-check-input');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const courseId = this.id.split('-')[1];
+                    console.log(`Course ${courseId} ${this.checked ? 'selected' : 'unselected'}`);
+                });
+            });
+        });
+    </script>
+}

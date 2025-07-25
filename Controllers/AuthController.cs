@@ -100,7 +100,7 @@ public class AuthController : Controller
             principal,
             new AuthenticationProperties { IsPersistent = viewModel.RememberMe });
 
-        return RedirectToAction("Approval", "User");
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet("Logout")]

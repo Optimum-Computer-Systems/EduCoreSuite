@@ -26,7 +26,6 @@ namespace EduCoreSuite.Models
         [Required]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,32}$",
             ErrorMessage = "Password must be between 8 and 32 characters long, contain at least one uppercase letter, one lowercase letter, and one digit.")]
-        public String Password { get; set; }
 
         public int RoleID { get; set; }
         [ForeignKey("RoleID")]

@@ -12,6 +12,7 @@ namespace EduCoreSuite.Pages.Auth
     {
         public readonly ApplicationDbContext _db;
         [BindProperty]
+
         public User User { get; set; }
         
         //Dropdown list for roles
@@ -59,8 +60,7 @@ namespace EduCoreSuite.Pages.Auth
             }
             //Hashing the password
             var passwordHasher = new PasswordHasher<User>();
-            User.Password = passwordHasher.HashPassword(User, User.Password);
-            User.PasswordHash = passwordHasher.HashPassword(User, User.Password);
+            User.PasswordHash = passwordHasher.HashPassword(User, User.PasswordHash);
 
             _db.Add(User);
             await _db.SaveChangesAsync();

@@ -1,7 +1,11 @@
 ﻿@model EduCoreSuite.Models.ViewModels.Auth.RegisterViewModel
 @{
+    Layout = null;
     ViewData["Title"] = "Register";
     var roles = ViewBag.Roles as List<EduCoreSuite.Models.Role>;
+}
+@{
+    Layout = "_Layout";
 }
 
 <div class="container-fluid vh-100 d-flex align-items-center justify-content-center" style="padding: 20px;">

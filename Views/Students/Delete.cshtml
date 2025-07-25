@@ -1,0 +1,82 @@
+﻿@model EduCoreSuite.Models.Student
+
+@{
+    ViewData["Title"] = "Delete Student";
+}
+
+<h2>Delete Student</h2>
+
+<h4>Are you sure you want to delete this student?</h4>
+<hr />
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="StudentID" />
+
+    <!-- ========== PERSONAL DETAILS ========== -->
+    <h4>Personal Details</h4>
+    <div class="row mb-3">
+        <div class="col-md-6"><strong>Full Name:</strong> @Model.FullName</div>
+        <div class="col-md-6"><strong>Email:</strong> @Model.Email</div>
+
+        <div class="col-md-6"><strong>Admission No:</strong> @Model.AdmissionNumber</div>
+        <div class="col-md-6"><strong>Date of Birth:</strong> @Model.DOB</div>
+
+        <div class="col-md-6"><strong>Nationality:</strong> @Model.Nationality</div>
+        <div class="col-md-6"><strong>ID Number:</strong> @Model.IDNumber</div>
+
+        <div class="col-md-6"><strong>Gender:</strong> @Model.Gender</div>
+        <div class="col-md-6"><strong>Religion:</strong> @Model.Religion</div>
+
+        <div class="col-md-6"><strong>Disability:</strong> @Model.Disability</div>
+        <div class="col-md-6"><strong>Medical:</strong> @Model.Medical</div>
+
+        <div class="col-md-6"><strong>Marital Status:</strong> @Model.MaritalStatus</div>
+        <div class="col-md-6"><strong>Co-Curricular:</strong> @Model.CoCurricular</div>
+    </div>
+
+    <!-- ========== CONTACT INFO ========== -->
+    <h4>Contact Info</h4>
+    <div class="row mb-3">
+        <div class="col-md-6"><strong>Primary Phone:</strong> @Model.PrimaryPhone</div>
+        <div class="col-md-6"><strong>Alt Phone:</strong> @Model.AltPhone</div>
+
+        <div class="col-md-6"><strong>Postal Code:</strong> @Model.PostalCode</div>
+        <div class="col-md-6"><strong>County:</strong> @Model.County</div>
+
+        <div class="col-md-6"><strong>SubCounty:</strong> @Model.SubCounty</div>
+        <div class="col-md-6"><strong>Town/Estate:</strong> @Model.Town</div>
+
+        <div class="col-md-6"><strong>Ward:</strong> @Model.Ward</div>
+    </div>
+
+    <!-- ========== EMERGENCY CONTACT ========== -->
+    <h4>Emergency Contact</h4>
+    <div class="row mb-3">
+        <div class="col-md-6"><strong>Emergency Name:</strong> @Model.EmergencyName</div>
+        <div class="col-md-6"><strong>Relationship:</strong> @Model.Relationship</div>
+
+        <div class="col-md-6"><strong>Emergency Phone:</strong> @Model.EmergencyPhone</div>
+        <div class="col-md-6"><strong>Emergency Email:</strong> @Model.EmergencyEmail</div>
+
+        <div class="col-md-6"><strong>Emergency Address:</strong> @Model.EmergencyAddress</div>
+    </div>
+
+    <!-- ========== ACADEMIC DETAILS ========== -->
+    <h4>Academic Details</h4>
+    <div class="row mb-3">
+        <div class="col-md-6"><strong>Course:</strong> @Model.Course</div>
+        <div class="col-md-6"><strong>Department:</strong> @Model.Department</div>
+
+        <div class="col-md-6"><strong>Faculty:</strong> @Model.Faculty</div>
+        <div class="col-md-6"><strong>Program:</strong> @Model.Program</div>
+
+        <div class="col-md-6"><strong>Exam Body:</strong> @Model.ExamBody</div>
+        <div class="col-md-6"><strong>Year:</strong> @Model.Year</div>
+    </div>
+
+    <!-- Submit -->
+    <div class="form-group mt-3">
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>

@@ -1,0 +1,306 @@
+﻿@model EduCoreSuite.Models.Staff
+
+@{
+    ViewData["Title"] = "Staff Details";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Staff Details</h1>
+            <p class="text-muted mb-0">View comprehensive information about this staff member</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.StaffID" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Edit Staff
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Staff Information Card -->
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user me-2"></i>@Model.FullName
+                        @if (!Model.IsDeleted)
+                        {
+                            <span class="badge bg-success ms-2">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary ms-2">Inactive</span>
+                        }
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="info-section mb-4">
+                                <h6 class="text-muted mb-3">
+                                    <i class="fas fa-id-card me-2"></i>Personal Information
+                                </h6>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Full Name:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="text-primary fw-bold">@Model.FullName</span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Academic Title:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (!string.IsNullOrEmpty(Model.Title))
+                                        {
+                                            <span class="badge bg-info fs-6">@Model.Title</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">No title specified</span>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Staff Number:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (!string.IsNullOrEmpty(Model.StaffNumber))
+                                        {
+                                            <span class="badge bg-secondary fs-6">@Model.StaffNumber</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">No staff number assigned</span>
+                                        }
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Role/Position:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <span class="badge bg-primary fs-6">
+                                            <i class="fas fa-briefcase me-1"></i>@Model.Role
+                                        </span>
+                                    </div>
+                                </div>
+                                <hr class="my-3">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <strong class="text-gray-800">Status:</strong>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @if (!Model.IsDeleted)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Active
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-pause-circle me-1"></i>Inactive
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-address-book me-2"></i>Contact Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-4">
+                        <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted">Contact Information</h6>
+                        <p class="text-muted small">Contact details are not configured for staff members in this system.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Leadership Card -->
+            <div class="card shadow">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-sitemap me-2"></i>Department Leadership
+                        <span class="badge bg-light text-dark ms-2">@(Model.DepartmentsLed?.Count ?? 0)</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.DepartmentsLed?.Any() == true)
+                    {
+                        <div class="row">
+                            @foreach (var department in Model.DepartmentsLed)
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-left-warning h-100">
+                                        <div class="card-body py-3">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6 class="text-warning mb-1">@department.Name</h6>
+                                                    <small class="text-muted">Code: @department.Code</small>
+                                                    @if (department.Faculty != null)
+                                                    {
+                                                        <div class="small text-muted mt-1">
+                                                            <i class="fas fa-university me-1"></i>@department.Faculty.Name
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <span class="badge bg-warning text-dark">
+                                                    Department Head
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-sitemap fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No department leadership roles</h6>
+                            <p class="text-muted small">This staff member is not currently leading any departments.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Sidebar -->
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-success text-white">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Quick Statistics
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="stat-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-warning text-white me-3">
+                                    <i class="fas fa-sitemap"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Departments Led</div>
+                                    <div class="fw-bold">@(Model.DepartmentsLed?.Count ?? 0)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-primary text-white me-3">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Position</div>
+                                    <div class="fw-bold">@Model.Role</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-circle bg-success text-white me-3">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small">Status</div>
+                                    <div class="fw-bold @(!Model.IsDeleted ? "text-success" : "text-secondary")">
+                                        @(!Model.IsDeleted ? "Active" : "Inactive")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Card -->
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cogs me-2"></i>Quick Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.StaffID" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit me-2"></i>Edit Staff
+                        </a>
+
+                        <a asp-action="Delete" asp-route-id="@Model.StaffID" 
+                           class="btn btn-outline-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to delete this staff member?')">
+                            <i class="fas fa-trash me-2"></i>Delete Staff
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.stat-item {
+    padding: 0.5rem 0;
+}
+
+.info-section hr {
+    border-color: #e3e6f0;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+</style>
