@@ -1,17 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
 using EduCoreSuite.Data;
-using EduCoreSuite.Pages;
+using Microsoft.AspNetCore.Mvc;
+using EduCoreSuite.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 using EducoreSuite.stmpservices;
-namespace EducoreSuite.forgotpassword
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
+
+namespace EduCoreSuite.Pages.Auth
 {
 
-
+    [AllowAnonymous]
     public class ForgotPasswordModel : PageModel
     {
         private readonly ApplicationDbContext _db;
@@ -32,6 +35,10 @@ namespace EducoreSuite.forgotpassword
 
         public string InfoMessage { get; set; }
         public string ErrorMessage { get; set; }
+
+        public void OnGet()
+        {
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {

@@ -110,35 +110,35 @@ public class AuthController : Controller
         return RedirectToAction("Login");
     }
 
-    [HttpGet("ForgotPassword")]
-    public IActionResult ForgotPassword()
-    {
-        return View(new ForgotPasswordViewModel());
-    }
+    //[HttpGet("ForgotPassword")]
+    //public IActionResult ForgotPassword()
+    //{
+    //    return View(new ForgotPasswordViewModel());
+    //}
 
-    [HttpPost("ForgotPassword")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel viewModel)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(viewModel);
-        }
+    //[HttpPost("ForgotPassword")]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel viewModel)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return View(viewModel);
+    //    }
 
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == viewModel.Email);
-        if (user == null)
-        {
-            ModelState.AddModelError("", "Email not found");
-            return View(viewModel);
-        }
+    //    var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == viewModel.Email);
+    //    if (user == null)
+    //    {
+    //        ModelState.AddModelError("", "Email not found");
+    //        return View(viewModel);
+    //    }
 
-        string code = new Random().Next(100000, 999999).ToString();
-        HttpContext.Session.SetString("ResetCode", code);
-        HttpContext.Session.SetString("ResetEmail", viewModel.Email);
-        // TODO: Send email using SMTP or SendGrid
+    //    string code = new Random().Next(100000, 999999).ToString();
+    //    HttpContext.Session.SetString("ResetCode", code);
+    //    HttpContext.Session.SetString("ResetEmail", viewModel.Email);
+    //    // TODO: Send email using SMTP or SendGrid
 
-        return RedirectToAction("VerifyCode");
-    }
+    //    return RedirectToAction("VerifyCode");
+    //}
 
     [HttpGet("VerifyCode")]
     public IActionResult VerifyCode()
