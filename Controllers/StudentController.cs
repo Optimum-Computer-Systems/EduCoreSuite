@@ -10,10 +10,10 @@ namespace EduCoreSuite.Controllers
 {
     public class StudentController : Controller
     {
-        private readonly ForgeDBContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly ActivityService _activityService;
 
-        public StudentController(ForgeDBContext context, ActivityService activityService)
+        public StudentController(ApplicationDbContext context, ActivityService activityService)
         {
             _context = context;
             _activityService = activityService;

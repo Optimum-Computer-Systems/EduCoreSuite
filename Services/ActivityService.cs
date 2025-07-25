@@ -6,9 +6,9 @@ namespace EduCoreSuite.Services
 {
     public class ActivityService
     {
-        private readonly ForgeDBContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public ActivityService(ForgeDBContext context)
+        public ActivityService(ApplicationDbContext context)
         {
             _context = context;
         }

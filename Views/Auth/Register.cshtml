@@ -1,0 +1,215 @@
+﻿@model EduCoreSuite.Models.ViewModels.Auth.RegisterViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Register";
+    var roles = ViewBag.Roles as List<EduCoreSuite.Models.Role>;
+}
+@{
+    Layout = "_Layout";
+}
+
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center" style="padding: 20px;">
+    <div class="card shadow-lg border-0" style="width: 100%; max-width: 650px; border-radius: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+        <div class="card-body p-4 p-md-5">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h2 class="h3 fw-bold mb-2" style="color: #2d3748; letter-spacing: -0.5px;">Sign Up</h2>
+                <p class="text-muted" style="font-size: 16px;">Create new account</p>
+            </div>
+
+            <form asp-action="Register" method="post">
+                <!-- Username -->
+                <div class="mb-3">
+                    <label asp-for="UserName" class="form-label" style="font-size: 14px; font-weight: 600; color: #4a5568; letter-spacing: 0.02em;">Username</label>
+                    <input asp-for="UserName" class="form-control"
+                           placeholder="Create a unique username"
+                           style="border-radius: 12px; padding: 14px 16px; border: 1.5px solid #e2e8f0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" />
+                    <span asp-validation-for="UserName" class="text-danger small d-block mt-1" style="font-size: 12px; font-weight: 500;"></span>
+                </div>
+
+                <!-- First Name and Last Name Row -->
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label asp-for="FirstName" class="form-label" style="font-size: 14px; font-weight: 600; color: #4a5568; letter-spacing: 0.02em;">First Name</label>
+                        <input asp-for="FirstName" class="form-control"
+                               placeholder="First Name"
+                               style="border-radius: 12px; padding: 14px 16px; border: 1.5px solid #e2e8f0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" />
+                        <span asp-validation-for="FirstName" class="text-danger small d-block mt-1" style="font-size: 12px; font-weight: 500;"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="form-label" style="font-size: 14px; font-weight: 600; color: #4a5568; letter-spacing: 0.02em;">Last Name</label>
+                        <input asp-for="LastName" class="form-control"
+                               placeholder="Last Name"
+                               style="border-radius: 12px; padding: 14px 16px; border: 1.5px solid #e2e8f0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" />
+                        <span asp-validation-for="LastName" class="text-danger small d-block mt-1" style="font-size: 12px; font-weight: 500;"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <!-- Email Address -->
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label asp-for="Email" class="form-label" style="font-size: 14px; font-weight: 600; color: #4a5568; letter-spacing: 0.02em;">Email Address</label>
+                        <input asp-for="Email" class="form-control"
+                               placeholder="Enter your email"
+                               style="border-radius: 12px; padding: 14px 16px; border: 1.5px solid #e2e8f0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" />
+                        <span asp-validation-for="Email" class="text-danger small d-block mt-1" style="font-size: 12px; font-weight: 500;"></span>
+                    </div>
+
+                    <!-- Role Selection (Hidden for now to match design) -->
+                    <div class="col-md-6">
+                        <select asp-for="RoleID" class="form-select">
+                            @foreach (var role in roles)
+                            {
+                                <option value="@role.ID">@role.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="RoleID" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- Password and Confirm Password Row -->
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label asp-for="Password" class="form-label" style="font-size: 14px; font-weight: 600; color: #4a5568; letter-spacing: 0.02em;">Password</label>
+                        <div class="position-relative">
+                            <input asp-for="Password" type="password" class="form-control"
+                                   placeholder="Enter your password"
+                                   style="border-radius: 12px; padding: 14px 16px; border: 1.5px solid #e2e8f0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" />
+                            <i class="fas fa-eye-slash position-absolute"
+                               style="right: 16px; top: 50%; transform: translateY(-50%); color: #a0aec0; cursor: pointer; z-index: 2;"></i>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small d-block mt-1" style="font-size: 12px; font-weight: 500;"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ConfirmPassword" class="form-label" style="font-size: 14px; font-weight: 600; color: #4a5568; letter-spacing: 0.02em;">Confirm Password</label>
+                        <div class="position-relative">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control"
+                                   placeholder="Confirm password"
+                                   style="border-radius: 12px; padding: 14px 16px; border: 1.5px solid #e2e8f0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" />
+                            <i class="fas fa-eye-slash position-absolute"
+                               style="right: 16px; top: 50%; transform: translateY(-50%); color: #a0aec0; cursor: pointer; z-index: 2;"></i>
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small d-block mt-1" style="font-size: 12px; font-weight: 500;"></span>
+                    </div>
+                </div>
+
+                <!-- Password Requirements -->
+                @* <div class="mb-4">
+                    <p class="small mb-2" style="color: #718096;">Password Requirements:</p>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-2" style="font-size: 12px;"></i>
+                            <span class="small" style="color: #718096;">At least 8 characters long</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-2" style="font-size: 12px;"></i>
+                            <span class="small" style="color: #718096;">Contains uppercase letter</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-2" style="font-size: 12px;"></i>
+                            <span class="small" style="color: #718096;">Contains number</span>
+                        </div>
+                    </div>
+                </div> *@
+
+                <!-- Submit Button -->
+                <div class="d-grid mb-4">
+                    <button type="submit" class="btn btn-primary fw-semibold py-3"
+                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                   border: none;
+                                   border-radius: 12px;
+                                   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                                   transition: all 0.3s ease;">
+                        Create Account
+                    </button>
+                </div>
+
+                <!-- Already have account -->
+                <div class="text-center">
+                    <p class="small mb-3" style="color: #718096;">Already have an account?</p>
+                    <a asp-controller="Auth" asp-action="Login"
+                       class="btn btn-link p-0 fw-semibold"
+                       style="color: #667eea; text-decoration: none; transition: color 0.2s ease;">
+                        Sign In
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        // Toggle password visibility
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordToggles = document.querySelectorAll('.fa-eye-slash, .fa-eye');
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.classList.remove('fa-eye-slash');
+                        this.classList.add('fa-eye');
+                    } else {
+                        input.type = 'password';
+                        this.classList.remove('fa-eye');
+                        this.classList.add('fa-eye-slash');
+                    }
+                });
+            });
+
+            // Add hover and focus effects
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.borderColor = '#667eea';
+                    this.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                    this.style.transform = 'translateY(-1px)';
+                });
+
+                input.addEventListener('blur', function() {
+                    this.style.borderColor = '#e2e8f0';
+                    this.style.boxShadow = 'none';
+                    this.style.transform = 'translateY(0)';
+                });
+
+                input.addEventListener('mouseenter', function() {
+                    this.style.borderColor = '#cbd5e0';
+                });
+
+                input.addEventListener('mouseleave', function() {
+                    if (document.activeElement !== this) {
+                        this.style.borderColor = '#e2e8f0';
+                    }
+                });
+            });
+
+            // Button hover effects
+            const submitButton = document.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.4)';
+                    this.style.background = 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)';
+                });
+
+                submitButton.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.3)';
+                    this.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                });
+
+                submitButton.addEventListener('mousedown', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            }
+        });
+    </script>
+}

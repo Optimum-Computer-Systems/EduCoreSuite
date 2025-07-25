@@ -1,18 +1,20 @@
+using EduCoreSuite.Data;
+using EduCoreSuite.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using System.Linq;
 using System;
-using EduCoreSuite.Data;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 public class ChangePasswordModel : PageModel
 {
-    private readonly AppDbContext _db;
+    private readonly ApplicationDbContext _db;
     private readonly ILogger<ChangePasswordModel> _logger;
 
-    public ChangePasswordModel(AppDbContext db, ILogger<ChangePasswordModel> logger)
+    public ChangePasswordModel(ApplicationDbContext db, ILogger<ChangePasswordModel> logger)
     {
         _db = db;
         _logger = logger;
@@ -98,8 +100,8 @@ public class ChangePasswordModel : PageModel
         }
 
         // Update password
-        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(Input.NewPassword);
-        user.ResetOTP = null;
+        var passwordHasher = new PasswordHasher<User>();
+        user.PasswordHash = passwordHasher.HashPassword(user, user.PasswordHash); user.ResetOTP = null;
         user.OTPGeneratedAt = null;
 
         await _db.SaveChangesAsync();

@@ -1,78 +1,87 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
 using EduCoreSuite.Data;
-using EduCoreSuite.Pages;
+using Microsoft.AspNetCore.Mvc;
+using EduCoreSuite.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 using EducoreSuite.stmpservices;
-namespace EducoreSuite.forgotpassword;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
-
-public class ForgotPasswordModel : PageModel
+namespace EduCoreSuite.Pages.Auth
 {
-    private readonly AppDbContext _db;
-    private readonly ILogger<ForgotPasswordModel> _logger;
-    private readonly IEmailSender _emailSender;
 
-    public ForgotPasswordModel(AppDbContext db, ILogger<ForgotPasswordModel> logger, IEmailSender emailSender)
+    [AllowAnonymous]
+    public class ForgotPasswordModel : PageModel
     {
-        _db = db;
-        _logger = logger;
-        _emailSender = emailSender;
-    }
+        private readonly ApplicationDbContext _db;
+        private readonly ILogger<ForgotPasswordModel> _logger;
+        private readonly IEmailSender _emailSender;
 
-    [BindProperty]
-    [Required(ErrorMessage = "Email is required.")]
-    [EmailAddress(ErrorMessage = "Invalid email address.")]
-    public string Email { get; set; }
-
-    public string InfoMessage { get; set; }
-    public string ErrorMessage { get; set; }
-
-    public async Task<IActionResult> OnPostAsync()
-    {
-        _logger.LogInformation("ForgotPassword: OnPostAsync triggered.");
-
-        if (!ModelState.IsValid)
+        public ForgotPasswordModel(ApplicationDbContext db, ILogger<ForgotPasswordModel> logger, IEmailSender emailSender)
         {
-            _logger.LogWarning("ModelState is invalid. Errors: {@Errors}, Email: {Email}",
-                ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList(), Email);
-            return Page();
+            _db = db;
+            _logger = logger;
+            _emailSender = emailSender;
         }
 
-        var user = _db.Users.FirstOrDefault(u => u.Email == Email);
+        [BindProperty]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        public string Email { get; set; }
 
-        if (user == null)
+        public string InfoMessage { get; set; }
+        public string ErrorMessage { get; set; }
+
+        public void OnGet()
         {
-            InfoMessage = "If this email exists, a reset code has been sent.";
-            _logger.LogWarning("User with email {Email} not found.", Email);
-            return Page();
         }
 
-        // Generate and store OTP
-        var otp = new Random().Next(100000, 999999).ToString();
-        user.ResetOTP = otp;
-        user.OTPGeneratedAt = DateTime.UtcNow;
-
-        try
+        public async Task<IActionResult> OnPostAsync()
         {
-            await _db.SaveChangesAsync();
-            await _emailSender.SendEmailAsync(user.Email, "Your OTP Code", $"Your One-Time Password is: {otp}");
-            _logger.LogInformation($"OTP sent to {Email}: {otp}");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error sending OTP.");
-            ErrorMessage = "An error occurred while sending the OTP. Please try again.";
-            return Page();
-        }
+            _logger.LogInformation("ForgotPassword: OnPostAsync triggered.");
 
-        // Store email temporarily and redirect
-        TempData["ResetEmail"] = Email;
-        return RedirectToPage("ChangePassword");
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("ModelState is invalid. Errors: {@Errors}, Email: {Email}",
+                    ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList(), Email);
+                return Page();
+            }
+
+            var user = _db.Users.FirstOrDefault(u => u.Email == Email);
+
+            if (user == null)
+            {
+                InfoMessage = "If this email exists, a reset code has been sent.";
+                _logger.LogWarning("User with email {Email} not found.", Email);
+                return Page();
+            }
+
+            // Generate and store OTP
+            var otp = new Random().Next(100000, 999999).ToString();
+            user.ResetOTP = otp;
+            user.OTPGeneratedAt = DateTime.UtcNow;
+
+            try
+            {
+                await _db.SaveChangesAsync();
+                await _emailSender.SendEmailAsync(user.Email, "Your OTP Code", $"Your One-Time Password is: {otp}");
+                _logger.LogInformation($"OTP sent to {Email}: {otp}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error sending OTP.");
+                ErrorMessage = "An error occurred while sending the OTP. Please try again.";
+                return Page();
+            }
+
+            // Store email temporarily and redirect
+            TempData["ResetEmail"] = Email;
+            return RedirectToPage("ChangePassword");
+        }
     }
 }
 

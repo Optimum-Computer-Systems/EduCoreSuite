@@ -10,9 +10,9 @@ namespace EduCoreSuite.Services
 {
     public class ExportService
     {
-        private readonly ForgeDBContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public ExportService(ForgeDBContext context)
+        public ExportService(ApplicationDbContext context)
         {
             _context = context;
             // Ensure EPPlus license is set

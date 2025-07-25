@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EduCoreSuite.Migrations
 {
     /// <inheritdoc />
-    public partial class FixedCampusCascade : Migration
+    public partial class NameOfYourMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,6 +77,20 @@ namespace EduCoreSuite.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Faculties", x => x.FacultyID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -169,6 +183,32 @@ namespace EduCoreSuite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleID = table.Column<int>(type: "int", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResetOTP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OTPGeneratedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Users_Roles_RoleID",
+                        column: x => x.RoleID,
+                        principalTable: "Roles",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Campuses",
                 columns: table => new
                 {
@@ -242,7 +282,8 @@ namespace EduCoreSuite.Migrations
                     Faculty = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Program = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExamBody = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Year = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Year = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AdmissionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -322,12 +363,15 @@ namespace EduCoreSuite.Migrations
                     CourseID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CourseName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CourseCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false),
                     ProgrammeID = table.Column<int>(type: "int", nullable: false),
                     CampusID = table.Column<int>(type: "int", nullable: false),
                     ExamBodyID = table.Column<int>(type: "int", nullable: false),
                     StudyStatusID = table.Column<int>(type: "int", nullable: false),
-                    StudyModeID = table.Column<int>(type: "int", nullable: false)
+                    StudyModeID = table.Column<int>(type: "int", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    Credits = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -368,6 +412,51 @@ namespace EduCoreSuite.Migrations
                         principalTable: "StudyStatuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Enrollments",
+                columns: table => new
+                {
+                    EnrollmentID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentID = table.Column<int>(type: "int", nullable: false),
+                    CourseID = table.Column<int>(type: "int", nullable: false),
+                    EnrollmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Grade = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
+                    Score = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    CompletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    AcademicYear = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Semester = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Enrollments", x => x.EnrollmentID);
+                    table.ForeignKey(
+                        name: "FK_Enrollments_Courses_CourseID",
+                        column: x => x.CourseID,
+                        principalTable: "Courses",
+                        principalColumn: "CourseID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Enrollments_Students_StudentID",
+                        column: x => x.StudentID,
+                        principalTable: "Students",
+                        principalColumn: "StudentID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "ID", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Student with limited system access", "Student" },
+                    { 2, "Administrator with unlimited access", "Admin" },
+                    { 3, "Lecturer with limited system access", "Lecturer" },
+                    { 4, "Staff user with limited access", "Staff" }
                 });
 
             migrationBuilder.InsertData(
@@ -444,6 +533,16 @@ namespace EduCoreSuite.Migrations
                 column: "DepartmentsLedDepartmentID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Enrollments_CourseID",
+                table: "Enrollments",
+                column: "CourseID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enrollments_StudentID",
+                table: "Enrollments",
+                column: "StudentID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Programmes_DepartmentID",
                 table: "Programmes",
                 column: "DepartmentID");
@@ -462,6 +561,11 @@ namespace EduCoreSuite.Migrations
                 name: "IX_SubCounties_CountyID",
                 table: "SubCounties",
                 column: "CountyID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_RoleID",
+                table: "Users",
+                column: "RoleID");
         }
 
         /// <inheritdoc />
@@ -471,13 +575,25 @@ namespace EduCoreSuite.Migrations
                 name: "Activities");
 
             migrationBuilder.DropTable(
-                name: "Courses");
-
-            migrationBuilder.DropTable(
                 name: "DepartmentStaff");
 
             migrationBuilder.DropTable(
+                name: "Enrollments");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Staff");
+
+            migrationBuilder.DropTable(
+                name: "Courses");
+
+            migrationBuilder.DropTable(
                 name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Campuses");
@@ -493,9 +609,6 @@ namespace EduCoreSuite.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudyStatuses");
-
-            migrationBuilder.DropTable(
-                name: "Staff");
 
             migrationBuilder.DropTable(
                 name: "SubCounties");

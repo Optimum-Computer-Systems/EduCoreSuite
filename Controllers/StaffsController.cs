@@ -10,9 +10,9 @@ namespace EduCoreSuite.Controllers
 {
     public class StaffsController : Controller
     {
-        private readonly ForgeDBContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public StaffsController(ForgeDBContext context)
+        public StaffsController(ApplicationDbContext context)
         {
             _context = context;
         }

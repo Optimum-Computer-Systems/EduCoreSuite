@@ -1,0 +1,196 @@
+﻿﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Optimum_University</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/courses.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+
+</head>
+<body>
+    @{
+        var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+    }
+
+    @if (!(currentController == "Reports"))
+    {
+        <!-- Top Header Bar -->
+        <header class="top-header bg-white border-bottom shadow-sm">
+            <div class="container-fluid px-3">
+                <div class="d-flex align-items-center justify-content-between py-2">
+                    <!-- Left: Logo + University Name + Sidebar Toggle -->
+                    <div class="d-flex justify-content-between align-items-center w-100 px-3 py-2">
+
+                        <!-- Left Side (Logo + Sidebar toggle) -->
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-link p-0 sidebar-toggle d-lg-none" type="button">
+                                <i class="bi bi-list fs-4 text-dark"></i>
+                            </button>
+                            <a class="text-decoration-none d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                                <img src="~/Resources/Logo.svg" alt="Logo" width="28" height="28" style="filter: brightness(0) saturate(100%);" />
+                                <h4 class="mb-0 fw-bold text-primary d-none d-md-block">Optimum University</h4>
+                            </a>
+                        </div>
+
+                        <!-- Right Side (Profile) -->
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="fw-semibold d-none d-md-inline text-dark">Hello, @User.Identity.Name</span>
+                            <img src="~/Resources/avatar.png" alt="Profile" class="rounded-circle" width="36" height="36" style="object-fit: cover;" />
+                            <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Right: Empty space for balance -->
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Intentionally left empty -->
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <div class="sidebar-container">
+            <nav class="sidebar bg-dark text-white" id="sidebar">
+                <div class="sidebar-content">
+                    <!-- Sidebar Header -->
+                    <div class="sidebar-header p-3 border-bottom border-secondary">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-mortarboard-fill text-primary fs-5"></i>
+                            <span class="fw-bold">EduCore Suite</span>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Menu -->
+                    <div class="sidebar-menu">
+                        <!-- Dashboard -->
+                        <div class="menu-section">
+                            <a class="menu-item @(currentController == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </div>
+
+                        <!-- Institution Setup -->
+                        <div class="menu-section">
+                            <div class="menu-header">
+                                <i class="bi bi-building"></i>
+                                <span>Institution Setup</span>
+                            </div>
+                            <a class="menu-item @(currentController == "Campuses" ? "active" : "")" asp-controller="Campuses" asp-action="Index">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>Campuses</span>
+                            </a>
+                            <a class="menu-item @(currentController == "Faculties" ? "active" : "")" asp-controller="Faculties" asp-action="Index">
+                                <i class="bi bi-mortarboard"></i>
+                                <span>Faculties</span>
+                            </a>
+                            <a class="menu-item @(currentController == "Departments" ? "active" : "")" asp-controller="Departments" asp-action="Index">
+                                <i class="bi bi-diagram-3"></i>
+                                <span>Departments</span>
+                            </a>
+                        </div>
+
+                        <!-- Academic Programs -->
+                        <div class="menu-section">
+                            <div class="menu-header">
+                                <i class="bi bi-journal-bookmark"></i>
+                                <span>Academic Programs</span>
+                            </div>
+                            <a class="menu-item @(currentController == "Programmes" ? "active" : "")" asp-controller="Programmes" asp-action="Index">
+                                <i class="bi bi-collection"></i>
+                                <span>Programmes</span>
+                            </a>
+                            <a class="menu-item @(currentController == "Courses" ? "active" : "")" asp-controller="Courses" asp-action="Index">
+                                <i class="bi bi-book"></i>
+                                <span>Courses</span>
+                            </a>
+                        </div>
+
+                        <!-- People Management -->
+                        <div class="menu-section">
+                            <div class="menu-header">
+                                <i class="bi bi-people"></i>
+                                <span>People Management</span>
+                            </div>
+                            <a class="menu-item @(currentController == "Staffs" ? "active" : "")" asp-controller="Staffs" asp-action="Index">
+                                <i class="bi bi-person-badge"></i>
+                                <span>Staff</span>
+                            </a>
+                            <a class="menu-item @(currentController == "Students" ? "active" : "")" asp-controller="Students" asp-action="Index">
+                                <i class="bi bi-person-check"></i>
+                                <span>Students</span>
+                            </a>
+                        </div>
+
+                        <!-- System Configuration -->
+                        <div class="menu-section">
+                            <div class="menu-header">
+                                <i class="bi bi-gear"></i>
+                                <span>Configuration</span>
+                            </div>
+                            <a class="menu-item @(currentController == "StudyModes" ? "active" : "")" asp-controller="StudyModes" asp-action="Index">
+                                <i class="bi bi-clock"></i>
+                                <span>Study Modes</span>
+                            </a>
+                            <a class="menu-item @(currentController == "StudyStatuses" ? "active" : "")" asp-controller="StudyStatuses" asp-action="Index">
+                                <i class="bi bi-check-circle"></i>
+                                <span>Study Status</span>
+                            </a>
+                            <a class="menu-item @(currentController == "ExamBodies" ? "active" : "")" asp-controller="ExamBodies" asp-action="Index">
+                                <i class="bi bi-award"></i>
+                                <span>Exam Bodies</span>
+                            </a>
+                        </div>
+
+                        <!-- Reports & Analytics -->
+                        <div class="menu-section">
+                            <a class="menu-item @(currentController == "Reports" ? "active" : "")" asp-controller="Reports" asp-action="Index">
+                                <i class="bi bi-graph-up"></i>
+                                <span>Reports & Analytics</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Sidebar Overlay for Mobile -->
+            <div class="sidebar-overlay d-lg-none" id="sidebarOverlay"></div>
+        </div>
+    }
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="container-fluid px-4">
+            <main role="main" class="py-4">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - Optimum_University - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

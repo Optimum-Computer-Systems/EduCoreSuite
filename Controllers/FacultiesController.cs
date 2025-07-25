@@ -9,9 +9,9 @@ namespace EduCoreSuite.Controllers
 {
     public class FacultiesController : Controller
     {
-        private readonly ForgeDBContext _context;
+        private readonly ApplicationDbContext _context;
         
-        public FacultiesController(ForgeDBContext context)
+        public FacultiesController(ApplicationDbContext context)
         {
             _context = context;
         }

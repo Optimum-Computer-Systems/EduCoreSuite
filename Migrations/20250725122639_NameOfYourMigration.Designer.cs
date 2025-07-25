@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EduCoreSuite.Migrations
 {
-    [DbContext(typeof(ForgeDBContext))]
-    [Migration("20250721123258_FixedCampusCascade")]
-    partial class FixedCampusCascade
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20250725122639_NameOfYourMigration")]
+    partial class NameOfYourMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -142,12 +142,23 @@ namespace EduCoreSuite.Migrations
                     b.Property<int>("CampusID")
                         .HasColumnType("int");
 
+                    b.Property<string>("CourseCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<string>("CourseName")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("Credits")
+                        .HasColumnType("int");
+
                     b.Property<int>("DepartmentID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Duration")
                         .HasColumnType("int");
 
                     b.Property<int>("ExamBodyID")
@@ -215,6 +226,61 @@ namespace EduCoreSuite.Migrations
                     b.HasIndex("FacultyID");
 
                     b.ToTable("Departments", (string)null);
+                });
+
+            modelBuilder.Entity("EduCoreSuite.Models.Enrollment", b =>
+                {
+                    b.Property<int>("EnrollmentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnrollmentID"));
+
+                    b.Property<string>("AcademicYear")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime?>("CompletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CourseID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Grade")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal?>("Score")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Semester")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("StudentID")
+                        .HasColumnType("int");
+
+                    b.HasKey("EnrollmentID");
+
+                    b.HasIndex("CourseID");
+
+                    b.HasIndex("StudentID");
+
+                    b.ToTable("Enrollments", (string)null);
                 });
 
             modelBuilder.Entity("EduCoreSuite.Models.ExamBody", b =>
@@ -322,6 +388,52 @@ namespace EduCoreSuite.Migrations
                     b.ToTable("Programmes", (string)null);
                 });
 
+            modelBuilder.Entity("EduCoreSuite.Models.Role", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Description = "Student with limited system access",
+                            Name = "Student"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Description = "Administrator with unlimited access",
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Description = "Lecturer with limited system access",
+                            Name = "Lecturer"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Description = "Staff user with limited access",
+                            Name = "Staff"
+                        });
+                });
+
             modelBuilder.Entity("EduCoreSuite.Models.Staff", b =>
                 {
                     b.Property<int>("StaffID")
@@ -363,6 +475,9 @@ namespace EduCoreSuite.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentID"));
+
+                    b.Property<DateTime?>("AdmissionDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("AdmissionNumber")
                         .IsRequired()
@@ -670,6 +785,49 @@ namespace EduCoreSuite.Migrations
                     b.ToTable("Activities", (string)null);
                 });
 
+            modelBuilder.Entity("EduCoreSuite.Models.User", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OTPGeneratedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResetOTP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RoleID");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("DepartmentStaff", b =>
                 {
                     b.HasOne("EduCoreSuite.Models.Staff", null)
@@ -766,6 +924,25 @@ namespace EduCoreSuite.Migrations
                     b.Navigation("Faculty");
                 });
 
+            modelBuilder.Entity("EduCoreSuite.Models.Enrollment", b =>
+                {
+                    b.HasOne("EduCoreSuite.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduCoreSuite.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("EduCoreSuite.Models.Programme", b =>
                 {
                     b.HasOne("EduCoreSuite.Models.Department", "Department")
@@ -807,6 +984,17 @@ namespace EduCoreSuite.Migrations
                     b.Navigation("County");
                 });
 
+            modelBuilder.Entity("EduCoreSuite.Models.User", b =>
+                {
+                    b.HasOne("EduCoreSuite.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("EduCoreSuite.Models.CountySubCounty", b =>
                 {
                     b.Navigation("SubCounties");
@@ -820,6 +1008,11 @@ namespace EduCoreSuite.Migrations
             modelBuilder.Entity("EduCoreSuite.Models.Faculty", b =>
                 {
                     b.Navigation("Departments");
+                });
+
+            modelBuilder.Entity("EduCoreSuite.Models.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,10 +9,10 @@ namespace EduCoreSuite.Controllers
 {
     public class EnrollmentsController : Controller
     {
-        private readonly ForgeDBContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly ActivityService _activityService;
 
-        public EnrollmentsController(ForgeDBContext context, ActivityService activityService)
+        public EnrollmentsController(ApplicationDbContext context, ActivityService activityService)
         {
             _context = context;
             _activityService = activityService;

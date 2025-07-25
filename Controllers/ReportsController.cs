@@ -9,10 +9,10 @@ namespace EduCoreSuite.Controllers
 {
     public class ReportsController : Controller
     {
-        private readonly ForgeDBContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly ExportService _exportService;
 
-        public ReportsController(ForgeDBContext context, ExportService exportService)
+        public ReportsController(ApplicationDbContext context, ExportService exportService)
         {
             _context = context;
             _exportService = exportService;

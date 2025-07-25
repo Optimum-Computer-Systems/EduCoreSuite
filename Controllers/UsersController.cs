@@ -31,7 +31,7 @@ namespace EduCoreSuite.Controllers
 
             //Hashing the password
             var hasher = new PasswordHasher<User>();
-            user.Password = hasher.HashPassword(user, user.Password); //Hash the password before saving it to the database
+            user.PasswordHash = hasher.HashPassword(user, user.PasswordHash); //Hash the password before saving it to the database
 
             _context.Users.Add(user); 
             await _context.SaveChangesAsync(); //Save changes to the database

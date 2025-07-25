@@ -4,20 +4,22 @@ using Microsoft.EntityFrameworkCore;
 using EduCoreSuite.Data;
 using EduCoreSuite.Models;
 using EduCoreSuite.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EduCoreSuite.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ForgeDBContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger, ForgeDBContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
             _context = context;
         }
-
+       
         public async Task<IActionResult> Index()
         {
             var vm = new DashboardViewModel
@@ -45,7 +47,7 @@ namespace EduCoreSuite.Controllers
         }
 
         // Removed GetEnrollmentTrends and related methods as they're no longer needed
-
+    
         private async Task<List<AcademicYearData>> GetEnrollmentByAcademicYear()
         {
             // Kenyan academic years: 1st Year, 2nd Year, 3rd Year, 4th Year
